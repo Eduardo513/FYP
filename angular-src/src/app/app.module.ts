@@ -16,10 +16,12 @@ import {ValidateService} from './services/validate.service';
 import {FlashMessagesModule} from 'angular2-flash-messages';
 import {AuthService} from './services/auth.service';
 import {AuthGuard} from './guards/auth.guard';
+import { CreateGameComponent } from './components/create-game/create-game.component';
 
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
+  {path: 'create-game', component: CreateGameComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
   {path: 'dashboard', component: DashboardComponent, canActivate:[AuthGuard]},
@@ -34,7 +36,8 @@ const appRoutes: Routes = [
     RegisterComponent,
     HomeComponent,
     DashboardComponent,
-    ProfileComponent
+    ProfileComponent,
+    CreateGameComponent
   ],
   imports: [
     BrowserModule,

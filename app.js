@@ -9,6 +9,7 @@ const config = require('./config/database');
 const app = express();
 
 const users = require('./routes/users');
+const games = require('./routes/games');
 
 
 // Connect to Database
@@ -45,6 +46,8 @@ require('./config/passport')(passport);
 
 app.use('/users', users);
 
+app.use('/games', games);
+
 //Index Route
 app.get('/', (req, res) =>{
     res.send("Invalid Endpoint");
@@ -65,10 +68,13 @@ app.listen(port, () => {
 - start server = nodemon on main folder
 - start database = net start Mongodb - on mongo folder as admin
 - run mongo shell = mongo - in bin directory
+- show dbs - shows all databases
+-db.users.find(); - shows all users
 - in mongo, .pretty() after things is good
 - ng serve - in src folder to start angular
 - git add . - adds everything to staging
 - get remove - removes everything from staging area
 - git status - shows whats in staging area
 - git commit -m 'Commtted changes' - this commits
+-git push - pushes to github
 */

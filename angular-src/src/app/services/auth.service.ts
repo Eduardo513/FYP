@@ -7,6 +7,7 @@ import {tokenNotExpired} from 'angular2-jwt';
 export class AuthService {
   authToken: any;
   user: any;
+  game: any;
 
   constructor(private http:Http ) { }
 
@@ -15,6 +16,14 @@ export class AuthService {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     return this.http.post('http://localhost:3000/users/register', user, {headers: headers})
+      .map(res => res.json());
+  }
+
+  createGame(game)
+  {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/games/create-game', game, {headers: headers})
       .map(res => res.json());
   }
 
