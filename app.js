@@ -60,10 +60,15 @@ app.listen(port, () => {
 });
 
 
+
 /* 
 - start server = nodemon on main folder
 - start database = net start Mongodb - on mongo folder as admin
 - run mongo shell = mongo - in bin directory
 - in mongo, .pretty() after things is good
 - ng serve - in src folder to start angular
+- git add . - adds everything to staging
+- get remove - removes everything from staging area
+- git status - shows whats in staging area
+- git commit -m 'Commtted changes' - this commits
 */
