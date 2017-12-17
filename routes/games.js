@@ -22,4 +22,25 @@ router.post('/create-game', (req, res, next) => {
     });
 });
 
+router.get('/allGames', (req, res) => 
+{
+    Game.find({}, (err, games) =>
+    {
+        if(err){
+            res.json({ success: false, message: err });
+        }
+        else
+        {
+            if(!games)
+            {
+                res.json({ success: false, message: 'No Games found.' });
+            }
+            else
+            {
+                res.json({ success: true, games: games });
+            }
+        }
+    });
+});
+
 module.exports = router;

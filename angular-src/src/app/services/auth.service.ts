@@ -8,6 +8,7 @@ export class AuthService {
   authToken: any;
   user: any;
   game: any;
+  statistics: any;
 
   constructor(private http:Http ) { }
 
@@ -24,6 +25,14 @@ export class AuthService {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     return this.http.post('http://localhost:3000/games/create-game', game, {headers: headers})
+      .map(res => res.json());
+  }
+
+  createStatistics(statistics)
+  {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/statistics/create-statistics', statistics, {headers: headers})
       .map(res => res.json());
   }
 
@@ -45,6 +54,14 @@ export class AuthService {
       .map(res => res.json());
   }
 
+  getAllGames(){
+    let headers = new Headers();
+    //headers.append('Content-Type', 'application/json');
+    return this.http.get('http://localhost:3000/games/allGames', {headers: headers})
+    //return this.http.get('groups/groupList', {headers: headers})
+    .map(res => res.json());
+  }
+
   storeUserData(token, user)
   {
     localStorage.setItem('id_token', token);
@@ -61,6 +78,7 @@ export class AuthService {
 
   loggedIn()
   {
+  
     return tokenNotExpired("id_token");
   }
 

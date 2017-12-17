@@ -18,6 +18,11 @@ module.exports.getGameById = function(id, callback){
     Game.findById(id, callback);
 }
 
+module.exports.getGameByName = function(name, callback){
+    const query = {name: name}
+    Game.findOne(query, callback);
+}
+
 module.exports.getGameByGenre = function(genre, callback){
     const query = {genre: genre}
     Game.findOne(query, callback);

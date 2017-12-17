@@ -10,6 +10,7 @@ const app = express();
 
 const users = require('./routes/users');
 const games = require('./routes/games');
+const statistics = require('./routes/statistics');
 
 
 // Connect to Database
@@ -47,6 +48,8 @@ require('./config/passport')(passport);
 app.use('/users', users);
 
 app.use('/games', games);
+
+app.use('/statistics', statistics);
 
 //Index Route
 app.get('/', (req, res) =>{

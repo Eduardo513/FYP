@@ -29,7 +29,7 @@ export class CreateGameComponent implements OnInit {
     }
   
 
-  //Register User
+  //Register Game
   this.authService.createGame(game).subscribe(data => {
     if(data.success)
     {

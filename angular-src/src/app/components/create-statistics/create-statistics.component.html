@@ -1,0 +1,23 @@
+
+
+
+  <h2 class ="page-header">Create a Statistic</h2>
+  <form (submit)="onCreateStatisticSubmit()">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" [(ngModel)]="username" name="username" class="form-control">
+    </div>
+ 
+
+
+    <div class="form-group">
+      <select [(ngModel)]="game" name="game">
+          <option *ngFor="let game of games" >
+        {{game.name}}
+      </option>
+      </select>
+    </div>
+  
+    <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
+  
