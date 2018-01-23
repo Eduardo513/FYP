@@ -19,6 +19,10 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    statistics :[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Statistics'
+    }],
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);

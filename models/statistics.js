@@ -12,6 +12,7 @@ const StatisticsSchema = mongoose.Schema({
     username :{
         type: String,
     },  
+    //this looks like it might be an array change later
     game :[{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Game'
@@ -32,6 +33,8 @@ module.exports.getStatisticsByUsername = function(username, callback){
 
 module.exports.addStatistics = function(newStatistics, callback){
     newStatistics.save(callback);
+
+    
 }
 
 

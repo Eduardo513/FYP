@@ -3,6 +3,7 @@ import {Http, Headers} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {tokenNotExpired} from 'angular2-jwt';
 
+
 @Injectable()
 export class AuthService {
   authToken: any;
@@ -54,6 +55,13 @@ export class AuthService {
       .map(res => res.json());
   }
 
+  getLeagueOfLegends(statistics){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/statistics/leagueoflegends', statistics, {headers: headers})
+    .map(res => res.json());
+  }
+  
   getAllGames(){
     let headers = new Headers();
     //headers.append('Content-Type', 'application/json');
