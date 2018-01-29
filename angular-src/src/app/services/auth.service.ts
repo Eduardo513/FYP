@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
-import {Http, Headers} from '@angular/http';
+import {Http, Headers, RequestOptions} from '@angular/http';
 import 'rxjs/add/operator/map';
 import {tokenNotExpired} from 'angular2-jwt';
+import { request } from 'https';
+import { URLSearchParams } from '@angular/http/src/url_search_params';
+
+
 
 
 @Injectable()
@@ -55,10 +59,10 @@ export class AuthService {
       .map(res => res.json());
   }
 
-  getLeagueOfLegends(statistics){
+  getLeagueOfLegends(statId){
     
     let headers = new Headers();
-    return this.http.put('http://localhost:3000/statistics/leagueoflegends', statistics, {headers: headers})
+    return this.http.put('http://localhost:3000/statistics/leagueoflegends', statId, {headers: headers})
     .map(res => res.json());
   }
   
@@ -67,6 +71,14 @@ export class AuthService {
     //headers.append('Content-Type', 'application/json');
     return this.http.get('http://localhost:3000/games/allGames', {headers: headers})
     //return this.http.get('groups/groupList', {headers: headers})
+    .map(res => res.json());
+  }
+
+  getAllStatisticsId(user){
+    
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.put('http://localhost:3000/users/getAllStatisticsId', user, {headers: headers})
     .map(res => res.json());
   }
 

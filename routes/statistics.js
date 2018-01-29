@@ -11,14 +11,106 @@ const User = require('../models/user');
 //GetStats from LeagueOfLegends
 
 router.put('/leagueoflegends', (req, res, next) => {
-    var data = {};
-    var accountId;
-    var matches = [];
-    var matchId;
-    var username = req.body.username;
-    var allMatchTime = 0;
-    var request = require("request");
+    var realStatId = req.body.statId;
+    var wins;
+    var losses;
+    var averagePlayTime;
+    var summonerLevel;
+    var apiKey = 'RGAPI-faa71b5e-5aed-409e-ac73-0d3f92511489';
+    Statistics.getStatisticsById(realStatId, (err, statisticsObject) => {
+        if (err) throw err;
 
+        if (statisticsObject) {
+
+            Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", statisticsObject.username, apiKey, (err, data) => {
+                if (err)
+                    throw err;
+
+                if (data) {
+                    if ("status" in data) {
+                        console.log("Error: " + data.status.status_code);
+                        res.json({success: false, msg: "Something Went Wrong" });
+                    }
+                    else {
+                        //grabs level off the data to update later
+                        summonerLevel = data.summonerLevel;
+
+                        Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
+                            if (err)
+                                throw err;
+
+                            if (data) {
+                                if ("status" in data) {
+                                    console.log("Error: " + data.status.status_code);
+                                    res.json({success: false, msg: "Something Went Wrong" });
+                                }
+                                else {
+                                    //average time per game of league is 30 mins
+                                    averagePlayTime = (data.totalGames * 30) / 60;
+                                    //updates stat object and sets data
+                                    Statistics.findOneAndUpdate({ _id: statisticsObject._id },
+                                        { $set: { gamesPlayed: data.totalGames, averagePlayTime: averagePlayTime, level: summonerLevel } }, { new: true }, (err, statistic) => {
+                                            if (err)
+                                                throw err;
+                                            else {
+                                                res.json({success: true, msg: "Statistic Created Succesfully: All Data Saved" });
+                                                console.log(statistic)
+                                               
+
+                                            }
+                                        });
+
+                                    /*   //      This is attempting to get the win loss ratio for the particapnts but its very difficult, come back later
+                                    for (var i = 0; i < 1; i++) {
+
+                                        Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matches/', data.matches[i].gameId, apiKey, (err, data) => {
+                                            if(err)
+                                                throw err;
+
+                                            if(data){
+                                                if ("status" in data) {
+                                                    console.log("Error: " + data.status.status_code);
+                                                }
+                                                else{
+                                                    for (var i = 0; i < 10; i++) {
+                                                      
+                                                        // console.log(data.participantIdentities[i].player.summonerName);
+                                                        // if(data.participantIdentities[i].player.summonerName == "Mr Garnz")
+                                                        // {
+                                                        //     console.log(data.participantIdentities[i].participantId);
+                                                          
+                                                        //     if(data.participantIdentities[i].participantId <= 5 )
+                                                        //      console.log(data.teams[0].win);
+                                                        //     else{
+                                                        //         console.log(data.teams[1].win);
+                                                        //     }
+                                                        //      //console.log(data.participantIdentities[i].player.summonerName)
+                                                        //  }
+                                                         
+                                                    }
+                                                
+                                                }
+                                            }
+                                        });
+                                 
+                                    }
+                                    */
+                                }
+                            }
+                        });
+
+
+
+
+
+                    }
+                }
+            });
+        }
+    });
+
+
+    /*
 
     request('https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + username + '?api_key=RGAPI-76b3eca2-9f6f-4c05-a5b2-775458d33f92', function (err, res, body) {
        
@@ -64,7 +156,7 @@ router.put('/leagueoflegends', (req, res, next) => {
 
         
     });
-
+*/
 });
 //CreateStatistic
 router.post('/create-statistics', (req, res, next) => {
@@ -91,13 +183,13 @@ router.post('/create-statistics', (req, res, next) => {
             });
 
 
-        Statistics.addStatistics(newStatistics, (err, statistc) => {
+        Statistics.addStatistics(newStatistics, (err, statistic) => {
 
             if (err) {
                 res.json({ success: false, msg: 'Failed to create statistc' });
             }
             else {
-                res.json({ success: true, msg: 'Statistic Created' });
+                res.json({ success: true, statId: statistic._id, msg: 'Statistic Created' });
             }
 
         });
@@ -106,9 +198,10 @@ router.post('/create-statistics', (req, res, next) => {
         User.findOneAndUpdate({ _id: currentUserId },
             { $push: { statistics: newStatistics } }, (err, statistic) => {
                 if (err)
-                    console.log(err);
+                    throw err;
 
-            })
+
+            });
 
 
     });

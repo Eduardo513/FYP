@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FlashMessagesService } from 'angular2-flash-messages';
+import {ValidateService} from '../../services/validate.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -22,6 +23,7 @@ export class CreateStatisticsComponent implements OnInit {
 
 
   constructor(
+    private validateService: ValidateService,
     private router: Router,
     private authService: AuthService,
     private flashMessage: FlashMessagesService) { }
@@ -33,6 +35,15 @@ export class CreateStatisticsComponent implements OnInit {
   }
 
   onCreateStatisticSubmit() {
+    //This is to check if the user is inputing a valid username, but it wont work - see related validate service method
+    /*  
+     //Required Fields
+     if(this.validateService.validateUsername(this.username))
+     {
+       this.flashMessage.show('Please enter in a valid username', {cssClass: 'alert-danger', timeout: 3000});
+      return false;
+     }
+     */
     this.user = JSON.parse(localStorage.getItem('user'));
 
 
@@ -41,13 +52,13 @@ export class CreateStatisticsComponent implements OnInit {
         username: this.username,
         game: this.game,
         id: this.user.id
-
       }
 
     //Register Statistic
     this.authService.createStatistics(statistics).subscribe(data => {
       if (data.success) {
-        this.authService.getLeagueOfLegends(statistics).subscribe(data => {
+        //now calls league of legends api and passes the statistic data to it
+        this.authService.getLeagueOfLegends(data).subscribe(data => {
 
           if (data.success) {
             this.flashMessage.show(data.msg, { cssClass: 'alert-success', timeout: 3000 });
@@ -57,7 +68,7 @@ export class CreateStatisticsComponent implements OnInit {
           }
 
         });
-        // this.flashMessage.show('Statistics has been created', {cssClass: 'alert-success', timeout: 3000});
+       
 
       }
       else {
@@ -68,17 +79,13 @@ export class CreateStatisticsComponent implements OnInit {
 
   }
 
-  getLeagueofLegends(statistics) {
-    this.authService.getLeagueOfLegends(statistics).subscribe(data => {
 
-
-
-    });
-  }
   getGames() {
     this.authService.getAllGames().subscribe(data => {
       this.games = data.games;
-    })
+    });
   }
 
 }
+
+
