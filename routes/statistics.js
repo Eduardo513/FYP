@@ -16,7 +16,7 @@ router.put('/leagueoflegends', (req, res, next) => {
     var losses;
     var averagePlayTime;
     var summonerLevel;
-    var apiKey = 'RGAPI-faa71b5e-5aed-409e-ac73-0d3f92511489';
+    var apiKey = 'RGAPI-92405013-dd45-47df-b763-113b979d68eb';
     Statistics.getStatisticsById(realStatId, (err, statisticsObject) => {
         if (err) throw err;
 

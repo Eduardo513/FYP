@@ -11,10 +11,12 @@ import { AuthService } from '../../services/auth.service';
 })
 export class DashboardComponent implements OnInit {
   user;
-  statistics;
+  statistics = [];
   games;
-  stat1;
-  username;
+  stat1 = [];
+  username = [];
+  game;
+  id;
 
   constructor(
     private validateService: ValidateService,
@@ -30,18 +32,23 @@ export class DashboardComponent implements OnInit {
 
 
   getAllStatistics(){
+
+    
     this.user = JSON.parse(localStorage.getItem('user'));
     this.authService.getAllStatisticsId(this.user).subscribe(data =>{
-    this.stat1 = JSON.stringify(data.statistics[0][0]);
-    this.statistics = JSON.parse(this.stat1);
-   
-    console.log(this.user);
-    console.log(this.statistics);
-    this.username = this.statistics.username;
+      for(var i = 0; i < data.statistics.length; i++)
+      {
+  
+        this.stat1.push(JSON.stringify(data.statistics[i][0]));
+       this.statistics.push(JSON.parse(this.stat1[i]));
+       
+       
+      }
+      console.log(this.statistics[1]);
+ 
    });
 
   }
-
 
 
 }
