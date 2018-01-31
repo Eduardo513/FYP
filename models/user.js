@@ -23,6 +23,10 @@ const UserSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'Statistics'
     }],
+    friends :[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    }],
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);
@@ -52,4 +56,6 @@ module.exports.comparePassword = function(candidatePassword, hash, callback) {
         callback(null, isMatch);
     });
 }
+
+
 

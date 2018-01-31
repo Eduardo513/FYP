@@ -67,6 +67,36 @@ router.post('/authenticate', (req, res, next) => {
     });
 });
 
+//addFriendToUser
+
+router.post('/addFriend', (req, res, next) => {
+        const currentUserId = req.body.id;
+        const friendUsername = req.body.username;
+
+        User.getUserByUsername(friendUsername, (err, friendUser) =>{
+            if(err)
+                throw err;
+            if(!friendUser)
+            {
+                return res.json({ success: false, msg: 'User not found' })
+            }
+            else{
+                User.findOneAndUpdate({ _id: currentUserId },
+                    { $push: { friends: friendUser } }, (err, addedFriend) => {
+                        if (err)
+                            throw err;
+                       
+                        if(addedFriend)
+                        {
+                            return res.json({ success: true, msg: 'Friend added' })
+                        }
+                    });
+            }
+
+
+        });
+});
+
 //GetStatisticsFromUser
 router.put('/getAllStatisticsId', (req, res, next) => {
 

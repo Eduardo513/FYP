@@ -1,5 +1,13 @@
 <h2 class="page-header">Dashboard</h2>
 <p> Welcome to your dashboard</p>
+<form (submit)="onAddFriendSubmit()">
+    <h1>Add you friend by typing his username here</h1>
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" [(ngModel)]="username" name="username" class="form-control">
+    </div>
+    <input type ="submit" class="btn btn-primary" value="Add Friend">
+    </form>
 
 
 

@@ -10,13 +10,13 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  user;
+  user = JSON.parse(localStorage.getItem('user'));
   statistics = [];
   games;
   stat1 = [];
-  username = [];
   game;
   id;
+  username: String;
 
   constructor(
     private validateService: ValidateService,
@@ -34,7 +34,7 @@ export class DashboardComponent implements OnInit {
   getAllStatistics(){
 
     
-    this.user = JSON.parse(localStorage.getItem('user'));
+ 
     this.authService.getAllStatisticsId(this.user).subscribe(data =>{
       for(var i = 0; i < data.statistics.length; i++)
       {
@@ -44,10 +44,32 @@ export class DashboardComponent implements OnInit {
        
        
       }
-      console.log(this.statistics[1]);
  
    });
 
+  }
+
+  onAddFriendSubmit(){
+    
+    const friendData = 
+    {
+      id: this.user.id,
+      username: this.username
+    }
+    this.authService.addFriend(friendData).subscribe(data =>{
+      if(data.success)
+      {
+        this.flashMessage.show(data.msg ,{
+          cssClass: 'alert-success',
+           timeout: 5000});
+      }
+      else{
+        this.flashMessage.show(data.msg ,{
+          cssClass: 'alert-danger',
+           timeout: 5000});
+
+      }
+    });
   }
 
 
