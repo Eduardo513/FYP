@@ -82,11 +82,35 @@ export class AuthService {
     .map(res => res.json());
   }
 
-  getAllStatisticsId(user){
+  getAllStatistics(user){
     
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.put('http://localhost:3000/users/getAllStatisticsId', user, {headers: headers})
+    return this.http.put('http://localhost:3000/users/getAllStatistics', user, {headers: headers})
+    .map(res => res.json());
+  }
+
+  getAllFriends(user){
+    
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/users/getAllFriends', user, {headers: headers})
+    .map(res => res.json());
+  }
+
+  confirmFriendRequest(user){
+    
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/users/confirmFriendRequest', user, {headers: headers})
+    .map(res => res.json());
+  }
+
+  getAllFriendRequests(user){
+    
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/users/getAllFriendRequests', user, {headers: headers})
     .map(res => res.json());
   }
 

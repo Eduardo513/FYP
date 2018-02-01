@@ -23,6 +23,10 @@ const UserSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'Statistics'
     }],
+    friendRequests :[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    }],
     friends :[{
         type: mongoose.Schema.Types.ObjectId,
         ref:'User'

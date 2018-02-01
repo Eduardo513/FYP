@@ -3,27 +3,49 @@
 <form (submit)="onAddFriendSubmit()">
     <h1>Add you friend by typing his username here</h1>
     <div class="form-group">
-      <label>Username</label>
-      <input type="text" [(ngModel)]="username" name="username" class="form-control">
+        <label>Username</label>
+        <input type="text" [(ngModel)]="username" name="username" class="form-control">
     </div>
-    <input type ="submit" class="btn btn-primary" value="Add Friend">
-    </form>
+    <input type="submit" class="btn btn-primary" value="Add Friend">
+</form>
 
 
-
+<h2>Friends</h2>
 <ul class="list-group">
-   
-        <li class="list-group-item" *ngFor="let stat of statistics"  >
-            <h2>Statistics</h2>
-                <p>Username: {{ stat.username }} <br/>
-                Average Play Time: {{ stat.averagePlayTime }}<br/>
-                Games Played: {{ stat.gamesPlayed }}<br/>
-                Level: {{ stat.level }}<br/>
-            </p>
-                </li>
-     
-       
-  
-  </ul>
 
-  
+    <li class="list-group-item" *ngFor="let stat of statistics">
+        <h2>Statistics</h2>
+        <p>Username: {{ stat.username }}
+            <br/> Average Play Time: {{ stat.averagePlayTime }}
+            <br/> Games Played: {{ stat.gamesPlayed }}
+            <br/> Level: {{ stat.level }}
+            <br/>
+        </p>
+    </li>
+
+    <li class="list-group-item" *ngFor="let friend of friends">
+       
+        <p>Username: {{ friend.username }}
+            <br/>
+
+        </p>
+    </li>
+
+    <form (submit)="onAcceptFriendRequest()">
+    <li class="list-group-item" >
+        <h2>Your Friend Requests. Select a friend request to accept</h2>
+
+     
+        <div class="form-group">
+            <select [(ngModel)]="selectedFriend" name="selectedFriend">
+                <option *ngFor="let friend of friendRequests">
+                    {{friend.username}}
+                </option>
+            </select>
+        </div>
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </li>
+</form>
+
+
+</ul>
