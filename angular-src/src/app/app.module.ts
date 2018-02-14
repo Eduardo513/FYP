@@ -1,8 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
+import {BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
+
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -18,11 +20,14 @@ import {AuthService} from './services/auth.service';
 import {AuthGuard} from './guards/auth.guard';
 import { CreateGameComponent } from './components/create-game/create-game.component';
 import { CreateStatisticsComponent } from './components/create-statistics/create-statistics.component';
+import { PartyComponent } from './components/party/party.component';
+
 
 
 const appRoutes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'create-statistics', component: CreateStatisticsComponent, canActivate:[AuthGuard]},
+  {path: 'party', component: PartyComponent, canActivate:[AuthGuard]},
   {path: 'create-game', component: CreateGameComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
@@ -40,7 +45,8 @@ const appRoutes: Routes = [
     DashboardComponent,
     ProfileComponent,
     CreateGameComponent,
-    CreateStatisticsComponent
+    CreateStatisticsComponent,
+    PartyComponent
   ],
   imports: [
     BrowserModule,

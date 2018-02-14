@@ -1,0 +1,23 @@
+<html>
+  <h1>Create a Party</h1>
+  <p>Select the friends you wish to invite</p>
+  <div>
+      <form ng-submit="submit()" ng-controller="AppCtrl" ng-cloak>
+<p>Party accessibility</p>
+          <md-radio-group >
+              
+                    <md-radio-button value="True"> Private</md-radio-button>
+                    <md-radio-button value="False"> Public </md-radio-button>
+              
+                  </md-radio-group>
+
+          <li class="list-group-item" *ngFor="let friend of friends">
+  
+          <p>Username: {{ friend.username }}
+              <br/>
+  
+          </p>
+      </li>
+      </form>
+  </div>
+</html>
