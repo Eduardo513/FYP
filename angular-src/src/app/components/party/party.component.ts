@@ -3,6 +3,8 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 import { Router } from '@angular/router';
 import {ValidateService} from '../../services/validate.service';
 import { AuthService } from '../../services/auth.service';
+import {FormControl} from '@angular/forms';
+
 
 @Component({
   selector: 'app-party',
@@ -11,11 +13,19 @@ import { AuthService } from '../../services/auth.service';
   encapsulation: ViewEncapsulation.None
 })
 export class PartyComponent implements OnInit {
+  selectedFriends = [];
+  minDate;
   user = JSON.parse(localStorage.getItem('user'));
+  public = String;
   friends = [];
-data = {
-  group1: 'Banana'
-}
+  multipleFriends = new FormControl();
+  selectedDate;
+  test = true;
+  selectedAccessibility = String;
+  accessibilityOptions = [
+    'Public',
+    'Private', ]
+
 
 
   constructor(private validateService: ValidateService,
@@ -25,6 +35,7 @@ data = {
 
   ngOnInit() {
     this.getAllFriends();
+    this.getDate();
   }
 
 getAllFriends(){
@@ -36,5 +47,24 @@ getAllFriends(){
 
     });
 
+  }
+
+  getDate(){//grabs current date and assinged in to mindate so user can not select a date in the past.
+    var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+    var formattedDate = new Date(utc);
+    this.minDate = formattedDate;
+    
+ 
+  }
+
+  submitForm(){
+    for(var i = 0; i < this.selectedFriends.length; i++)
+    {
+      console.log(this.selectedFriends[i]);
+   
+    }
+    console.log(this.selectedDate);
+    console.log(this.selectedAccessibility);
+  
   }
 }

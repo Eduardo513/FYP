@@ -1,23 +1,42 @@
 <html>
   <h1>Create a Party</h1>
   <p>Select the friends you wish to invite</p>
-  <div>
-      <form ng-submit="submit()" ng-controller="AppCtrl" ng-cloak>
+ 
+   
 <p>Party accessibility</p>
-          <md-radio-group >
-              
-                    <md-radio-button value="True"> Private</md-radio-button>
-                    <md-radio-button value="False"> Public </md-radio-button>
-              
-                  </md-radio-group>
+<div class="example-container">
+    <form class="example-container" >
+     
+        
+<mat-radio-group aria-label="Party accessibility" [(ngModel)]="selectedAccessibility" name="access">
+    <mat-radio-button *ngFor="let access of accessibilityOptions" [value]="access" required>
+        {{access}}
+      
+    </mat-radio-button>
+   
+  </mat-radio-group>
+</form>
 
-          <li class="list-group-item" *ngFor="let friend of friends">
-  
-          <p>Username: {{ friend.username }}
-              <br/>
-  
-          </p>
-      </li>
-      </form>
+<mat-form-field>
+      
+        <input matInput [min]="minDate" [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="selectedDate" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+
+
+</mat-form-field>
+
+<mat-form-field>
+
+
+    <mat-select placeholder="Friends" [(ngModel)]="selectedFriends" multiple required >
+      <mat-option *ngFor="let friend of friends" [value]="friend">{{friend.username}}</mat-option>
+    </mat-select>
+
+  </mat-form-field>
+<div *ngIf="selectedFriends.length > 0 &&  selectedDate != undefined && (selectedAccessibility == 'Public' || selectedAccessibility == 'Private') ">
+  <button  type="submit" (click)="submitForm()"  mat-raised-button color="primary">Submit</button>
+</div>
   </div>
+
 </html>
