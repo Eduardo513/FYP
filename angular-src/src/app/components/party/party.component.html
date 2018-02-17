@@ -1,42 +1,53 @@
 <html>
-  <h1>Create a Party</h1>
-  <p>Select the friends you wish to invite</p>
- 
-   
+<h1>Create a Party</h1>
+<p>Select the friends you wish to invite</p>
+
+
 <p>Party accessibility</p>
 <div class="example-container">
-    <form class="example-container" >
-     
-        
-<mat-radio-group aria-label="Party accessibility" [(ngModel)]="selectedAccessibility" name="access">
-    <mat-radio-button *ngFor="let access of accessibilityOptions" [value]="access" required>
-        {{access}}
-      
-    </mat-radio-button>
-   
-  </mat-radio-group>
-</form>
+    <form class="example-container">
 
-<mat-form-field>
-      
+
+        <mat-radio-group aria-label="Party accessibility" [(ngModel)]="selectedAccessibility" name="access">
+            <mat-radio-button *ngFor="let access of accessibilityOptions" [value]="access" required>
+                {{access}}
+
+            </mat-radio-button>
+
+        </mat-radio-group>
+    </form>
+
+    <mat-form-field>
+
         <input matInput [min]="minDate" [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="selectedDate" required>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
 
 
-</mat-form-field>
+    </mat-form-field>
 
-<mat-form-field>
+    <mat-form-field>
+        <mat-select placeholder="Friends" [(ngModel)]="selectedFriends" multiple required>
+            <mat-option *ngFor="let friend of friends" [value]="friend">{{friend.username}}</mat-option>
+        </mat-select>
+
+    </mat-form-field>
+
+    <mat-form-field>
+            
+            
+                <mat-select placeholder="Game" [(ngModel)]="selectedGame" required >
+                  <mat-option *ngFor="let game of games" [value]="game">{{game.name}}</mat-option>
+                </mat-select>
+            
+              </mat-form-field>
+    <div *ngIf="selectedFriends.length > 0 &&  selectedDate != undefined && selectedGame != undefined &&(selectedAccessibility == 'Public' || selectedAccessibility == 'Private') ">
+     
+        <button type="submit" (click)="submitForm()" mat-raised-button color="primary">Create Party</button>
+
+    </div>
 
 
-    <mat-select placeholder="Friends" [(ngModel)]="selectedFriends" multiple required >
-      <mat-option *ngFor="let friend of friends" [value]="friend">{{friend.username}}</mat-option>
-    </mat-select>
-
-  </mat-form-field>
-<div *ngIf="selectedFriends.length > 0 &&  selectedDate != undefined && (selectedAccessibility == 'Public' || selectedAccessibility == 'Private') ">
-  <button  type="submit" (click)="submitForm()"  mat-raised-button color="primary">Submit</button>
 </div>
-  </div>
 
 </html>

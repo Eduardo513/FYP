@@ -16,12 +16,12 @@ export class PartyComponent implements OnInit {
   selectedFriends = [];
   minDate;
   user = JSON.parse(localStorage.getItem('user'));
-  public = String;
   friends = [];
   multipleFriends = new FormControl();
   selectedDate;
-  test = true;
-  selectedAccessibility = String;
+  selectedGame;
+  games;
+  selectedAccessibility;
   accessibilityOptions = [
     'Public',
     'Private', ]
@@ -36,6 +36,7 @@ export class PartyComponent implements OnInit {
   ngOnInit() {
     this.getAllFriends();
     this.getDate();
+    this.getGames();
   }
 
 getAllFriends(){
@@ -58,13 +59,40 @@ getAllFriends(){
   }
 
   submitForm(){
-    for(var i = 0; i < this.selectedFriends.length; i++)
-    {
-      console.log(this.selectedFriends[i]);
-   
+    var isPartyPublic;
+
+    if(this.selectedAccessibility == "Public"){
+      isPartyPublic = true;
     }
-    console.log(this.selectedDate);
-    console.log(this.selectedAccessibility);
+    else{
+      isPartyPublic = false;
+    }
+
+    const party =
+    {
+      partyCreator: this.user,
+      partyMembers: this.selectedFriends,
+      game: this.selectedGame,
+      date: this.selectedDate,
+      accessibility: isPartyPublic
+    }
+
+    this.authService.createParty(party).subscribe(data => {
+      if (data.success) {
+        this.flashMessage.show(data.msg, { cssClass: 'alert-success', timeout: 3000 });
+      }
+      else {
+        this.flashMessage.show('Something went wrong', { cssClass: 'alert-danger', timeout: 3000 });
+
+      }
+    });
+
   
+  }
+
+  getGames() {
+    this.authService.getAllGames().subscribe(data => {
+      this.games = data.games;
+    });
   }
 }

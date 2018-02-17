@@ -216,10 +216,7 @@ router.post('/getAllFriendRequests', (req, res, next) => {
                 for (var i = 0; i < user.friendRequests.length; i++) {
 
                     //gets the statistics object from the id
-                    User.find({
-                        '_id': {
-                            $in: [(user.friendRequests[i])]
-                        }
+                    User.find({ '_id': {    $in: [(user.friendRequests[i])]   }
                     }, function (err, friendRequest) {
                         if (err)
                             throw err;

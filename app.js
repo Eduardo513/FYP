@@ -11,6 +11,7 @@ const app = express();
 const users = require('./routes/users');
 const games = require('./routes/games');
 const statistics = require('./routes/statistics');
+const partys = require('./routes/partys');
 
 
 // Connect to Database
@@ -50,6 +51,8 @@ app.use('/users', users);
 app.use('/games', games);
 
 app.use('/statistics', statistics);
+
+app.use('/partys', partys);
 
 //Index Route
 app.get('/', (req, res) =>{

@@ -21,7 +21,7 @@ const PartySchema = mongoose.Schema({
     },
     public :{
         type: Boolean,
-        required: true
+        
     },
 
 });

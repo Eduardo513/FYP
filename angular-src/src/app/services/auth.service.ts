@@ -41,6 +41,14 @@ export class AuthService {
       .map(res => res.json());
   }
 
+  createParty(party)
+  {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/partys/create-party', party, {headers: headers})
+      .map(res => res.json());
+  }
+
   addFriend(friendData)
   {
     let headers = new Headers();
