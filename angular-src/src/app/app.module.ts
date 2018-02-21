@@ -4,14 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatButtonModule, MatCheckboxModule} from '@angular/material';
-import {MatRadioModule} from '@angular/material/radio';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatIconModule} from '@angular/material/icon';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatNativeDateModule} from '@angular/material'; //this is an implementation of the datepicker above that allows us to take in user input as javascript date objects when selecting from a calender
-import {MatInputModule} from '@angular/material';
+import { AppMaterialModules } from './material.module'; //imports all of materials from the materials module
+// import {MatButtonModule, MatCheckboxModule} from '@angular/material';
+// import {MatRadioModule} from '@angular/material/radio';
+// import {MatFormFieldModule} from '@angular/material/form-field';
+// import {MatSelectModule} from '@angular/material/select';
+// import {MatIconModule} from '@angular/material/icon';
+// import {MatDatepickerModule} from '@angular/material/datepicker';
+// import {MatNativeDateModule} from '@angular/material'; //this is an implementation of the datepicker above that allows us to take in user input as javascript date objects when selecting from a calender
+// import {MatInputModule} from '@angular/material';
+// import {MatTabsModule} from '@angular/material/tabs';
+// import {MatTableModule} from '@angular/material/table';
 
 
 import { AppComponent } from './app.component';
@@ -63,15 +66,18 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     FlashMessagesModule,
     BrowserAnimationsModule,
-    MatButtonModule,
-    MatRadioModule, 
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatIconModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatInputModule
+    AppMaterialModules
+    // MatButtonModule,
+    // MatRadioModule, 
+    // MatCheckboxModule,
+    // MatFormFieldModule,
+    // MatSelectModule,
+    // MatIconModule,
+    // MatDatepickerModule,
+    // MatNativeDateModule,
+    // MatInputModule,
+    // MatTabsModule,
+    // MatTableModule
   ],
   providers: [ValidateService, AuthService, AuthGuard],
   bootstrap: [AppComponent]

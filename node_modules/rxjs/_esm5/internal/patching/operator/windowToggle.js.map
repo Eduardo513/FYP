@@ -1,0 +1,1 @@
+{"version":3,"file":"windowToggle.js","sourceRoot":"","sources":["../../../../src/internal/patching/operator/windowToggle.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,YAAY,IAAI,WAAW,EAAE,MAAM,8BAA8B,CAAC;AAE3E;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;GAwCG;AACH,MAAM,uBAAkD,QAAuB,EAC5C,eAAkD;IACnF,MAAM,CAAC,WAAW,CAAC,QAAQ,EAAE,eAAe,CAAC,CAAC,IAAI,CAA8B,CAAC;AACnF,CAAC"}

@@ -42,6 +42,11 @@ module.exports.getPartyByStartDate = function(startDate, callback){
     Party.find(query, callback);
 }
 
+module.exports.getPartyByPublic = function(public, callback){
+    const query = {public: public}
+    Party.find(query, callback);
+}
+
 module.exports.addParty = function(newParty, callback){
     newParty.save(callback);
 }

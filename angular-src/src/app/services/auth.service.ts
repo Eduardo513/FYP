@@ -90,11 +90,25 @@ export class AuthService {
     .map(res => res.json());
   }
 
+  getAllPublicParties(){
+    let headers = new Headers();
+    return this.http.get('http://localhost:3000/partys/getPublicParties', {headers: headers})
+    .map(res => res.json());
+  }
+
   getAllStatistics(user){
     
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     return this.http.put('http://localhost:3000/users/getAllStatistics', user, {headers: headers})
+    .map(res => res.json());
+  }
+
+  getPartyInString(party){
+    
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/partys/getPartyInString', party, {headers: headers})
     .map(res => res.json());
   }
 
