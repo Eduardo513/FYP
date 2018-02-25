@@ -33,8 +33,12 @@ router.post('/create-party', (req, res, next) => {
 
 //AllPublicParties
 router.get('/getPublicParties', (req, res, next) => {
-   
-
+    
+    var rsapi = require('rs-api');
+    rsapi.osrs.player.hiscores('eduardo513').then(
+        function (stats) {
+            console.log(stats.skills.overall.level)
+        }).catch(console.error);
     Party.getPartyByPublic(true, (err, parties) => {
         if (err)
             throw err
@@ -55,7 +59,7 @@ router.get('/getPublicParties', (req, res, next) => {
 //PartyInformationInStringFormatFromObject
 //this parses all the object ids from the party object and returns it in readable string formats for display
 router.post('/getPartyInString', (req, res, next) => {
-
+    
 
     User.findById(req.body.partyCreator, (err, partyCreatorObject) => {
         if (err)

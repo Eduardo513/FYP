@@ -58,6 +58,7 @@ export class CreateStatisticsComponent implements OnInit {
     this.authService.createStatistics(statistics).subscribe(data => {
       if (data.success) {
         //now calls league of legends api and passes the statistic data to it
+        if(this.game == "Leagueoflegends"){
         this.authService.getLeagueOfLegends(data).subscribe(data => {
 
           if (data.success) {
@@ -68,7 +69,20 @@ export class CreateStatisticsComponent implements OnInit {
           }
 
         });
-       
+      }
+      //change this to else if or a switch statment once include more games
+      else{
+        this.authService.getRunescape(data).subscribe(data => {
+          
+                    if (data.success) {
+                      this.flashMessage.show(data.msg, { cssClass: 'alert-success', timeout: 3000 });
+                    }
+                    else {
+                      this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });
+                    }
+          
+                  });
+      }
 
       }
       else {

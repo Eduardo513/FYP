@@ -150,6 +150,7 @@ export class PartyComponent implements OnInit {
   }
 
   getPublicParties(array) {
+ 
 
     this.authService.getAllPublicParties().subscribe(data => {
 

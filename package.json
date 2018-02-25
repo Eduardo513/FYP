@@ -7,17 +7,16 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app"
   },
-  "dependencies":{
-    "express":"*",
-    "mongoose":"*",
-    "bcryptjs":"*",
-    "cors":"*",
-    "jsonwebtoken":"*",
-    "body-parser":"*",
-    "passport":"*",
-    "passport-jwt":"*"
-
-
+  "dependencies": {
+    "bcryptjs": "*",
+    "body-parser": "*",
+    "cors": "*",
+    "express": "*",
+    "jsonwebtoken": "*",
+    "mongoose": "*",
+    "passport": "*",
+    "passport-jwt": "*",
+    "rs-api": "^2.4.5"
   },
   "author": "Eddy Tafner",
   "license": "ISC"

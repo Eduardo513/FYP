@@ -24,6 +24,12 @@ const StatisticsSchema = mongoose.Schema({
     averagePlayTime :{
         type:String,
     },
+    rank :{
+        type:String,
+    },
+    runescape :{
+        type:{}
+    },
     game :{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Game'

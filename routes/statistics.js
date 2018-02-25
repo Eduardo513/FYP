@@ -10,6 +10,33 @@ const User = require('../models/user');
 
 //GetStats from LeagueOfLegends
 
+router.put('/runescape', (req, res, next)=>{
+    var username;
+    var rsapi = require('rs-api');
+    Statistics.getStatisticsById(req.body.statId, (err, statisticsObject) => {
+        if (err) throw err;
+
+        if (statisticsObject) {
+            username = statisticsObject.username;
+            rsapi.osrs.player.hiscores(username).then(
+                function (stats) {
+                    
+                    Statistics.findOneAndUpdate({ _id: statisticsObject._id },
+                        { $set: { runescape: stats, rank: stats.skills.overall.rank, level: stats.skills.overall.level } }, { new: true }, (err, statistic) => {
+                            if (err)
+                                throw err;
+                            else {
+                                res.json({success: true, msg: "Statistic Created Succesfully: All Data Saved" });
+                            }  
+                        });
+                   
+            }).catch(console.error);
+
+        }
+    
+   
+    });
+});
 router.put('/leagueoflegends', (req, res, next) => {
     var realStatId = req.body.statId;
     var wins;
@@ -60,41 +87,7 @@ router.put('/leagueoflegends', (req, res, next) => {
                                             }
                                         });
 
-                                    /*   //      This is attempting to get the win loss ratio for the particapnts but its very difficult, come back later
-                                    for (var i = 0; i < 1; i++) {
-
-                                        Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matches/', data.matches[i].gameId, apiKey, (err, data) => {
-                                            if(err)
-                                                throw err;
-
-                                            if(data){
-                                                if ("status" in data) {
-                                                    console.log("Error: " + data.status.status_code);
-                                                }
-                                                else{
-                                                    for (var i = 0; i < 10; i++) {
-                                                      
-                                                        // console.log(data.participantIdentities[i].player.summonerName);
-                                                        // if(data.participantIdentities[i].player.summonerName == "Mr Garnz")
-                                                        // {
-                                                        //     console.log(data.participantIdentities[i].participantId);
-                                                          
-                                                        //     if(data.participantIdentities[i].participantId <= 5 )
-                                                        //      console.log(data.teams[0].win);
-                                                        //     else{
-                                                        //         console.log(data.teams[1].win);
-                                                        //     }
-                                                        //      //console.log(data.participantIdentities[i].player.summonerName)
-                                                        //  }
-                                                         
-                                                    }
-                                                
-                                                }
-                                            }
-                                        });
-                                 
-                                    }
-                                    */
+                                
                                 }
                             }
                         });
@@ -110,53 +103,7 @@ router.put('/leagueoflegends', (req, res, next) => {
     });
 
 
-    /*
-
-    request('https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + username + '?api_key=RGAPI-76b3eca2-9f6f-4c05-a5b2-775458d33f92', function (err, res, body) {
-       
-        var summonerObj = JSON.parse(body);
-        console.log(summonerObj);
-      
-
-
-            accountId = summonerObj.accountId;
-
-            request('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/' + accountId + '/?api_key=RGAPI-76b3eca2-9f6f-4c05-a5b2-775458d33f92', function (err, res, body) {
-                matches = JSON.parse(body);
-                console.log(matches);
-                
-              
-                    
-                    console.log(matches.matches.length);
-
-                    for (var i = 0; i < matches.matches.length; i++) {
-                        var match = matches.matches[i];
-                        console.log(match);
-
-                        request('https://euw1.api.riotgames.com/lol/match/v3/matches/' + matches.matches[i].gameId + '/?api_key=RGAPI-76b3eca2-9f6f-4c05-a5b2-775458d33f92', function (err, res, body) {
-                            var matcheInfo = JSON.parse(body);
-
-                            if (matcheInfo.gameDuration != null) {
-                                allMatchTime = allMatchTime + matcheInfo.gameDuration;
-                                console.log(allMatchTime);
-                            
-                            }
-
-                            //console.log(matcheInfo.gameDuration);
-                            //console.log(matches);
-                            // for (var i=0;i<100;i++) {
-                            //var match = matches.matches[i];
-                            //  console.log(match);
-                            // }
-                        });
-                    }
-                   
-                
-            });
-
-        
-    });
-*/
+  
 });
 //CreateStatistic
 router.post('/create-statistics', (req, res, next) => {
@@ -209,5 +156,4 @@ router.post('/create-statistics', (req, res, next) => {
 });
 
 module.exports = router;
-
 
