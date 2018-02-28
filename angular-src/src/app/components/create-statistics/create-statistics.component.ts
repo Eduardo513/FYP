@@ -18,6 +18,7 @@ export class CreateStatisticsComponent implements OnInit {
   game: Object;
   test: String;
   games;
+  gameSelected;
 
 
 
@@ -30,11 +31,13 @@ export class CreateStatisticsComponent implements OnInit {
 
   ngOnInit() {
     this.getGames();
+  
 
 
   }
 
   onCreateStatisticSubmit() {
+    console.log(this.gameSelected);
     //This is to check if the user is inputing a valid username, but it wont work - see related validate service method
     /*  
      //Required Fields
@@ -57,40 +60,45 @@ export class CreateStatisticsComponent implements OnInit {
     //Register Statistic
     this.authService.createStatistics(statistics).subscribe(data => {
       if (data.success) {
-        //now calls league of legends api and passes the statistic data to it
-        if(this.game == "Leagueoflegends"){
-        this.authService.getLeagueOfLegends(data).subscribe(data => {
+        switch(this.game){
 
-          if (data.success) {
-            this.flashMessage.show(data.msg, { cssClass: 'alert-success', timeout: 3000 });
-          }
-          else {
-            this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });
-          }
+          case "LeagueOfLegends":
+          this.authService.getLeagueOfLegends(data).subscribe(data => {
+            this.flashMessageOutput(data);
+           });
+           break;
 
-        });
+           case "Runescape":
+           this.authService.getRunescape(data).subscribe(data => {
+             this.flashMessageOutput(data);
+           });
+           break;
+
+
+           //now add all the games here.
+           case "CounterStrike":
+           this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });
+           break;
+
+        }
       }
-      //change this to else if or a switch statment once include more games
       else{
-        this.authService.getRunescape(data).subscribe(data => {
-          
-                    if (data.success) {
-                      this.flashMessage.show(data.msg, { cssClass: 'alert-success', timeout: 3000 });
-                    }
-                    else {
-                      this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });
-                    }
-          
-                  });
+        this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });
       }
+      
+      });
+    }
+      
+        
 
-      }
-      else {
-        this.flashMessage.show('Something went wrong', { cssClass: 'alert-danger', timeout: 3000 });
-
-      }
-    });
-
+  flashMessageOutput(data)
+  {
+    if (data.success) {
+      this.flashMessage.show(data.msg, { cssClass: 'alert-success', timeout: 3000 });
+    }
+    else {
+      this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });
+    }
   }
 
 

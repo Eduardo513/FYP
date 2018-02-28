@@ -19,8 +19,14 @@ module.exports.getGameById = function(id, callback){
 }
 
 module.exports.getGameByName = function(name, callback){
-    const query = {name: name}
-    Game.findOne(query, callback);
+    return new Promise((resolve, reject) =>{
+        const query = {name: name}
+        Game.findOne(query, (err, game) =>{
+            if(err) return reject(err);
+            return resolve(game);
+        });
+    });
+    
 }
 
 module.exports.getGameByGenre = function(genre, callback){

@@ -43,6 +43,17 @@ module.exports.getStatisticsById = function(id, callback){
     Statistics.findById(id, callback);
 };
 
+module.exports.getGameByStatisticsId = function(id, callback){
+   
+    return new Promise((resolve, reject) => {
+        Statistics.findById(id, (err, stats) =>{
+            if(err) return reject(err);
+            return resolve(stats.game);
+        });
+    });
+   
+};
+
 module.exports.getStatisticsByUsername = function(username, callback){
     const query = {username: username}
     Statistics.findOne(query, callback);

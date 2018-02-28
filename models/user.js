@@ -39,6 +39,16 @@ module.exports.getUserById = function(id, callback){
     User.findById(id, callback);
 }
 
+module.exports.getAllStatisticsByUserId = function(id, callback){
+    return new Promise((resolve, reject) => {
+        User.findById(id, (err, user) =>{
+            if(err) return reject(err);
+            return resolve(user.statistics);
+        });
+    });
+
+}
+
 module.exports.getUserByUsername = function(username, callback){
     const query = {username: username}
     User.findOne(query, callback);

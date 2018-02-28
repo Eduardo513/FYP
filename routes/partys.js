@@ -34,11 +34,12 @@ router.post('/create-party', (req, res, next) => {
 //AllPublicParties
 router.get('/getPublicParties', (req, res, next) => {
     
-    var rsapi = require('rs-api');
-    rsapi.osrs.player.hiscores('eduardo513').then(
-        function (stats) {
-            console.log(stats.skills.overall.level)
-        }).catch(console.error);
+    var owjs = require('overwatch-js');
+    
+   //// Search for a player ( you must have the exact username, if not Blizzard api will return a not found status)
+   owjs.getOverall('pc', 'eu', 'Garnz-1534')
+       .then((data) => console.dir(data, {depth : 2, colors : true}) );
+
     Party.getPartyByPublic(true, (err, parties) => {
         if (err)
             throw err

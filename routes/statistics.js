@@ -1,3 +1,5 @@
+
+
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -10,7 +12,7 @@ const User = require('../models/user');
 
 //GetStats from LeagueOfLegends
 
-router.put('/runescape', (req, res, next)=>{
+router.put('/runescape', (req, res, next) => {
     var username;
     var rsapi = require('rs-api');
     Statistics.getStatisticsById(req.body.statId, (err, statisticsObject) => {
@@ -20,21 +22,21 @@ router.put('/runescape', (req, res, next)=>{
             username = statisticsObject.username;
             rsapi.osrs.player.hiscores(username).then(
                 function (stats) {
-                    
+
                     Statistics.findOneAndUpdate({ _id: statisticsObject._id },
                         { $set: { runescape: stats, rank: stats.skills.overall.rank, level: stats.skills.overall.level } }, { new: true }, (err, statistic) => {
                             if (err)
                                 throw err;
                             else {
-                                res.json({success: true, msg: "Statistic Created Succesfully: All Data Saved" });
-                            }  
+                                res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
+                            }
                         });
-                   
-            }).catch(console.error);
+
+                }).catch(console.error);
 
         }
-    
-   
+
+
     });
 });
 router.put('/leagueoflegends', (req, res, next) => {
@@ -56,7 +58,7 @@ router.put('/leagueoflegends', (req, res, next) => {
                 if (data) {
                     if ("status" in data) {
                         console.log("Error: " + data.status.status_code);
-                        res.json({success: false, msg: "Something Went Wrong" });
+                        res.json({ success: false, msg: "Something Went Wrong" });
                     }
                     else {
                         //grabs level off the data to update later
@@ -69,7 +71,7 @@ router.put('/leagueoflegends', (req, res, next) => {
                             if (data) {
                                 if ("status" in data) {
                                     console.log("Error: " + data.status.status_code);
-                                    res.json({success: false, msg: "Something Went Wrong" });
+                                    res.json({ success: false, msg: "Something Went Wrong" });
                                 }
                                 else {
                                     //average time per game of league is 30 mins
@@ -80,14 +82,14 @@ router.put('/leagueoflegends', (req, res, next) => {
                                             if (err)
                                                 throw err;
                                             else {
-                                                res.json({success: true, msg: "Statistic Created Succesfully: All Data Saved" });
+                                                res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
                                                 console.log(statistic)
-                                               
+
 
                                             }
                                         });
 
-                                
+
                                 }
                             }
                         });
@@ -103,25 +105,73 @@ router.put('/leagueoflegends', (req, res, next) => {
     });
 
 
-  
+
 });
 //CreateStatistic
 router.post('/create-statistics', (req, res, next) => {
 
+    var j = 0;
+    var statisticsExists = false; // boolean used to check if statistics object was already created for that user for that game.
     const name = req.body.game;
     const currentUserId = req.body.id;
+    var emptyStats = false;
+
+
+
+
+
+
+
+
+
+
+
 
     //add validation here to check if game already exists for logged in user
 
-    Game.getGameByName(name, (err, gameObj) => {
+    Game.getGameByName(name)
+        .then(gameObj => {
+               
 
-        if (err) {
-            throw err;
-        }
-        if (!gameObj) {
-            return res.json({ success: false, msg: 'Game not found:' })
-        }
+            User.getAllStatisticsByUserId(currentUserId)
+                .then(stats => {
+              if(stats.length == 0)
+              tester(gameObj);
+              else{
 
+              
+
+
+                    for (var i = 0; i < stats.length; i++) {
+                        
+                        Statistics.getGameByStatisticsId(stats[i]).then(game => {
+                           j = j + 1;
+                           if(game == gameObj.id)
+                           {
+                               statisticsExists = true;
+                               
+                               res.json({ success: false, msg: 'You have already created Statistics for that game.' });
+                               
+                           }
+                        
+                           if(!statisticsExists && j == stats.length)
+                             saveStatistics(gameObj)
+                        });
+
+                     
+                    }
+                    
+                }
+                })
+               
+            
+
+        });
+
+       
+
+    function saveStatistics(gameObj) {
+        
         let newStatistics = new Statistics
             ({
                 username: req.body.username,
@@ -148,12 +198,16 @@ router.post('/create-statistics', (req, res, next) => {
                     throw err;
 
 
-            });
+            }
 
+        );
 
-    });
+    }
+
 
 });
+
+
 
 module.exports = router;
 
