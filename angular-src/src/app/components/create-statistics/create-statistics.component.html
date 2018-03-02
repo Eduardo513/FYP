@@ -22,21 +22,36 @@
 
   </mat-tab>
   <mat-tab label="OldSchool Runescape">
-      <h2 class="page-header">Create a Statistic</h2>
-      <form (submit)="onCreateStatisticSubmit()">
-          <div class="form-group" >
-              <label>Username</label>
-              <input type="text" [(ngModel)]="username" name="username" class="form-control">
-              <select [(ngModel)]="selectedGame" name="game">
-                  <option *ngFor="let game of games">
-                    </option>
-              </select>
-            </div>
-           
-        </form>
+    <mat-list *ngFor="let stat of statistics">
+      <div *ngFor="let game of games">
+   
+          <div *ngIf="validateCertainGameAndStats(game, stat, 'Runescape')">
+        
+       
+      <mat-list-item> Game: {{ game.name }} </mat-list-item>
+      <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
+      <mat-list-item> Level: {{ stat.level }} </mat-list-item>
+      <mat-list-item> Username:{{ stat.username }} </mat-list-item>
+   </div>
+    
+    </div>
+    </mat-list>
   </mat-tab>
   <mat-tab label="Overwatch">
-
+      <mat-list *ngFor="let stat of statistics">
+          <div *ngFor="let game of games">
+       
+              <div *ngIf="validateCertainGameAndStats(game, stat, 'Overwatch')">
+            
+           
+          <mat-list-item> Game: {{ game.name }} </mat-list-item>
+          <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
+          <mat-list-item> Level: {{ stat.level }} </mat-list-item>
+          <mat-list-item> Username:{{ stat.username }} </mat-list-item>
+       </div>
+        
+        </div>
+        </mat-list>
   </mat-tab>
 </mat-tab-group>
 

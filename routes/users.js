@@ -56,7 +56,9 @@ router.post('/authenticate', (req, res, next) => {
                         id: user._id,
                         name: user.name,
                         username: user.username,
-                        email: user.email
+                        email: user.email,
+                        statistics: user.statistics,
+                        friends: user.friends
                     }
                 });
             }
@@ -302,7 +304,7 @@ router.post('/getAllFriends', (req, res, next) => {
 
 //GetStatisticsFromUser
 router.put('/getAllStatistics', (req, res, next) => {
-
+   
 
     const user = req.body;
     var allStatistics = [];
@@ -313,6 +315,7 @@ router.put('/getAllStatistics', (req, res, next) => {
         if (err)
             throw err;
         if (user) {
+            
 
             if (!user.statistics) {
                 res.json({ success: false, message: 'No Statistics Found.' });

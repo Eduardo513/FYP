@@ -30,6 +30,9 @@ const StatisticsSchema = mongoose.Schema({
     runescape :{
         type:{}
     },
+    overwatch :{
+        type:{}
+    },
     game :{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Game'

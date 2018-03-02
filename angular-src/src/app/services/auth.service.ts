@@ -88,6 +88,13 @@ export class AuthService {
     return this.http.put('http://localhost:3000/statistics/runescape', statId, {headers: headers})
     .map(res => res.json());
   }
+
+  getOverwatch(statId){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/statistics/overwatch', statId, {headers: headers})
+    .map(res => res.json());
+  }
   
   getAllGames(){
     let headers = new Headers();

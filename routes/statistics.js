@@ -12,6 +12,32 @@ const User = require('../models/user');
 
 //GetStats from LeagueOfLegends
 
+router.put('/overwatch', (req, res, next) =>{
+    var username = req.body.username;
+    var timePlayed;
+    var owjs = require('overwatch-js');
+
+    Statistics.getStatisticsById(req.body.statId, (err, statisticsObject) => {
+        if (err) throw err;
+        if(statisticsObject){
+            owjs.getOverall('pc', 'eu', statisticsObject.username)
+            .then((overwatchStats) => 
+             timePlayed = 
+                Statistics.findOneAndUpdate({ _id: statisticsObject._id },              //time needs to be divided by this to be accurate         //level is the tier times 100 plus what the level from the api is
+                { $set: { overwatch: overwatchStats, averagePlayTime: (((overwatchStats.quickplay.global.time_played / 60)/60)/1000), level: (((overwatchStats.profile.tier)*100) + overwatchStats.profile.level) } }, { new: true }, (err, statistic) => {
+                    if (err)
+                        throw err;
+                    else {
+                        res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
+                    }
+                }));
+            // .then((data) => console.dir(data, {depth : 2, colors : true}) );
+        }
+    });
+   //// Search for a player ( you must have the exact username, if not Blizzard api will return a not found status)
+   
+});
+
 router.put('/runescape', (req, res, next) => {
     var username;
     var rsapi = require('rs-api');
@@ -21,10 +47,10 @@ router.put('/runescape', (req, res, next) => {
         if (statisticsObject) {
             username = statisticsObject.username;
             rsapi.osrs.player.hiscores(username).then(
-                function (stats) {
+                function (runescapeStats) {
 
                     Statistics.findOneAndUpdate({ _id: statisticsObject._id },
-                        { $set: { runescape: stats, rank: stats.skills.overall.rank, level: stats.skills.overall.level } }, { new: true }, (err, statistic) => {
+                        { $set: { runescape: runescapeStats, rank: runescapeStats.skills.overall.rank, level: runescapeStats.skills.overall.level } }, { new: true }, (err, statistic) => {
                             if (err)
                                 throw err;
                             else {
@@ -118,25 +144,16 @@ router.post('/create-statistics', (req, res, next) => {
 
 
 
-
-
-
-
-
-
-
-
-
-    //add validation here to check if game already exists for logged in user
-
+    //validation to see if statistics is already created with that game for that user
+    //get game object by name
     Game.getGameByName(name)
         .then(gameObj => {
                
-
+            //retrieves all the statistics for the user
             User.getAllStatisticsByUserId(currentUserId)
                 .then(stats => {
-              if(stats.length == 0)
-              tester(gameObj);
+              if(stats.length == 0)//if not stats are created then create stats
+              saveStatistics(gameObj);
               else{
 
               
@@ -153,7 +170,7 @@ router.post('/create-statistics', (req, res, next) => {
                                res.json({ success: false, msg: 'You have already created Statistics for that game.' });
                                
                            }
-                        
+                           //if all the stats have been looked at and none of them equal the one the user is trying to create then create stats
                            if(!statisticsExists && j == stats.length)
                              saveStatistics(gameObj)
                         });

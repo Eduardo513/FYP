@@ -13,8 +13,8 @@ import { AuthService } from '../../services/auth.service';
 })
 export class CreateStatisticsComponent implements OnInit {
   username: String;
-  statistics: Object;
-  user;
+  statistics = [];
+  user = JSON.parse(localStorage.getItem('user'));
   game: Object;
   test: String;
   games;
@@ -30,14 +30,17 @@ export class CreateStatisticsComponent implements OnInit {
     private flashMessage: FlashMessagesService) { }
 
   ngOnInit() {
+   
+    this.getAllStatistics();
     this.getGames();
-  
+    
+    console.log(this.statistics);
 
 
   }
 
   onCreateStatisticSubmit() {
-    console.log(this.gameSelected);
+
     //This is to check if the user is inputing a valid username, but it wont work - see related validate service method
     /*  
      //Required Fields
@@ -47,7 +50,7 @@ export class CreateStatisticsComponent implements OnInit {
       return false;
      }
      */
-    this.user = JSON.parse(localStorage.getItem('user'));
+    
 
 
     const statistics =
@@ -74,6 +77,11 @@ export class CreateStatisticsComponent implements OnInit {
            });
            break;
 
+           case "Overwatch":
+           this.authService.getOverwatch(data).subscribe(data => {
+             this.flashMessageOutput(data);
+           });
+           break;
 
            //now add all the games here.
            case "CounterStrike":
@@ -106,6 +114,25 @@ export class CreateStatisticsComponent implements OnInit {
     this.authService.getAllGames().subscribe(data => {
       this.games = data.games;
     });
+  }
+
+
+  getAllStatistics(){
+  
+    this.authService.getAllStatistics(this.user).subscribe(data =>{
+   
+      for(var i = 0; i < data.statistics.length; i++)
+      {
+       this.statistics.push(data.statistics[i][0]);
+      }
+  
+   });
+  }
+
+  //this checks to see if the statistics object is the same statistics object for the game for which the gameName is passed. This is used as a validation check in the html angular
+  validateCertainGameAndStats(game, stat, gameName){
+    if(game.name == gameName && game._id ==  stat.game)
+    return true;
   }
 
 }
