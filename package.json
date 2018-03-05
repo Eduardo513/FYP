@@ -17,6 +17,8 @@
     "mongoose": "*",
     "passport": "*",
     "passport-jwt": "*",
+    "pubg-api-redis": "^3.7.0",
+    "pubg.js": "^2.0.0",
     "rs-api": "^2.4.5"
   },
   "author": "Eddy Tafner",

@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import {RouterModule, Routes} from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMaterialModules } from './material.module'; //imports all of materials from the materials module
+import { ChartsModule } from 'ng2-charts';
 // import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 // import {MatRadioModule} from '@angular/material/radio';
 // import {MatFormFieldModule} from '@angular/material/form-field';
@@ -66,7 +67,8 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     FlashMessagesModule,
     BrowserAnimationsModule,
-    AppMaterialModules
+    AppMaterialModules,
+    ChartsModule
     // MatButtonModule,
     // MatRadioModule, 
     // MatCheckboxModule,

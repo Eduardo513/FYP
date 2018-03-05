@@ -22,21 +22,12 @@ const StatisticsSchema = mongoose.Schema({
         type:String,
     },
     averagePlayTime :{
-        type:String,
+        type:Number,
     },
     rank :{
         type:String,
     },
-    runescape :{
-        type:{}
-    },
-    olschoolRunescape :{
-        type:{}
-    },
-    overwatch :{
-        type:{}
-    },
-    worldOfWarcraft :{
+    detailGameData :{
         type:{}
     },
     game :{

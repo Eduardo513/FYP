@@ -1,5 +1,7 @@
 <html>
+    
 <mat-tab-group>
+    
   <mat-tab label="League Of Legends">
    
         <form class="example-container">
@@ -11,12 +13,22 @@
 
           <button type="submit" [disabled]="!isValid(lolUsername)"  (click)="onCreateStatisticSubmit('Leagueoflegends', lolUsername)" mat-raised-button color="primary">Create Statistics</button>
         </form>
+        <script src="node_modules/chart.js/src/chart.js"></script>
+        <div style="display: block">
+            <canvas baseChart
+                        [data]="doughnutChartData"
+                        [labels]="doughnutChartLabels"
+                        [chartType]="doughnutChartType"
+                        (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)"></canvas>
+          </div>
+
+       
           <mat-list *ngFor="let stat of statistics">
               <div *ngFor="let game of games">
-        
                 <div *ngIf="validateCertainGameAndStats(game, stat, 'Leagueoflegends')">
-        
-        
+                  
+                 
                   <mat-list-item> Game: {{ game.name }} </mat-list-item>
                   <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
                   <mat-list-item> Level: {{ stat.level }} </mat-list-item>

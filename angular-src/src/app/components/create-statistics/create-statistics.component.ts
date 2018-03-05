@@ -13,6 +13,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class CreateStatisticsComponent implements OnInit {
   statistics = [];
+  allStatisticsAverageTimePlayed = [];
   user = JSON.parse(localStorage.getItem('user'));
   game: Object;
   test;
@@ -21,6 +22,18 @@ export class CreateStatisticsComponent implements OnInit {
   selectedRegion
   allRealms = [];
   allRegions = ['eu', 'us', 'kr', 'tw'];
+
+  public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
+  public doughnutChartData: number[] = [350, 450, 100];
+  public doughnutChartType: string = 'doughnut';
+
+  public chartClicked(e: any): void {
+    console.log(e);
+  }
+
+  public chartHovered(e: any): void {
+    console.log(e);
+  }
 
 
 
@@ -43,10 +56,13 @@ export class CreateStatisticsComponent implements OnInit {
 
 
 
+
   }
 
 
   onCreateStatisticSubmit(selectedGame, username) {
+
+
 
 
 
@@ -71,64 +87,80 @@ export class CreateStatisticsComponent implements OnInit {
         id: this.user.id
       }
 
-    //Register Statistic
-    this.authService.createStatistics(statistics).subscribe(data => {
+    switch (selectedGame) {
 
-      if (data.success) {
-        switch (selectedGame) {
+      case "Leagueoflegends":
+        this.authService.getLeagueOfLegends(statistics).subscribe(data => {
+          if (data.success) {
+            this.createStatisticObject(data);
+          }
+          else {
+            this.flashMessageOutput(data);
+          }
+        });
+        break;
 
-          case "LeagueOfLegends":
-            this.authService.getLeagueOfLegends(data).subscribe(data => {
-              this.flashMessageOutput(data);
-            });
-            break;
+      case "Oldschool Runescape":
+        this.authService.getOldschoolRunescape(statistics).subscribe(data => {
+          if (data.success) {
+            this.createStatisticObject(data);
+          }
+          else {
+            this.flashMessageOutput(data);
+          }
+        });
+        break;
 
-          case "Oldschool Runescape":
-            this.authService.getOldschoolRunescape(data).subscribe(data => {
-              this.flashMessageOutput(data);
-            });
-            break;
+      case "Runescape":
+        this.authService.getRunescape(statistics).subscribe(data => {
+          if (data.success) {
+            this.createStatisticObject(data);
+          }
+          else {
+            this.flashMessageOutput(data);
+          }
+        });
+        break;
 
-          case "Runescape":
-            this.authService.getRunescape(data).subscribe(data => {
-              this.flashMessageOutput(data);
-            });
-            break;
+      case "Overwatch":
+        this.authService.getOverwatch(statistics).subscribe(data => {
+          if (data.success) {
+            this.createStatisticObject(data);
+          }
+          else {
+            this.flashMessageOutput(data);
+          }
+        });
+        break;
 
-          case "Overwatch":
-            this.authService.getOverwatch(data).subscribe(data => {
-              this.flashMessageOutput(data);
-            });
-            break;
+      case "World of Warcraft":
+        //wow requires a custom data as it needs realm and region for api to work
+        statistics["region"] = this.selectedRegion;
+        statistics["realm"] = this.selectedRealm;
+        this.authService.getWorldOfWarcraft(statistics).subscribe(data => {
+          if (data.success) {
+            this.createStatisticObject(data);
+          }
+          else {
+            this.flashMessageOutput(data);
+          }
+        });
+        break;
 
-          case "World of Warcraft":
-            //wow requires a custom data as it needs realm and region for api to work
-            const WoWData = {
-              statId: data.statId,
-              region: this.selectedRegion,
-              realm: this.selectedRealm
-            }
 
-            this.authService.getWorldOfWarcraft(WoWData).subscribe(data => {
-              this.flashMessageOutput(data);
-            });
-            break;
-
-          //now add all the games here.
-          case "CounterStrike":
-            this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });
-            break;
-
-        }
-      }
-      else {
-        this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });
-      }
-
-    });
+    }
+   
   }
 
+  //this is run after it has been confirmed the user for that game exists and the user does not already have a statistic of this kind created
+  //once this criteria is met then we create the actual statistic object
+  createStatisticObject(detailedStats) {
+    this.authService.createStatistics(detailedStats).subscribe(data => {
+      this.flashMessageOutput(data);
 
+    });
+
+  }
 
   flashMessageOutput(data) {
     if (data.success) {
@@ -155,6 +187,7 @@ export class CreateStatisticsComponent implements OnInit {
         this.statistics.push(data.statistics[i][0]);
       }
 
+
     });
   }
 
@@ -165,7 +198,7 @@ export class CreateStatisticsComponent implements OnInit {
   }
 
   isValid(username) {
-    
+
     if (username == undefined) {
       return false;
     }
@@ -173,7 +206,10 @@ export class CreateStatisticsComponent implements OnInit {
       return true
   }
 
-  
+
+
+
+
 
 }
 

@@ -11,114 +11,113 @@ const User = require('../models/user');
 const rsapi = require('rs-api');
 const BLIZZARD_API_KEY = 'jutgaaa5v98ykzwe7wrpemseg6rqy6zb';
 const blizzard = require('blizzard.js').initialize({ apikey: BLIZZARD_API_KEY });
-
+const owjs = require('overwatch-js');
 //GetStats from LeagueOfLegends
 
 router.put('/overwatch', (req, res, next) => {
-    var username = req.body.username;
-    var timePlayed;
-    var owjs = require('overwatch-js');
 
-    Statistics.getStatisticsById(req.body.statId, (err, statisticsObject) => {
-        if (err) throw err;
-        if (statisticsObject) {
-            owjs.getOverall('pc', 'eu', statisticsObject.username)
-                .then((overwatchStats) => {
-                    timePlayed =
-                        Statistics.findOneAndUpdate({ _id: statisticsObject._id },              //time needs to be divided by this to be accurate         //level is the tier times 100 plus what the level from the api is
-                            { $set: { overwatch: overwatchStats, averagePlayTime: (((overwatchStats.quickplay.global.time_played / 60) / 60) / 1000), level: (((overwatchStats.profile.tier) * 100) + overwatchStats.profile.level) } }, { new: true }, (err, statistic) => {
-                                if (err)
-                                    throw err;
-                                else {
-                                    res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
-                                }
-                            })
-                }).catch(console.error );
+    owjs.getOverall('pc', 'eu', req.body.username)
+        .then((overwatchStats) => {
 
-        }
-    });
-
+            const detailedStats = {
+                username: req.body.username,
+                game: req.body.game,
+                userId: req.body.id,
+                detailGameData: overwatchStats,
+                averagePlayTime: (((overwatchStats.quickplay.global.time_played / 60) / 60) / 1000),
+                level: (((overwatchStats.profile.tier) * 100) + overwatchStats.profile.level)
+            }
+            res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
+        }).catch(reason => {
+            console.log(reason);
+            res.json({ success: false, msg: "Username not found in Overwatch database, Please try again." });
+        });
 
 });
 
+
 router.put('/runescape', (req, res, next) => {
-    var username;
 
-    Statistics.getStatisticsById(req.body.statId, (err, statisticsObject) => {
-        if (err) throw err;
+    rsapi.rs.player.hiscores(req.body.username).then(
+        function (runescapeStats) {
 
-        if (statisticsObject) {
-            username = statisticsObject.username;
-            rsapi.rs.player.hiscores(username).then(
-                function (runescapeStats) {
-
-                    Statistics.findOneAndUpdate({ _id: statisticsObject._id },
-                        { $set: { runescape: runescapeStats, rank: runescapeStats.skills.overall.rank, level: runescapeStats.skills.overall.level } }, { new: true }, (err, statistic) => {
-                            if (err)
-                                throw err;
-                            else {
-                                res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
-                            }
-                        });
-
-                }).catch(console.error);
-
-        }
+            const detailedStats = {
+                username: req.body.username,
+                game: req.body.game,
+                userId: req.body.id,
+                detailGameData: runescapeStats,
+                rank: runescapeStats.skills.overall.rank,
+                level: runescapeStats.skills.overall.level
+            }
+            res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
 
 
-    });
+
+        }).catch(reason => {
+            res.json({ success: false, msg: "Username not found in Runescape database, Please try again." });
+        });
+
+
+
 });
 
 router.put('/oldschoolRunescape', (req, res, next) => {
-    var username;
-    Statistics.getStatisticsById(req.body.statId, (err, statisticsObject) => {
-        if (err) throw err;
-
-        if (statisticsObject) {
-            username = statisticsObject.username;
-            rsapi.osrs.player.hiscores(username).then(
-                function (runescapeStats) {
-
-                    Statistics.findOneAndUpdate({ _id: statisticsObject._id },
-                        { $set: { olschoolRunescape: runescapeStats, rank: runescapeStats.skills.overall.rank, level: runescapeStats.skills.overall.level } }, { new: true }, (err, statistic) => {
-                            if (err)
-                                throw err;
-                            else {
-                                res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
-                            }
-                        });
-
-                }).catch(console.error);
-
-        }
 
 
-    });
+    rsapi.osrs.player.hiscores(req.body.username).then(
+        function (runescapeStats) {
+
+            const detailedStats = {
+                username: req.body.username,
+                game: req.body.game,
+                userId: req.body.id,
+                detailGameData: runescapeStats,
+                rank: runescapeStats.skills.overall.rank,
+                level: runescapeStats.skills.overall.level
+            }
+            res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
+
+
+
+        }).catch(reason => {
+            res.json({ success: false, msg: "Username not found in Oldschool Runescape database, Please try again." });
+        });
+
+
+
 });
+
+
+
 
 router.put('/worldOfWarcraft', (req, res, next) => {
-    Statistics.getStatisticsById(req.body.statId, (err, statisticsObject) => {
-        if (err) throw err;
+    console.log(req.body.username);
+    console.log(req.body.realm);
+    console.log(req.body.region);
+    blizzard.wow.character(['profile', 'guild', 'mounts', 'pvp', 'stats'], { origin: req.body.region, realm: req.body.realm, name: req.body.username })
+        .then(wowData => {
+            const detailedStats = {
+                username: req.body.username,
+                game: req.body.game,
+                userId: req.body.id,
+                detailGameData: wowData.data,
+                level: wowData.data.level
+            }
+            res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
 
-        if (statisticsObject) {
-       
-            blizzard.wow.character(['profile' ,'guild', 'mounts', 'pvp', 'stats'], { origin: req.body.region, realm: req.body.realm, name: statisticsObject.username })
-                .then(wowData => {
-                    console.log(wowData.data);
-                    Statistics.findOneAndUpdate({ _id: statisticsObject._id },
-                        { $set: { worldOfWarcraft: wowData.data, level: wowData.data.level } }, { new: true }, (err, statistic) => {
-                            if (err)
-                                throw err;
-                            else {
-                                res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
-                            }
-                        });
-                   
-                }).catch(console.error);
 
-        }
-    });
+
+        }).catch(reason => {
+            console.log(reason);
+            res.json({ success: false, msg: "Username not found in World of Warcraft database, Please try again." });
+        });
+
 });
+
+
+
+
+
 
 //gets all the realms for each server accros korea/usa/eurpe and tw
 router.put('/getWorldOfWarcraftRealms', (req, res, next) => {
@@ -157,29 +156,24 @@ router.put('/getWorldOfWarcraftRealms', (req, res, next) => {
 
 });
 router.put('/leagueoflegends', (req, res, next) => {
-    var realStatId = req.body.statId;
-    var wins;
-    var losses;
-    var averagePlayTime;
     var summonerLevel;
-    var apiKey = 'RGAPI-92405013-dd45-47df-b763-113b979d68eb';
-    Statistics.getStatisticsById(realStatId, (err, statisticsObject) => {
-        if (err) throw err;
+    var summonerProfile;
+    var apiKey = 'RGAPI-665248d5-688d-41c0-ba6f-9eab34b14d1b';
 
-        if (statisticsObject) {
 
-            Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", statisticsObject.username, apiKey, (err, data) => {
+            Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", req.body.username, apiKey, (err, data) => {
                 if (err)
                     throw err;
 
                 if (data) {
                     if ("status" in data) {
                         console.log("Error: " + data.status.status_code);
-                        res.json({ success: false, msg: "Something Went Wrong" });
+                        res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
                     }
                     else {
                         //grabs level off the data to update later
                         summonerLevel = data.summonerLevel;
+                        summonerProfile = data;
 
                         Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
                             if (err)
@@ -191,23 +185,20 @@ router.put('/leagueoflegends', (req, res, next) => {
                                     res.json({ success: false, msg: "Something Went Wrong" });
                                 }
                                 else {
-                                    //average time per game of league is 30 mins
-                                    averagePlayTime = (data.totalGames * 30) / 60;
-                                    //updates stat object and sets data
-                                    Statistics.findOneAndUpdate({ _id: statisticsObject._id },
-                                        { $set: { gamesPlayed: data.totalGames, averagePlayTime: averagePlayTime, level: summonerLevel } }, { new: true }, (err, statistic) => {
-                                            if (err)
-                                                throw err;
-                                            else {
-                                                res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
-                                                console.log(statistic)
-
-
-                                            }
-                                        });
-
-
-                                }
+                                    
+                                     //average time per game of league is 30 mins
+                                       
+                                       
+                                        const detailedStats = {
+                                        username: req.body.username,
+                                        game: req.body.game,
+                                        userId: req.body.id,
+                                        detailGameData: summonerProfile,
+                                        level: summonerLevel
+                                    }
+                                    res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
+                                   
+                              }
                             }
                         });
 
@@ -218,39 +209,98 @@ router.put('/leagueoflegends', (req, res, next) => {
                     }
                 }
             });
-        }
-    });
-
-
-
+  
 });
+
+// router.put('/leagueoflegends', (req, res, next) => {
+//     var realStatId = req.body.statId;
+//     var wins;
+//     var losses;
+//     var averagePlayTime;
+//     var summonerLevel;
+//     var apiKey = 'RGAPI-665248d5-688d-41c0-ba6f-9eab34b14d1b';
+//     Statistics.getStatisticsById(realStatId, (err, statisticsObject) => {
+//         if (err) throw err;
+
+//         if (statisticsObject) {
+
+//             Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", statisticsObject.username, apiKey, (err, data) => {
+//                 if (err)
+//                     throw err;
+
+//                 if (data) {
+//                     if ("status" in data) {
+//                         console.log("Error: " + data.status.status_code);
+//                         res.json({ success: false, msg: "Something Went Wrong" });
+//                     }
+//                     else {
+//                         //grabs level off the data to update later
+//                         summonerLevel = data.summonerLevel;
+
+//                         Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
+//                             if (err)
+//                                 throw err;
+
+//                             if (data) {
+//                                 if ("status" in data) {
+//                                     console.log("Error: " + data.status.status_code);
+//                                     res.json({ success: false, msg: "Something Went Wrong" });
+//                                 }
+//                                 else {
+//                                    
+//                                     //average time per game of league is 30 mins
+//                                     averagePlayTime = (data.totalGames * 30) / 60;
+//                                     //updates stat object and sets data
+//                                     Statistics.findOneAndUpdate({ _id: statisticsObject._id },
+//                                         { $set: { gamesPlayed: data.totalGames, averagePlayTime: averagePlayTime, level: summonerLevel } }, { new: true }, (err, statistic) => {
+//                                             if (err)
+//                                                 throw err;
+//                                             else {
+//                                                 res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
+//                                                 console.log(statistic)
+
+
+//                                             }
+//                                         });
+
+
+//                                 }
+//                             }
+//                         });
+
+
+
+
+
+//                     }
+//                 }
+//             });
+//         }
+//     });
+
+
+
+// });
+
 //CreateStatistic
 router.post('/create-statistics', (req, res, next) => {
 
     var j = 0;
     var statisticsExists = false; // boolean used to check if statistics object was already created for that user for that game.
-    const name = req.body.game;
-    const currentUserId = req.body.id;
+    const name = req.body.detailedStats.game;
+    const currentUserId = req.body.detailedStats.userId;
     var emptyStats = false;
-
-
-
 
     //validation to see if statistics is already created with that game for that user
     //get game object by name
     Game.getGameByName(name)
         .then(gameObj => {
-        
-
             //retrieves all the statistics for the user
             User.getAllStatisticsByUserId(currentUserId)
                 .then(stats => {
                     if (stats.length == 0)//if not stats are created then create stats
                         saveStatistics(gameObj);
                     else {
-
-
-
 
                         for (var i = 0; i < stats.length; i++) {
 
@@ -281,13 +331,13 @@ router.post('/create-statistics', (req, res, next) => {
 
     function saveStatistics(gameObj) {
 
-        let newStatistics = new Statistics
-            ({
-                username: req.body.username,
-                game: gameObj,
-
-            });
-
+        let newStatistics = new Statistics({
+            username: req.body.detailedStats.username,
+            game: gameObj,
+            detailGameData: req.body.detailedStats.detailGameData,
+            level: req.body.detailedStats.level,
+            rank: req.body.detailedStats.rank
+        });
 
         Statistics.addStatistics(newStatistics, (err, statistic) => {
 
@@ -295,6 +345,7 @@ router.post('/create-statistics', (req, res, next) => {
                 res.json({ success: false, msg: 'Failed to create statistc' });
             }
             else {
+
                 res.json({ success: true, statId: statistic._id, msg: 'Statistic Created' });
             }
 

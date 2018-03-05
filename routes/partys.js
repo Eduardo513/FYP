@@ -33,7 +33,7 @@ router.post('/create-party', (req, res, next) => {
 
 //AllPublicParties
 router.get('/getPublicParties', (req, res, next) => {
-  
+ 
     Party.getPartyByPublic(true, (err, parties) => {
         if (err)
             throw err
