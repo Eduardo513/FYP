@@ -33,9 +33,7 @@ router.post('/create-party', (req, res, next) => {
 
 //AllPublicParties
 router.get('/getPublicParties', (req, res, next) => {
-    var owjs = require('overwatch-js');
-    owjs.getOverall('pc', 'eu', 'Garnz-1534')
-    .then((data) => console.dir((((data.profile.tier)*100) + data.profile.level), {depth : 2, colors : true}) );
+  
     Party.getPartyByPublic(true, (err, parties) => {
         if (err)
             throw err

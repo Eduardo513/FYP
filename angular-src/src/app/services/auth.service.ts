@@ -82,10 +82,31 @@ export class AuthService {
     .map(res => res.json());
   }
 
+  getOldschoolRunescape(statId){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/statistics/oldschoolRunescape', statId, {headers: headers})
+    .map(res => res.json());
+  }
+
   getRunescape(statId){
     
     let headers = new Headers();
     return this.http.put('http://localhost:3000/statistics/runescape', statId, {headers: headers})
+    .map(res => res.json());
+  }
+
+  getWorldOfWarcraftRealms(){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/statistics/getWorldOfWarcraftRealms', {headers: headers})
+    .map(res => res.json());
+  }
+
+  getWorldOfWarcraft(statId){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/statistics/worldOfWarcraft', statId, {headers: headers})
     .map(res => res.json());
   }
 

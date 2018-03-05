@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bcryptjs": "*",
+    "blizzard.js": "^2.3.0",
     "body-parser": "*",
     "cors": "*",
     "express": "*",

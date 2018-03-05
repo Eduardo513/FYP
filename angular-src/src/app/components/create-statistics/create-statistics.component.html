@@ -1,57 +1,156 @@
 <html>
 <mat-tab-group>
   <mat-tab label="League Of Legends">
-    <h2 class="page-header">Create a Statistic</h2>
-    <form (submit)="onCreateStatisticSubmit()">
-      <div class="form-group">
-        <label>Username</label>
-        <input type="text" [(ngModel)]="username" name="username" class="form-control">
-      </div>
-      <div class="form-group">
-        <select [(ngModel)]="game" name="game">
-          <option *ngFor="let game of games">
-            {{game.name}}
-          </option>
-        </select>
-      </div>
+   
+        <form class="example-container">
+    <h2 class="page-header">League of Legends</h2>
+    
+        <mat-form-field>
+            <input matInput  [(ngModel)]="lolUsername" placeholder="Username" name="lolusername" required >
+          </mat-form-field>
 
-      <input type="submit" class="btn btn-primary" value="Submit">
-    </form>
+          <button type="submit" [disabled]="!isValid(lolUsername)"  (click)="onCreateStatisticSubmit('Leagueoflegends', lolUsername)" mat-raised-button color="primary">Create Statistics</button>
+        </form>
+          <mat-list *ngFor="let stat of statistics">
+              <div *ngFor="let game of games">
+        
+                <div *ngIf="validateCertainGameAndStats(game, stat, 'Leagueoflegends')">
+        
+        
+                  <mat-list-item> Game: {{ game.name }} </mat-list-item>
+                  <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
+                  <mat-list-item> Level: {{ stat.level }} </mat-list-item>
+                  <mat-list-item> Username:{{ stat.username }} </mat-list-item>
+                </div>
+        
+              </div>
+            </mat-list>
+  
+
+
   </mat-tab>
+ 
   <mat-tab label="Runescape">
-
-  </mat-tab>
-  <mat-tab label="OldSchool Runescape">
+      <h2 class="page-header">Runescape</h2>
+      <form class="example-container">
+          <mat-form-field>
+              <input matInput [(ngModel)]="runescapeUsername" name="runescapeUsername"  placeholder="Username" required>
+            </mat-form-field>
+    
+        <button type="submit"  [disabled]="!isValid(runescapeUsername)" (click)="onCreateStatisticSubmit('Runescape', runescapeUsername)" mat-raised-button color="primary">Create Statistics</button>
+      </form>
     <mat-list *ngFor="let stat of statistics">
       <div *ngFor="let game of games">
-   
-          <div *ngIf="validateCertainGameAndStats(game, stat, 'Runescape')">
-        
-       
-      <mat-list-item> Game: {{ game.name }} </mat-list-item>
-      <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
-      <mat-list-item> Level: {{ stat.level }} </mat-list-item>
-      <mat-list-item> Username:{{ stat.username }} </mat-list-item>
-   </div>
-    
-    </div>
-    </mat-list>
-  </mat-tab>
-  <mat-tab label="Overwatch">
-      <mat-list *ngFor="let stat of statistics">
-          <div *ngFor="let game of games">
-       
-              <div *ngIf="validateCertainGameAndStats(game, stat, 'Overwatch')">
-            
-           
+
+        <div *ngIf="validateCertainGameAndStats(game, stat, 'Runescape')">
+
+
           <mat-list-item> Game: {{ game.name }} </mat-list-item>
           <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
           <mat-list-item> Level: {{ stat.level }} </mat-list-item>
           <mat-list-item> Username:{{ stat.username }} </mat-list-item>
-       </div>
-        
         </div>
+
+      </div>
+    </mat-list>
+  </mat-tab>
+
+  <mat-tab label="OldSchool Runescape">
+  
+      <h2 class="page-header">Oldschool Runescape</h2>
+      <form class="example-container">
+          <mat-form-field>
+              <input matInput [(ngModel)]="oldRunescapeUsername" name="oldRunescapeUsername"  placeholder="Username" required>
+            </mat-form-field>
+    
+        <button type="submit" [disabled]="!isValid(oldRunescapeUsername)" (click)="onCreateStatisticSubmit('Oldschool Runescape', oldRunescapeUsername)" mat-raised-button color="primary">Create Statistics</button>
+      </form>
+    <mat-list *ngFor="let stat of statistics">
+      <div *ngFor="let game of games">
+
+        <div *ngIf="validateCertainGameAndStats(game, stat, 'Oldschool Runescape')">
+
+
+          <mat-list-item> Game: {{ game.name }} </mat-list-item>
+          <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
+          <mat-list-item> Level: {{ stat.level }} </mat-list-item>
+          <mat-list-item> Username:{{ stat.username }} </mat-list-item>
+        </div>
+
+      </div>
+    </mat-list>
+  </mat-tab>
+
+  <mat-tab label="Overwatch">
+   
+      <h2 class="page-header">Overwatch</h2>
+      <form class="example-container">
+          <mat-form-field>
+              <input matInput [(ngModel)]="overwatchUsername" name="overwatchUsername" placeholder="Username" required>
+            </mat-form-field>
+
+            <mat-form-field>
+                <input matInput [(ngModel)]="overwatchBattleTag" name="overwatchBattleTag" placeholder="BattleTag Number" required>
+              </mat-form-field>
+    
+        <button type="submit" [disabled]="!isValid(overwatchUsername) || overwatchBattleTag == undefined"  (click)="onCreateStatisticSubmit('Overwatch', overwatchUsername)" mat-raised-button color="primary">Create Statistics</button>
+      </form>
+    <mat-list *ngFor="let stat of statistics">
+      <div *ngFor="let game of games">
+
+        <div *ngIf="validateCertainGameAndStats(game, stat, 'Overwatch')">
+
+
+          <mat-list-item> Game: {{ game.name }} </mat-list-item>
+          <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
+          <mat-list-item> Level: {{ stat.level }} </mat-list-item>
+          <mat-list-item> Username:{{ stat.username }} </mat-list-item>
+        </div>
+
+      </div>
+    </mat-list>
+   
+  </mat-tab>
+  <mat-tab label="World of Warcraft">
+  
+      <form class="example-container">
+
+        <mat-form-field>
+          <input matInput  [(ngModel)]="wowUsername" name="wowUsername" placeholder="Username" required>
+        </mat-form-field>
+
+
+        <mat-form-field>
+          <mat-select placeholder="Realm" [(ngModel)]="selectedRealm" name="Realm" required>
+            <mat-option *ngFor="let realm of allRealms" [value]="realm">{{realm}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Region" [(ngModel)]="selectedRegion" name="Region" required>
+            <mat-option *ngFor="let region of allRegions" [value]="region">{{region}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        
+        <button type="submit" [disabled]="!isValid(wowUsername) || selectedRealm == undefined || selectedRegion == undefined " (click)="onCreateStatisticSubmit('World of Warcraft', wowUsername)" mat-raised-button color="primary">Create World of Warcraft Statistics</button>
+      </form>
+
+      <mat-list *ngFor="let stat of statistics">
+          <div *ngFor="let game of games">
+    
+            <div *ngIf="validateCertainGameAndStats(game, stat, 'World of Warcraft')">
+    
+    
+              <mat-list-item> Game: {{ game.name }} </mat-list-item>
+              <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
+              <mat-list-item> Level: {{ stat.level }} </mat-list-item>
+              <mat-list-item> Username:{{ stat.username }} </mat-list-item>
+            </div>
+    
+          </div>
         </mat-list>
+
   </mat-tab>
 </mat-tab-group>
 

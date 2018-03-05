@@ -30,7 +30,13 @@ const StatisticsSchema = mongoose.Schema({
     runescape :{
         type:{}
     },
+    olschoolRunescape :{
+        type:{}
+    },
     overwatch :{
+        type:{}
+    },
+    worldOfWarcraft :{
         type:{}
     },
     game :{
