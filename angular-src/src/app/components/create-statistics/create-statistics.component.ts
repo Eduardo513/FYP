@@ -16,12 +16,16 @@ export class CreateStatisticsComponent implements OnInit {
   allStatisticsAverageTimePlayed = [];
   user = JSON.parse(localStorage.getItem('user'));
   game: Object;
-  test;
   games;
-  selectedRealm;
-  selectedRegion
-  allRealms = [];
-  allRegions = ['eu', 'us', 'kr', 'tw'];
+  selectedWoWRealm;
+  selectedWoWRegion
+  selectedOverwatchRegion;
+  selectedOverwatchPlatform;
+  overwatchBattleTag;
+  allWoWRealms = [];
+  allWoWRegions = ['eu', 'us', 'kr', 'tw'];
+  allOverwatchRegions =['eu', 'us', 'as'];
+  allOverwatchPlatforms =['PC', 'Xbox One', 'PlayStation 4'];
 
   public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
   public doughnutChartData: number[] = [350, 450, 100];
@@ -47,7 +51,7 @@ export class CreateStatisticsComponent implements OnInit {
     //grabs all the realms for world of warcraft and sorts any arrays to be displayd
     this.authService.getWorldOfWarcraftRealms().subscribe(data => {
       if (data.success)
-        this.allRealms = data.realms;
+        this.allWoWRealms = data.realms;
     });
 
     this.getAllStatistics();
@@ -123,6 +127,31 @@ export class CreateStatisticsComponent implements OnInit {
         break;
 
       case "Overwatch":
+      //this switch statment so I can display nice visuals to users while sending correctly formed data to backend
+      switch(this.selectedOverwatchPlatform){
+        case "PC":
+        this.selectedOverwatchPlatform = "pc";
+        break;
+
+        case "Xbox One":
+        this.selectedOverwatchPlatform = "xbl";
+        break;
+
+        case "PlayStation 4":
+        this.selectedOverwatchPlatform = "psn";
+        break;
+      }
+      if(this.overwatchBattleTag != undefined){
+        var battleTag = username.concat("-" + this.overwatchBattleTag); //overwatch requires the number and username together witha  dash inbetween on pc
+        statistics.username = battleTag;
+      }
+     
+      
+      statistics["region"] = this.selectedOverwatchRegion;
+      statistics["platform"] = this.selectedOverwatchPlatform;
+     
+      console.log(statistics);
+
         this.authService.getOverwatch(statistics).subscribe(data => {
           if (data.success) {
             this.createStatisticObject(data);
@@ -135,8 +164,8 @@ export class CreateStatisticsComponent implements OnInit {
 
       case "World of Warcraft":
         //wow requires a custom data as it needs realm and region for api to work
-        statistics["region"] = this.selectedRegion;
-        statistics["realm"] = this.selectedRealm;
+        statistics["region"] = this.selectedWoWRegion;
+        statistics["realm"] = this.selectedWoWRealm;
         this.authService.getWorldOfWarcraft(statistics).subscribe(data => {
           if (data.success) {
             this.createStatisticObject(data);

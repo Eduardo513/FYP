@@ -16,7 +16,7 @@ const owjs = require('overwatch-js');
 
 router.put('/overwatch', (req, res, next) => {
 
-    owjs.getOverall('pc', 'eu', req.body.username)
+    owjs.getOverall(req.body.platform, req.body.region, req.body.username)
         .then((overwatchStats) => {
 
             const detailedStats = {
