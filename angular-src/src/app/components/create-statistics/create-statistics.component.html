@@ -129,7 +129,8 @@
 
 
           <mat-list-item> Game: {{ game.name }} </mat-list-item>
-          <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
+          <mat-list-item> Rank: {{ stat.detailGameData.profile.ranking }} </mat-list-item>
+          <mat-list-item> Best Kill Streak: {{ stat.detailGameData.quickplay.global.kill_streak_best }} </mat-list-item>
           <mat-list-item> Level: {{ stat.level }} </mat-list-item>
           <mat-list-item> Username:{{ stat.username }} </mat-list-item>
         </div>

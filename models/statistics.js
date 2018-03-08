@@ -59,6 +59,20 @@ module.exports.getStatisticsByUsername = function(username, callback){
     Statistics.findOne(query, callback);
 };
 
+module.exports.getAllStatisticsForGame = function(game, callback){
+
+    return new Promise((resolve, reject) =>{
+        const query = {game: game}
+        Statistics.find(query, (err, stats) =>{
+            if(err)
+            return reject(err);
+            else
+            return resolve(stats);
+        });
+    });
+   
+};
+
 module.exports.addStatistics = function(newStatistics, callback){
     newStatistics.save(callback);
 };

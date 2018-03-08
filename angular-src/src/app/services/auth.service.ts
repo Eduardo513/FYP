@@ -116,6 +116,13 @@ export class AuthService {
     return this.http.put('http://localhost:3000/statistics/overwatch', statId, {headers: headers})
     .map(res => res.json());
   }
+
+  getAverageForAStat(stat){
+    
+    let headers = new Headers();
+    return this.http.post('http://localhost:3000/statistics/getAverageForAStat', stat, {headers: headers})
+    .map(res => res.json());
+  }
   
   getAllGames(){
     let headers = new Headers();
@@ -128,6 +135,12 @@ export class AuthService {
   getAllPublicParties(){
     let headers = new Headers();
     return this.http.get('http://localhost:3000/partys/getPublicParties', {headers: headers})
+    .map(res => res.json());
+  }
+
+  createOrUpdateAverageStat(data){
+    let headers = new Headers();
+    return this.http.post('http://localhost:3000/averageStats/createOrUpdateAverageStat', data, {headers: headers})
     .map(res => res.json());
   }
 

@@ -24,8 +24,16 @@ export class CreateStatisticsComponent implements OnInit {
   overwatchBattleTag;
   allWoWRealms = [];
   allWoWRegions = ['eu', 'us', 'kr', 'tw'];
-  allOverwatchRegions =['eu', 'us', 'as'];
-  allOverwatchPlatforms =['PC', 'Xbox One', 'PlayStation 4'];
+  allOverwatchRegions = ['eu', 'us', 'as'];
+  allOverwatchPlatforms = ['PC', 'Xbox One', 'PlayStation 4'];
+
+  averageStats = [{
+    game: String,
+    stat: String,
+    average: Number
+  }]
+
+
 
   public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
   public doughnutChartData: number[] = [350, 450, 100];
@@ -56,6 +64,7 @@ export class CreateStatisticsComponent implements OnInit {
 
     this.getAllStatistics();
     this.getGames();
+    this.updateOrCreateAllAverages();
 
 
 
@@ -65,6 +74,10 @@ export class CreateStatisticsComponent implements OnInit {
 
 
   onCreateStatisticSubmit(selectedGame, username) {
+
+
+
+
 
 
 
@@ -90,6 +103,9 @@ export class CreateStatisticsComponent implements OnInit {
         game: selectedGame,
         id: this.user.id
       }
+
+     
+
 
     switch (selectedGame) {
 
@@ -127,30 +143,30 @@ export class CreateStatisticsComponent implements OnInit {
         break;
 
       case "Overwatch":
-      //this switch statment so I can display nice visuals to users while sending correctly formed data to backend
-      switch(this.selectedOverwatchPlatform){
-        case "PC":
-        this.selectedOverwatchPlatform = "pc";
-        break;
+        //this switch statment so I can display nice visuals to users while sending correctly formed data to backend
+        switch (this.selectedOverwatchPlatform) {
+          case "PC":
+            this.selectedOverwatchPlatform = "pc";
+            break;
 
-        case "Xbox One":
-        this.selectedOverwatchPlatform = "xbl";
-        break;
+          case "Xbox One":
+            this.selectedOverwatchPlatform = "xbl";
+            break;
 
-        case "PlayStation 4":
-        this.selectedOverwatchPlatform = "psn";
-        break;
-      }
-      if(this.overwatchBattleTag != undefined){
-        var battleTag = username.concat("-" + this.overwatchBattleTag); //overwatch requires the number and username together witha  dash inbetween on pc
-        statistics.username = battleTag;
-      }
-     
-      
-      statistics["region"] = this.selectedOverwatchRegion;
-      statistics["platform"] = this.selectedOverwatchPlatform;
-     
-      console.log(statistics);
+          case "PlayStation 4":
+            this.selectedOverwatchPlatform = "psn";
+            break;
+        }
+        if (this.overwatchBattleTag != undefined) {
+          var battleTag = username.concat("-" + this.overwatchBattleTag); //overwatch requires the number and username together witha  dash inbetween on pc
+          statistics.username = battleTag;
+        }
+
+
+        statistics["region"] = this.selectedOverwatchRegion;
+        statistics["platform"] = this.selectedOverwatchPlatform;
+
+        console.log(statistics);
 
         this.authService.getOverwatch(statistics).subscribe(data => {
           if (data.success) {
@@ -178,7 +194,52 @@ export class CreateStatisticsComponent implements OnInit {
 
 
     }
-   
+
+  }
+
+  //get average for a stat across all users for that game. Tiers are different levels deeper into the object
+  //stat string is the name of the statistic
+  getAverageStat(selectedGame, statString, tier1, tier2, tier3, tier4, tier5) {
+    const averageData =
+      {
+        game: selectedGame,
+        statLocationTier1: tier1,
+        statLocationTier2: tier2,
+        statLocationTier3: tier3,
+        statLocationTier4: tier4,
+        statLocationTier5: tier5
+      }
+
+    this.authService.getAverageForAStat(averageData).subscribe(data => {
+      if (!data.success || data.averageStat == null) { //we have error checking in routes as well but just as a backup
+        
+      }
+      else{
+
+      
+        const averageStats = {
+          game: selectedGame,
+          statName: statString,
+          average: data.averageStat
+        };
+        this.authService.createOrUpdateAverageStat(averageStats).subscribe(data => {
+        });
+      }
+
+    });
+
+  }
+
+  //this method will update all the averages for all the games so they are constantly up to date when user loads page
+  //any new averages I want to add to the system I can implement here
+  updateOrCreateAllAverages() {
+    this.getAverageStat('Oldschool Runescape', 'Oldschool Runescape Level', 'level', undefined, undefined, undefined, undefined);
+    this.getAverageStat('Runescape', 'Runescape Level', 'level', undefined, undefined, undefined, undefined);
+    this.getAverageStat('Overwatch', 'QuickPlay Best Kill Streak', 'detailGameData', 'quickplay', 'global', 'kill_streak_best', undefined);
+    this.getAverageStat('Overwatch', 'QuickPlay Best MultiKill', 'detailGameData', 'quickplay', 'global', 'multikill_best', undefined);
+    this.getAverageStat('Overwatch', 'QuickPlay Most Damage Done in Game', 'detailGameData', 'quickplay', 'global', 'hero_damage_done_most_in_game', undefined);
+    this.getAverageStat('Overwatch', 'Competitive Best Kill Streak', 'detailGameData', 'competitive', 'global', 'kill_streak_best', undefined);
+    this.getAverageStat('Overwatch', 'Competitive Most Damage Done in Game', 'detailGameData', 'competitive', 'global', 'hero_damage_done_most_in_game', undefined);
   }
 
   //this is run after it has been confirmed the user for that game exists and the user does not already have a statistic of this kind created
@@ -186,6 +247,7 @@ export class CreateStatisticsComponent implements OnInit {
   createStatisticObject(detailedStats) {
     this.authService.createStatistics(detailedStats).subscribe(data => {
       this.flashMessageOutput(data);
+      
 
     });
 
@@ -222,8 +284,14 @@ export class CreateStatisticsComponent implements OnInit {
 
   //this checks to see if the statistics object is the same statistics object for the game for which the gameName is passed. This is used as a validation check in the html angular
   validateCertainGameAndStats(game, stat, gameName) {
+    if(game == undefined || stat == undefined){
+    }
+    else{
+
+    
     if (game.name == gameName && game._id == stat.game)
       return true;
+    } 
   }
 
   isValid(username) {

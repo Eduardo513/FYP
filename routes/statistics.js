@@ -29,7 +29,6 @@ router.put('/overwatch', (req, res, next) => {
             }
             res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
         }).catch(reason => {
-            console.log(reason);
             res.json({ success: false, msg: "Username not found in Overwatch database, Please try again." });
         });
 
@@ -91,10 +90,8 @@ router.put('/oldschoolRunescape', (req, res, next) => {
 
 
 router.put('/worldOfWarcraft', (req, res, next) => {
-    console.log(req.body.username);
-    console.log(req.body.realm);
-    console.log(req.body.region);
-    blizzard.wow.character(['profile', 'guild', 'mounts', 'pvp', 'stats'], { origin: req.body.region, realm: req.body.realm, name: req.body.username })
+
+    blizzard.wow.character(['profile', 'guild', 'pvp', 'stats'], { origin: req.body.region, realm: req.body.realm, name: req.body.username })
         .then(wowData => {
             const detailedStats = {
                 username: req.body.username,
@@ -108,7 +105,7 @@ router.put('/worldOfWarcraft', (req, res, next) => {
 
 
         }).catch(reason => {
-            console.log(reason);
+
             res.json({ success: false, msg: "Username not found in World of Warcraft database, Please try again." });
         });
 
@@ -161,131 +158,121 @@ router.put('/leagueoflegends', (req, res, next) => {
     var apiKey = 'RGAPI-665248d5-688d-41c0-ba6f-9eab34b14d1b';
 
 
-            Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", req.body.username, apiKey, (err, data) => {
-                if (err)
-                    throw err;
+    Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", req.body.username, apiKey, (err, data) => {
+        if (err)
+            throw err;
 
-                if (data) {
-                    if ("status" in data) {
-                        console.log("Error: " + data.status.status_code);
-                        res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
-                    }
-                    else {
-                        //grabs level off the data to update later
-                        summonerLevel = data.summonerLevel;
-                        summonerProfile = data;
+        if (data) {
+            if ("status" in data) {
+                console.log("Error: " + data.status.status_code);
+                res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
+            }
+            else {
+                //grabs level off the data to update later
+                summonerLevel = data.summonerLevel;
+                summonerProfile = data;
 
-                        Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
-                            if (err)
-                                throw err;
+                Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
+                    if (err)
+                        throw err;
 
-                            if (data) {
-                                if ("status" in data) {
-                                    console.log("Error: " + data.status.status_code);
-                                    res.json({ success: false, msg: "Something Went Wrong" });
-                                }
-                                else {
-                                    
-                                     //average time per game of league is 30 mins
-                                       
-                                       
-                                        const detailedStats = {
-                                        username: req.body.username,
-                                        game: req.body.game,
-                                        userId: req.body.id,
-                                        detailGameData: summonerProfile,
-                                        level: summonerLevel
-                                    }
-                                    res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
-                                   
-                              }
+                    if (data) {
+                        if ("status" in data) {
+                            console.log("Error: " + data.status.status_code);
+                            res.json({ success: false, msg: "Something Went Wrong" });
+                        }
+                        else {
+
+                            //average time per game of league is 30 mins
+
+
+                            const detailedStats = {
+                                username: req.body.username,
+                                game: req.body.game,
+                                userId: req.body.id,
+                                detailGameData: summonerProfile,
+                                level: summonerLevel
                             }
-                        });
+                            res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
 
-
-
-
-
+                        }
                     }
-                }
-            });
-  
+                });
+
+
+
+
+
+            }
+        }
+    });
+
 });
 
-// router.put('/leagueoflegends', (req, res, next) => {
-//     var realStatId = req.body.statId;
-//     var wins;
-//     var losses;
-//     var averagePlayTime;
-//     var summonerLevel;
-//     var apiKey = 'RGAPI-665248d5-688d-41c0-ba6f-9eab34b14d1b';
-//     Statistics.getStatisticsById(realStatId, (err, statisticsObject) => {
-//         if (err) throw err;
 
-//         if (statisticsObject) {
+router.post('/getAverageForAStat', (req, res, next) => {
 
-//             Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", statisticsObject.username, apiKey, (err, data) => {
-//                 if (err)
-//                     throw err;
+    const statLocationTier1 = req.body.statLocationTier1;
+    const statLocationTier2 = req.body.statLocationTier2;
+    const statLocationTier3 = req.body.statLocationTier3;
+    const statLocationTier4 = req.body.statLocationTier4;
+    const statLocationTier5 = req.body.statLocationTier5;
+    var averageStat = 0;
+    Game.getGameByName(req.body.game)
+        .then(gameObj => {
 
-//                 if (data) {
-//                     if ("status" in data) {
-//                         console.log("Error: " + data.status.status_code);
-//                         res.json({ success: false, msg: "Something Went Wrong" });
-//                     }
-//                     else {
-//                         //grabs level off the data to update later
-//                         summonerLevel = data.summonerLevel;
-
-//                         Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
-//                             if (err)
-//                                 throw err;
-
-//                             if (data) {
-//                                 if ("status" in data) {
-//                                     console.log("Error: " + data.status.status_code);
-//                                     res.json({ success: false, msg: "Something Went Wrong" });
-//                                 }
-//                                 else {
-//                                    
-//                                     //average time per game of league is 30 mins
-//                                     averagePlayTime = (data.totalGames * 30) / 60;
-//                                     //updates stat object and sets data
-//                                     Statistics.findOneAndUpdate({ _id: statisticsObject._id },
-//                                         { $set: { gamesPlayed: data.totalGames, averagePlayTime: averagePlayTime, level: summonerLevel } }, { new: true }, (err, statistic) => {
-//                                             if (err)
-//                                                 throw err;
-//                                             else {
-//                                                 res.json({ success: true, msg: "Statistic Created Succesfully: All Data Saved" });
-//                                                 console.log(statistic)
+            Statistics.getAllStatisticsForGame(gameObj)
+                .then(stats => {
+                  
+                    for (var i = 0; i < stats.length; i++) {
+                        if (statLocationTier2 == undefined) {
+                            averageStat = averageStat + parseInt(stats[i][statLocationTier1]);
+                        }
+                        else if (statLocationTier3 == undefined) {
+                            averageStat = averageStat + parseInt(stats[i][statLocationTier1][statLocationTier2]);
+                        }
+                        else if (statLocationTier4 == undefined) {
+                            averageStat = averageStat + parseInt(stats[i][statLocationTier1][statLocationTier2][statLocationTier3]);
+                        }
+                        else if (statLocationTier5 == undefined) {
+                            averageStat = averageStat + parseInt(stats[i][statLocationTier1][statLocationTier2][statLocationTier3][statLocationTier4]);
+                        }
+                        else {
+                            averageStat = averageStat + parseInt(stats[i][statLocationTier1][statLocationTier2][statLocationTier3][statLocationTier4][statLocationTier5]);
+                        }
 
 
-//                                             }
-//                                         });
+                    }
+
+                    averageStat = averageStat / stats.length;
+                    Math.round(averageStat);
+                    if (averageStat.isNullOrUndefined) {
+                        res.json({ success: false, msg: 'Failed to retrieve Average' });
+                    }
+                    else {
+                        res.json({ success: true, averageStat: averageStat, msg: 'Average Retrieved' });
+                    }
+
+                }).catch(reason => {
+                    res.json({ success: false, msg: "Username not found in Oldschool Runescape database, Please try again." });
+                });
+
+        }).catch(console.error);
 
 
-//                                 }
-//                             }
-//                         });
+});
 
-
-
-
-
-//                     }
-//                 }
-//             });
-//         }
-//     });
-
-
-
-// });
-
+/*Quite complicated code before so will explain. This code is only executed once the gamedetails have been retrived and confirmed that they exist
+we then find the game object via the game name and then grab all the statistics for the user. We first check if the user has any statistics. If none
+then we just create it. We then check if the user has a statistic related to the game, if the user does then we run updateStatistics() with a paramter
+of the statistic id that we found to be related to the game. if the user does not have a statistc related to this game then we go ahead and create it
+which we are in context of. if the 
+*/
 //CreateStatistic
 router.post('/create-statistics', (req, res, next) => {
 
     var j = 0;
+    var statisticNumber = 0;
     var statisticsExists = false; // boolean used to check if statistics object was already created for that user for that game.
     const name = req.body.detailedStats.game;
     const currentUserId = req.body.detailedStats.userId;
@@ -296,27 +283,30 @@ router.post('/create-statistics', (req, res, next) => {
     Game.getGameByName(name)
         .then(gameObj => {
             //retrieves all the statistics for the user
-            User.getAllStatisticsByUserId(currentUserId)
+            User.getAllStatisticsIdsByUserId(currentUserId)
                 .then(stats => {
                     if (stats.length == 0)//if not stats are created then create stats
                         saveStatistics(gameObj);
                     else {
 
-                        for (var i = 0; i < stats.length; i++) {
-
-                            Statistics.getGameByStatisticsId(stats[i]).then(game => {
+                        for (var i = 0; i < stats.length || statisticsExists; i++) {
+                            Statistics.getGameByStatisticsId(stats[i])
+                            .then(game => {
                                 j = j + 1;
+                               
                                 if (game == gameObj.id) {
                                     statisticsExists = true;
-
-                                    res.json({ success: false, msg: 'You have already created Statistics for that game.' });
-
+                                    updateStatistics(stats[j-1], gameObj);
+                                       //this is giving an error when creating  stats cant set headers after they are sent
+                                    
+                                 
                                 }
                                 //if all the stats have been looked at and none of them equal the one the user is trying to create then create stats
                                 if (!statisticsExists && j == stats.length)
                                     saveStatistics(gameObj)
+                                   
                             });
-
+                            
 
                         }
 
@@ -327,7 +317,27 @@ router.post('/create-statistics', (req, res, next) => {
 
         });
 
+        function updateStatistics(statObject, gameObj){
 
+         Statistics.findOneAndUpdate({ _id: statObject },
+            {
+                $set: {
+                    username: req.body.detailedStats.username,
+                    game: gameObj,
+                    detailGameData: req.body.detailedStats.detailGameData,
+                    level: req.body.detailedStats.level,
+                    rank: req.body.detailedStats.rank
+                }
+            }, (err, newStatistic) => {
+                if (err)
+                     res.json({ success: false, err: err, msg: 'Failed to update statistc' });
+                else {
+                    res.json({ success: true, newStatistic: newStatistic, msg: 'Statistic Updated' });
+                }
+            }
+
+        );
+    }
 
     function saveStatistics(gameObj) {
 
@@ -366,8 +376,6 @@ router.post('/create-statistics', (req, res, next) => {
 
 
 });
-
-
 
 module.exports = router;
 

@@ -12,6 +12,7 @@ const users = require('./routes/users');
 const games = require('./routes/games');
 const statistics = require('./routes/statistics');
 const partys = require('./routes/partys');
+const averageStats = require('./routes/averageStats');
 
 
 // Connect to Database
@@ -55,6 +56,8 @@ app.use('/games', games);
 app.use('/statistics', statistics);
 
 app.use('/partys', partys);
+
+app.use('/averageStats', averageStats);
 
 //Index Route
 app.get('/', (req, res) =>{

@@ -39,7 +39,7 @@ module.exports.getUserById = function(id, callback){
     User.findById(id, callback);
 }
 
-module.exports.getAllStatisticsByUserId = function(id, callback){
+module.exports.getAllStatisticsIdsByUserId = function(id, callback){
     return new Promise((resolve, reject) => {
         User.findById(id, (err, user) =>{
             if(err) return reject(err);
