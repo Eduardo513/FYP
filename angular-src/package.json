@@ -29,6 +29,8 @@
     "angular2-jwt": "^0.2.3",
     "chart.js": "^2.7.2",
     "core-js": "^2.4.1",
+    "moment": "^2.21.0",
+    "ng-pick-datetime": "^5.2.1",
     "ng2-charts": "^1.6.0",
     "rxjs": "^5.0.1",
     "ts-helpers": "^1.1.1",

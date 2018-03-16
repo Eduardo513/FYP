@@ -15,6 +15,9 @@ const AverageStatSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'Game'
     },  
+    completeLocation :{
+        type: String,
+    },
 });
 
 const AverageStat = module.exports = mongoose.model('AverageStat', AverageStatSchema);

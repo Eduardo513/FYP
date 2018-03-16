@@ -54,6 +54,13 @@
 
         <div *ngIf="validateCertainGameAndStats(game, stat, 'Runescape')">
 
+            <div *ngFor="let averageStat of allRunescapeAverages">  
+                <span >
+                    <app-stats-card [data]="generateCard(averageStat, '/assets/images/runescapeLogo.png', specificStatistics.Runescape)"></app-stats-card> 
+
+  
+                </span>
+               </div>
 
           <mat-list-item> Game: {{ game.name }} </mat-list-item>
           <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>
@@ -80,6 +87,13 @@
       <div *ngFor="let game of games">
 
         <div *ngIf="validateCertainGameAndStats(game, stat, 'Oldschool Runescape')">
+
+            <div *ngFor="let averageStat of allOldSchoolRunescapeAverages">  
+                <span >
+                 
+                   <app-stats-card [data]="generateCard(averageStat, '/assets/images/oldschoolRunescapeLogo.jpg', specificStatistics.OldschoolRunescape)"></app-stats-card> 
+                </span>
+               </div>
 
 
           <mat-list-item> Game: {{ game.name }} </mat-list-item>
@@ -122,11 +136,39 @@
       <button type="submit" [disabled]="!isValid(overwatchUsername)" (click)="onCreateStatisticSubmit('Overwatch', overwatchUsername)"
         mat-raised-button color="primary">Create Statistics</button>
     </form>
+    <!-- <div *ngFor="let averageStat of averageStats">
+    <app-stats-card [data]='generateCard(averageStat,"/assets/images/overwatchLogo.jpg")'></app-stats-card>
+    </div> -->
+    <!-- <div>
+      <div style="display: block">
+        <canvas baseChart
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+      </div>
+      <button (click)="update()">Update</button>
+    </div> -->
+  
+  
+     
+ 
+
+      
     <mat-list *ngFor="let stat of statistics">
       <div *ngFor="let game of games">
 
         <div *ngIf="validateCertainGameAndStats(game, stat, 'Overwatch')">
 
+            <div *ngFor="let averageStat of allOverwatchAverages">  
+                <span >
+                   <app-stats-card [data]="generateCard(averageStat, '/assets/images/overwatchLogo.jpg', specificStatistics.Overwatch)"></app-stats-card> 
+                </span>
+               </div>
+           
 
           <mat-list-item> Game: {{ game.name }} </mat-list-item>
           <mat-list-item> Rank: {{ stat.detailGameData.profile.ranking }} </mat-list-item>
@@ -170,6 +212,12 @@
 
         <div *ngIf="validateCertainGameAndStats(game, stat, 'World of Warcraft')">
 
+            <div *ngFor="let averageStat of allWorldOfWarcraftAverages">  
+                <span >
+                 
+                   <app-stats-card [data]="generateCard(averageStat, '/assets/images/World-of-WarcraftLogo.png', specificStatistics.WorldofWarcraft)"></app-stats-card> 
+                </span>
+               </div>
 
           <mat-list-item> Game: {{ game.name }} </mat-list-item>
           <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>

@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/database');
 const User = require('../models/user');
 const Statistics = require('../models/statistics');
+const AverageStat = require('../models/averageStat');
+const Game = require('../models/game');
 
 
 
@@ -58,7 +60,8 @@ router.post('/authenticate', (req, res, next) => {
                         username: user.username,
                         email: user.email,
                         statistics: user.statistics,
-                        friends: user.friends
+                        friends: user.friends,
+                        favouriteStats: user.favouriteStats
                     }
                 });
             }
@@ -301,9 +304,104 @@ router.post('/getAllFriends', (req, res, next) => {
 
 });
 
+//addFavouriteStat
+//looks through all the users current faviourte stats to make sure they have already not added this stat
+router.put('/addFavouriteStat', (req, res, next) =>{
+    var foundMatch = false;
+    AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject =>{
+        User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats =>{
+
+            //this is checking if user already has stat favourited. if it equals -1 that means they dont have that stat in the array
+            if((allUsersFavouriteStats.indexOf(averageStatObject.id)) == '-1')
+            {
+                User.findOneAndUpdate({ _id: req.body.userId },
+                    { $push: { favouriteStats: averageStatObject } }, (err, addedStat) => {
+                        if (err)
+                            throw err;
+                        if (!addedStat) {
+                            return res.json({ success: false, msg: 'Stat unable to be added' })
+                        }
+            
+                        if (addedStat) {
+                            return res.json({ success: true, msg: 'Favourite Stat Added!' })
+                        }
+                    });
+            }
+            else{
+                return res.json({ success: false, msg: 'You already have that stat favourited!' })
+            }
+           
+            
+        });
+       
+    });
+    
+});
+
+//gets the specific number for stat for the user. UsersStat is the users statistic object
+router.put('/getSpecificUserStat', (req, res, next) =>{
+    var splitUpLocation = req.body.averageStat.completeLocation.split(','); //here we split up the location of the specific stat so we can parse to it
+    // var usersStat = req.body.usersStat;//UsersStat is the users whole statistic object
+   
+  /*Quite complicated will explain. We grabb all stats ids for user and grab all games.
+  We then grab the stat object for each stat id and compare the game attached to that stat object to each game availabe
+  if we get a match on that then thats one step complete, we must also have the same game object on that statistic as the average stat passed throguh the parameter
+  if all this is true then we pass it into a function below and parse it to retrive the number for the specific stat */
+    User.getAllStatisticsIdsByUserId(req.body.userId).then(allUsersStatIds =>{
+        Game.getAllGames().then(games =>{
+            allUsersStatIds.forEach(function(statId){
+                Statistics.getStatisticsById(statId, (err, statObject) =>{
+                
+                    if(games.indexOf(statObject.game) && req.body.averageStat.game == statObject.game){
+                        getDataFromLocation(splitUpLocation, statObject)
+                       
+                  
+                    }
+                });
+        });
+          
+        });
+    });
+
+    function getDataFromLocation(location, usersStat){
+        var usersSpecificStat //this is what we assign the specific number in the stat we are looking for
+        const statLocationTier1 = splitUpLocation[0];
+        const statLocationTier2 = splitUpLocation[1];
+        const statLocationTier3 = splitUpLocation[2];
+        const statLocationTier4 = splitUpLocation[3];
+        const statLocationTier5 = splitUpLocation[4];
+    
+        if (statLocationTier2 == 'undefined') {
+          usersSpecificStat =  parseInt(usersStat[statLocationTier1]);
+        }
+        else if (statLocationTier3 == 'undefined') {
+          usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2]);
+        }
+        else if (statLocationTier4 == 'undefined') {
+          usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2][statLocationTier3]);
+        }
+        else if (statLocationTier5 == 'undefined') {
+          usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2][statLocationTier3][statLocationTier4]);
+        }
+        else {
+          usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2][statLocationTier3][statLocationTier4][statLocationTier5]);
+        }
+    
+        if (usersSpecificStat.isNullOrUndefined) {
+          console.log("Average Stat failed to find for user")
+          return res.json({ success: false, msg: 'Statistic not Found' })
+        }
+        else {
+         return res.json({ success: true, averageStat: req.body.averageStat, usersSpecificStat: usersSpecificStat, msg: 'Statistic Found' })
+        }
+    }
+ 
+
+});
+
 
 //GetStatisticsFromUser
-router.put('/getAllStatistics', (req, res, next) => {
+router.put('/getAllStatisticsForLoggedInUser', (req, res, next) => {
    
 
     const user = req.body;

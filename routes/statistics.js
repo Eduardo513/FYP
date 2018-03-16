@@ -153,9 +153,27 @@ router.put('/getWorldOfWarcraftRealms', (req, res, next) => {
 
 });
 router.put('/leagueoflegends', (req, res, next) => {
-    var summonerLevel;
+
+    var params = {key: String, ttl: Number, api: Object, objectType: String, region: String, params:Object}
+    
+    var lol = require('lol-js');
+    var lolClient = lol.client({
+        apiKey: 'RGAPI-6dd3239e-6e10-491c-b532-c8d9c9f9a9da',
+        cache: {set: {params: params , value: Object}, 
+        get: {params: params, callback: Object}}
+    });
+    lolClient.getChampionById('na', 53, {champData: ['all']}, function(err, data) {
+        console.log("Found ", data.name);
+        lolClient.destroy();
+    });
+
+    lolClient.getChampionByName('EUW1', 'Sona', (err, data) =>{
+        console.log(data);
+    });
+
+     var summonerLevel;
     var summonerProfile;
-    var apiKey = 'RGAPI-665248d5-688d-41c0-ba6f-9eab34b14d1b';
+    var apiKey = 'RGAPI-6dd3239e-6e10-491c-b532-c8d9c9f9a9da';
 
 
     Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", req.body.username, apiKey, (err, data) => {
@@ -169,35 +187,39 @@ router.put('/leagueoflegends', (req, res, next) => {
             }
             else {
                 //grabs level off the data to update later
+                var summonerId = data.id;
+                var accountId = data.accountId
                 summonerLevel = data.summonerLevel;
                 summonerProfile = data;
 
-                Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
-                    if (err)
-                        throw err;
+               
 
-                    if (data) {
-                        if ("status" in data) {
-                            console.log("Error: " + data.status.status_code);
-                            res.json({ success: false, msg: "Something Went Wrong" });
-                        }
-                        else {
+                // Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
+                //     if (err)
+                //         throw err;
 
-                            //average time per game of league is 30 mins
+                    // if (data) {
+                    //     if ("status" in data) {
+                    //         console.log("Error: " + data.status.status_code);
+                    //         res.json({ success: false, msg: "Something Went Wrong" });
+                    //     }
+                    //     else {
+                         
+                    //         //average time per game of league is 30 mins
 
 
-                            const detailedStats = {
-                                username: req.body.username,
-                                game: req.body.game,
-                                userId: req.body.id,
-                                detailGameData: summonerProfile,
-                                level: summonerLevel
-                            }
-                            res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
+                    //         const detailedStats = {
+                    //             username: req.body.username,
+                    //             game: req.body.game,
+                    //             userId: req.body.id,
+                    //             detailGameData: summonerProfile,
+                    //             level: summonerLevel
+                    //         }
+                    //         res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
 
-                        }
-                    }
-                });
+                    //     }
+                    // }
+                // });
 
 
 
@@ -207,16 +229,74 @@ router.put('/leagueoflegends', (req, res, next) => {
         }
     });
 
+    // var summonerLevel;
+    // var summonerProfile;
+    // var apiKey = 'RGAPI-6dd3239e-6e10-491c-b532-c8d9c9f9a9da';
+
+
+    // Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", req.body.username, apiKey, (err, data) => {
+    //     if (err)
+    //         throw err;
+
+    //     if (data) {
+    //         if ("status" in data) {
+    //             console.log("Error: " + data.status.status_code);
+    //             res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
+    //         }
+    //         else {
+    //             //grabs level off the data to update later
+    //             summonerLevel = data.summonerLevel;
+    //             summonerProfile = data;
+
+    //             Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
+    //                 if (err)
+    //                     throw err;
+
+    //                 if (data) {
+    //                     if ("status" in data) {
+    //                         console.log("Error: " + data.status.status_code);
+    //                         res.json({ success: false, msg: "Something Went Wrong" });
+    //                     }
+    //                     else {
+                         
+    //                         //average time per game of league is 30 mins
+
+
+    //                         const detailedStats = {
+    //                             username: req.body.username,
+    //                             game: req.body.game,
+    //                             userId: req.body.id,
+    //                             detailGameData: summonerProfile,
+    //                             level: summonerLevel
+    //                         }
+    //                         res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
+
+    //                     }
+    //                 }
+    //             });
+
+
+
+
+
+    //         }
+    //     }
+    // });
+
 });
 
-
+//splits up the location of the statistic into strings, then parses the object with the split up strings as the destination
+//grabs the average from the destination and returns it
 router.post('/getAverageForAStat', (req, res, next) => {
 
-    const statLocationTier1 = req.body.statLocationTier1;
-    const statLocationTier2 = req.body.statLocationTier2;
-    const statLocationTier3 = req.body.statLocationTier3;
-    const statLocationTier4 = req.body.statLocationTier4;
-    const statLocationTier5 = req.body.statLocationTier5;
+    var splitUpLocation = req.body.completeLocation.split(',');
+  
+    const statLocationTier1 = splitUpLocation[0];
+    const statLocationTier2 = splitUpLocation[1];
+    const statLocationTier3 = splitUpLocation[2];
+    const statLocationTier4 = splitUpLocation[3];
+    const statLocationTier5 = splitUpLocation[4];
+   
     var averageStat = 0;
     Game.getGameByName(req.body.game)
         .then(gameObj => {
@@ -225,16 +305,16 @@ router.post('/getAverageForAStat', (req, res, next) => {
                 .then(stats => {
                   
                     for (var i = 0; i < stats.length; i++) {
-                        if (statLocationTier2 == undefined) {
+                        if (statLocationTier2 == 'undefined') {
                             averageStat = averageStat + parseInt(stats[i][statLocationTier1]);
                         }
-                        else if (statLocationTier3 == undefined) {
+                        else if (statLocationTier3 == 'undefined') {
                             averageStat = averageStat + parseInt(stats[i][statLocationTier1][statLocationTier2]);
                         }
-                        else if (statLocationTier4 == undefined) {
+                        else if (statLocationTier4 == 'undefined') {
                             averageStat = averageStat + parseInt(stats[i][statLocationTier1][statLocationTier2][statLocationTier3]);
                         }
-                        else if (statLocationTier5 == undefined) {
+                        else if (statLocationTier5 == 'undefined') {
                             averageStat = averageStat + parseInt(stats[i][statLocationTier1][statLocationTier2][statLocationTier3][statLocationTier4]);
                         }
                         else {
@@ -243,14 +323,15 @@ router.post('/getAverageForAStat', (req, res, next) => {
 
 
                     }
-
+                
                     averageStat = averageStat / stats.length;
-                    Math.round(averageStat);
+                
+                   
                     if (averageStat.isNullOrUndefined) {
                         res.json({ success: false, msg: 'Failed to retrieve Average' });
                     }
                     else {
-                        res.json({ success: true, averageStat: averageStat, msg: 'Average Retrieved' });
+                        res.json({ success: true, gameObj: gameObj, averageStat: Math.round(averageStat), msg: 'Average Retrieved' });
                     }
 
                 }).catch(reason => {
@@ -285,30 +366,25 @@ router.post('/create-statistics', (req, res, next) => {
             //retrieves all the statistics for the user
             User.getAllStatisticsIdsByUserId(currentUserId)
                 .then(stats => {
-                    if (stats.length == 0)//if not stats are created then create stats
+                    
+                    if (stats.length == 0)//if no stats are created then create stats
                         saveStatistics(gameObj);
                     else {
-
+                       
                         for (var i = 0; i < stats.length || statisticsExists; i++) {
-                            Statistics.getGameByStatisticsId(stats[i])
-                            .then(game => {
-                                j = j + 1;
-                               
-                                if (game == gameObj.id) {
+                            Statistics.findById(stats[i], (err, statObject) =>{
+                          
+                                if(statObject.game == gameObj.id){                       
+                                    updateStatistics(statObject.id, gameObj);
                                     statisticsExists = true;
-                                    updateStatistics(stats[j-1], gameObj);
-                                       //this is giving an error when creating  stats cant set headers after they are sent
-                                    
-                                 
                                 }
-                                //if all the stats have been looked at and none of them equal the one the user is trying to create then create stats
-                                if (!statisticsExists && j == stats.length)
-                                    saveStatistics(gameObj)
-                                   
+                                if(j == stats.length - 1 && !statisticsExists)
+                                {
+                                  saveStatistics(gameObj)
+                                }
+                                j = j + 1; //since we are in a callback we have to keep track of i in a different variable
                             });
-                            
-
-                        }
+                        };                  
 
                     }
                 })
@@ -318,7 +394,6 @@ router.post('/create-statistics', (req, res, next) => {
         });
 
         function updateStatistics(statObject, gameObj){
-
          Statistics.findOneAndUpdate({ _id: statObject },
             {
                 $set: {
@@ -340,7 +415,6 @@ router.post('/create-statistics', (req, res, next) => {
     }
 
     function saveStatistics(gameObj) {
-
         let newStatistics = new Statistics({
             username: req.body.detailedStats.username,
             game: gameObj,

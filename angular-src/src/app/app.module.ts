@@ -6,6 +6,7 @@ import {RouterModule, Routes} from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMaterialModules } from './material.module'; //imports all of materials from the materials module
 import { ChartsModule } from 'ng2-charts';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 // import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 // import {MatRadioModule} from '@angular/material/radio';
 // import {MatFormFieldModule} from '@angular/material/form-field';
@@ -33,6 +34,7 @@ import {AuthGuard} from './guards/auth.guard';
 import { CreateGameComponent } from './components/create-game/create-game.component';
 import { CreateStatisticsComponent } from './components/create-statistics/create-statistics.component';
 import { PartyComponent } from './components/party/party.component';
+import { StatsCardComponent } from './components/stats-card/stats-card.component';
 
 
 
@@ -58,7 +60,8 @@ const appRoutes: Routes = [
     ProfileComponent,
     CreateGameComponent,
     CreateStatisticsComponent,
-    PartyComponent
+    PartyComponent,
+    StatsCardComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +71,9 @@ const appRoutes: Routes = [
     FlashMessagesModule,
     BrowserAnimationsModule,
     AppMaterialModules,
-    ChartsModule
+    ChartsModule,
+    OwlDateTimeModule, 
+    OwlNativeDateTimeModule
     // MatButtonModule,
     // MatRadioModule, 
     // MatCheckboxModule,

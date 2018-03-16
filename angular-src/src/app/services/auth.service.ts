@@ -110,10 +110,46 @@ export class AuthService {
     .map(res => res.json());
   }
 
+  addFavouriteStat(averageStatAndUser){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/users/addFavouriteStat', averageStatAndUser, {headers: headers})
+    .map(res => res.json());
+  }
+
+  getLogoForGame(game){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/games/getLogoForGame', game, {headers: headers})
+    .map(res => res.json());
+  }
+
+
+  getAllAverageStatsByGame(game){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/averageStats/getAllAverageStatsByGame', game, {headers: headers})
+    .map(res => res.json());
+  }
+
   getOverwatch(statId){
     
     let headers = new Headers();
     return this.http.put('http://localhost:3000/statistics/overwatch', statId, {headers: headers})
+    .map(res => res.json());
+  }
+
+  getAverageStatById(averageStatId){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/AverageStats/getAverageStatById', averageStatId, {headers: headers})
+    .map(res => res.json());
+  }
+
+  getSpecificUserStat(statData){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/users/getSpecificUserStat',statData, {headers: headers})
     .map(res => res.json());
   }
 
@@ -144,11 +180,11 @@ export class AuthService {
     .map(res => res.json());
   }
 
-  getAllStatistics(user){
+  getAllStatisticsForLoggedInUser(user){
     
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.put('http://localhost:3000/users/getAllStatistics', user, {headers: headers})
+    return this.http.put('http://localhost:3000/users/getAllStatisticsForLoggedInUser', user, {headers: headers})
     .map(res => res.json());
   }
 

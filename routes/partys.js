@@ -9,7 +9,7 @@ const Game = require('../models/game');
 
 //CreateParty
 router.post('/create-party', (req, res, next) => {
-
+  
 
     let newParty = new Party({
         partyCreator: req.body.partyCreator.id,

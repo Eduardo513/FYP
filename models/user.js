@@ -31,12 +31,25 @@ const UserSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref:'User'
     }],
+    favouriteStats :[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'AverageStat'
+    }]
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);
 
 module.exports.getUserById = function(id, callback){
     User.findById(id, callback);
+}
+
+module.exports.getAllFavouriteStats = function(id, callback){
+    return new Promise((resolve, reject) => {
+        User.findById(id, (err, user) =>{
+            if(err) return reject(err);
+            return resolve(user.favouriteStats);
+        });
+    });
 }
 
 module.exports.getAllStatisticsIdsByUserId = function(id, callback){

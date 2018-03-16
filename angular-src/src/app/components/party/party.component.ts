@@ -21,7 +21,10 @@ var readableParty = [];
   encapsulation: ViewEncapsulation.None
 })
 export class PartyComponent implements OnInit {
+  
   selectedFriends = [];
+  dt1;
+  public selectedMoment = new Date();
   minDate;
   user = JSON.parse(localStorage.getItem('user'));
   friends = [];
@@ -55,12 +58,13 @@ export class PartyComponent implements OnInit {
     private flashMessage: FlashMessagesService) { }
 
   ngOnInit() {
-
+  
 
     this.getAllFriends();
     this.getDate();
     this.getGames();
     this.getPublicParties(readableParty);
+    console.log(this.selectedMoment);
 
 
 
@@ -119,6 +123,8 @@ export class PartyComponent implements OnInit {
 
   submitForm() {
     var isPartyPublic;
+    var newDate = this.selectedMoment.toISOString().replace('Z', '').replace('T', '  ');
+    console.log(newDate);
 
     if (this.selectedAccessibility == "Public") {
       isPartyPublic = true;
@@ -132,7 +138,7 @@ export class PartyComponent implements OnInit {
         partyCreator: this.user,
         partyMembers: this.selectedFriends,
         game: this.selectedGame,
-        date: this.selectedDate,
+        date: newDate,
         accessibility: isPartyPublic
       }
 

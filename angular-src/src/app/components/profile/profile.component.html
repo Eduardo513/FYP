@@ -1,7 +1,21 @@
-<div *ngIf="user" class="main-content">
+
+
+
+    <div *ngIf="user" class="main-content">
     
-    
-            <div class="container-fluid">
+        <mat-grid-list cols="2" rowHeight="2:1">
+                <!-- <mat-grid-tile><app-stats-card [data]="generateCard(averageStat, '/assets/images/runescapeLogo.png', specificStatistics.Runescape)"></app-stats-card> </mat-grid-tile> -->
+                <mat-grid-tile> 
+                    
+                </mat-grid-tile>
+                <mat-grid-tile>3</mat-grid-tile>
+                <mat-grid-tile>4</mat-grid-tile>
+              </mat-grid-list>
+              
+                <div *ngFor="let cardData of allCardDataForUser">
+                        <app-stats-card [data]=cardData></app-stats-card>
+                    </div>
+            <!-- <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="card card-stats" >
@@ -18,9 +32,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
+                    </div> -->
+                    
+                    <!-- <div class="row">
                         <div class="col-md-4">
                             <div class="card" >
                                 <div class="card-header card-chart" data-background-color="green">
@@ -36,5 +50,5 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-</div>
+                        </div> -->
+    </div>

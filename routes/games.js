@@ -12,31 +12,63 @@ router.post('/create-game', (req, res, next) => {
         genre: req.body.genre
     });
 
-    Game.addGame(newGame, (err, game) =>{
-        if(err){
-            res.json({success: false, msg:'Failed to create game'});
+    Game.addGame(newGame, (err, game) => {
+        if (err) {
+            res.json({ success: false, msg: 'Failed to create game' });
         }
-        else{
-            res.json({success: true, msg:'Game created'});
+        else {
+            res.json({ success: true, msg: 'Game created' });
         }
     });
 });
 
-router.get('/allGames', (req, res) => 
-{
-    Game.find({}, (err, games) =>
-    {
-        if(err){
+router.put('/getLogoForGame', (req, res, next) => {
+    var selectedGameId = req.body.game;
+    var logo;
+
+    Game.findById(selectedGameId, (err, gameObj)=>{
+
+        switch (gameObj.name) {
+            
+                    case "Leagueoflegends":
+                       logo = '/assets/images/LeagueOfLegendsLogo.jpg'
+                        break;
+            
+                    case "Oldschool Runescape":
+                       logo = '/assets/images/oldschoolRunescapeLogo.jpg'
+                        break;
+            
+                    case "Runescape":
+                        logo = '/assets/images/runescapeLogo.png'
+                        break;
+            
+                    case "Overwatch":
+                    logo = '/assets/images/overwatchLogo.jpg'
+                        break;
+            
+                    case "World of Warcraft":
+                    logo = '/assets/images/World-of-WarcraftLogo.png'
+                        break;
+            
+                }
+                res.json({success: true, logo: logo, msg: 'Logo Retrieved'})
+            
+    });
+    
+});
+
+
+
+router.get('/allGames', (req, res) => {
+    Game.find({}, (err, games) => {
+        if (err) {
             res.json({ success: false, message: err });
         }
-        else
-        {
-            if(!games)
-            {
+        else {
+            if (!games) {
                 res.json({ success: false, message: 'No Games found.' });
             }
-            else
-            {
+            else {
                 res.json({ success: true, games: games });
             }
         }

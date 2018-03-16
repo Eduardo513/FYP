@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
 
 
   getAllStatistics(){
-    this.authService.getAllStatistics(this.user).subscribe(data =>{
+    this.authService.getAllStatisticsForLoggedInUser(this.user).subscribe(data =>{
       for(var i = 0; i < data.statistics.length; i++)
       {
        this.statistics.push(data.statistics[i][0]);

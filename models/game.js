@@ -29,6 +29,17 @@ module.exports.getGameByName = function(name, callback){
     
 }
 
+module.exports.getAllGames = function(callback){
+    return new Promise((resolve, reject) =>{
+        const query = {}
+        Game.find(query, (err, games) =>{
+            if(err) return reject(err);
+            return resolve(games);
+        });
+    });
+    
+}
+
 module.exports.getGameByGenre = function(genre, callback){
     const query = {genre: genre}
     Game.findOne(query, callback);

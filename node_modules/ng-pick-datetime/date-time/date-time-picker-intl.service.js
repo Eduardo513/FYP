@@ -1,0 +1,29 @@
+import { Injectable } from '@angular/core';
+var OwlDateTimeIntl = (function () {
+    function OwlDateTimeIntl() {
+        this.upSecondLabel = 'Add a second';
+        this.downSecondLabel = 'Minus a second';
+        this.upMinuteLabel = 'Add a minute';
+        this.downMinuteLabel = 'Minus a minute';
+        this.upHourLabel = 'Add a hour';
+        this.downHourLabel = 'Minus a hour';
+        this.prevMonthLabel = 'Previous month';
+        this.nextMonthLabel = 'Next month';
+        this.prevYearLabel = 'Previous year';
+        this.nextYearLabel = 'Next year';
+        this.switchToMonthViewLabel = 'Change to month view';
+        this.switchToYearViewLabel = 'Change to year view';
+        this.cancelBtnLabel = 'Cancel';
+        this.setBtnLabel = 'Set';
+        this.rangeFromLabel = 'From';
+        this.rangeToLabel = 'To';
+        this.hour12AMLabel = 'AM';
+        this.hour12PMLabel = 'PM';
+    }
+    OwlDateTimeIntl.decorators = [
+        { type: Injectable },
+    ];
+    OwlDateTimeIntl.ctorParameters = function () { return []; };
+    return OwlDateTimeIntl;
+}());
+export { OwlDateTimeIntl };
