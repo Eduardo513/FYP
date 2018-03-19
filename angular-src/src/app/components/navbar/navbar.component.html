@@ -19,6 +19,10 @@
           <a [routerLink]="['/dashboard']"> Dashboard </a>
         </li>
 
+         <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a [routerLink]="['/friends']"> Friends </a>
+        </li>
+
         <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
             <a [routerLink]="['/party']"> Create Party </a>
           </li>

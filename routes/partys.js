@@ -9,7 +9,7 @@ const Game = require('../models/game');
 
 //CreateParty
 router.post('/create-party', (req, res, next) => {
-  
+console.log("hello");
 
     let newParty = new Party({
         partyCreator: req.body.partyCreator.id,
@@ -18,6 +18,7 @@ router.post('/create-party', (req, res, next) => {
         startDate: req.body.date,
         public: req.body.accessibility
     });
+
 
     Party.addParty(newParty, (err, party) => {
         if (err) {

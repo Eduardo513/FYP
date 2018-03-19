@@ -17,7 +17,7 @@ const PartySchema = mongoose.Schema({
         ref:'Game'
     },
     startDate :{
-        type: String
+        type: Date
     },
     public :{
         type: Boolean,

@@ -1,0 +1,87 @@
+<h2>Friends</h2>
+
+<mat-tab-group>
+
+  <mat-tab label="View Your Friends">
+
+
+
+
+    <ul class="list-unstyled">
+      <li class="card card-body mb-2" *ngFor="let friend of friendsList">
+        <div class="row">
+          <div class="col-sm-4">
+            <!-- <img *ngIf="user.image" class="img-fluid" [src]="user.image" alt=""> -->
+            <!-- <img *ngIf="user.image" class="img-fluid" src="{{user.image}}" alt=""> -->
+            <!-- <img *ngIf="user.image" class="img-fluid" bind-src="user.image" alt=""> -->
+          </div>
+          <div class="col-sm-8">
+            <h3 [ngStyle]="currentStyles">{{ friend.username }} {{ friend.name }}</h3>
+            <ul class="list-group">
+              <li class="list-group-item">Bio:</li>
+              <li class="list-group-item">Favourite Game:</li>
+              <li class="list-group-item">Gamer Since:</li>
+            </ul>
+            <br>
+            <div [ngStyle]="currentStyles">
+            <button type="submit" (click)="viewProfile"
+            mat-raised-button color="primary">View Profile</button>
+            </div>
+          </div>
+        </div>
+
+      </li>
+    </ul>
+
+    <!-- <ng-template #noUsers><h4>No Users Found</h4></ng-template> -->
+
+    <h4 *ngIf="friendsList?.length == 0">No Friends Found</h4>
+
+    <h4 *ngIf="!loaded">Loading Friends...</h4>
+  </mat-tab>
+  <mat-tab label="View Your Friend Requests">
+
+
+    <ul class="list-unstyled">
+      <li class="card card-body mb-2" *ngFor="let friendRequest of friendRequestsList">
+        <div class="row">
+          <div class="col-sm-4">
+            <!-- <img *ngIf="user.image" class="img-fluid" [src]="user.image" alt=""> -->
+            <!-- <img *ngIf="user.image" class="img-fluid" src="{{user.image}}" alt=""> -->
+            <!-- <img *ngIf="user.image" class="img-fluid" bind-src="user.image" alt=""> -->
+          </div>
+          <div class="col-sm-8">
+            <h3 [ngStyle]="currentStyles">{{ friendRequest.username }} {{ friendRequest.name }}</h3>
+            <ul class="list-group">
+              <li class="list-group-item">Bio:</li>
+              <li class="list-group-item">Favourite Game:</li>
+              <li class="list-group-item">Gamer Since:</li>
+            </ul>
+            <br>
+            <div [ngStyle]="currentStyles">
+              <button type="submit" (click)="acceptFriendRequest(friendRequest)" mat-raised-button color="primary">Accept Friend Request</button>
+            </div>
+            <br>
+            <div [ngStyle]="currentStyles">
+              <button type="submit" (click)="viewProfile" mat-raised-button color="primary">View Profile</button>
+
+            </div>
+          </div>
+        </div>
+
+      </li>
+    </ul>
+
+    <h4 *ngIf="friendRequestsList?.length == 0">No Friend Requests Found</h4>
+  </mat-tab>
+  <mat-tab label="Add Friends">
+      <form>
+      <h3>Add Friends!</h3>
+      <div class="form-group" >
+          <label>Friend's Username</label>
+          <input type="text" [(ngModel)]="addingFriendUsername" name="addingFriendUsername" class="form-control">
+      </div>
+      <button type="submit" (click)="addFriend(addingFriendUsername)" mat-raised-button color="primary">Add Friend</button>
+  </form>
+  </mat-tab>
+</mat-tab-group>

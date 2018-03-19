@@ -72,6 +72,16 @@ router.post('/authenticate', (req, res, next) => {
     });
 });
 
+router.put('/getUserObjectById', (req, res, next) => {
+    var userId = req.body.id
+    User.findById(userId, (err, userObj) => {
+        if (!userObj)
+            return res.json({ success: false, msg: 'User not found' })
+        else
+            return res.json({ success: true, userObj: userObj, msg: 'User found' })
+    });
+});
+
 //addFriendToUser
 //the person who initiated the request sends a friendrequest. this will add their own user object to the friends friendrequest array
 //the friend will then have to accept the friend request and only then will both friend arrays on both user objects be updated with each other
@@ -82,15 +92,17 @@ router.post('/addFriend', (req, res, next) => {
     const friendUsername = req.body.username;
     var friendRequestAlreadySent = false; //used to error check friend request
     var friendAlreadyCompleted = false; //used to error check friend request if they are already friends
+    var friendRequestPending = false; //used to error check if they have this friend as a waiting friend request
+
 
     //check to see if user already sent a friend request to this user
     User.getUserByUsername(friendUsername, (err, friendUser) => {
         if (err)
             throw err;
-         if (!friendUser) {
-           return res.json({ success: false, msg: 'User not found' })
-         }
-         
+        if (!friendUser) {
+            return res.json({ success: false, msg: 'User not found' })
+        }
+
         if (friendUser) {
             //checks to see if friendrequest to that friend already exists 
             for (var i = 0; i < friendUser.friendRequests.length; i++) {
@@ -98,7 +110,7 @@ router.post('/addFriend', (req, res, next) => {
                     friendRequestAlreadySent = true;
 
             }
-                //checks to see if they are already friends with that user
+            //checks to see if they are already friends with that user
             for (var i = 0; i < friendUser.friends.length; i++) {
                 if (friendUser.friends[i] == currentUserId)
                     friendAlreadyCompleted = true;
@@ -124,19 +136,33 @@ router.post('/addFriend', (req, res, next) => {
                     }
                     else {
 
-                        //find user that the logged in user wants to add as a friend, and puts loggedin user as a friendrequest object in friendrequest array
-                        User.findOneAndUpdate({ username: friendUsername },
-                            { $push: { friendRequests: loggedInUser } }, (err, addedFriend) => {
-                                if (err)
-                                    throw err;
-                                if (!addedFriend) {
-                                    return res.json({ success: false, msg: 'User not found' })
-                                }
+                        //checks to see if they are already have a friend request from that user pending
+                        for (var i = 0; i < loggedInUser.friendRequests.length; i++) {
+                            if (loggedInUser.friendRequests[i] == friendUser.id)
+                                friendRequestPending = true;
+                        }
 
-                                if (addedFriend) {
-                                    return res.json({ success: true, msg: 'Friend Request Sent!' })
-                                }
-                            });
+                        if (friendRequestPending) {
+                            return res.json({ success: false, msg: 'You already have a pending friend request from that user.' });
+                        }
+
+                        else {
+
+
+                            //find user that the logged in user wants to add as a friend, and puts loggedin user as a friendrequest object in friendrequest array
+                            User.findOneAndUpdate({ username: friendUsername },
+                                { $push: { friendRequests: loggedInUser } }, (err, addedFriend) => {
+                                    if (err)
+                                        throw err;
+                                    if (!addedFriend) {
+                                        return res.json({ success: false, msg: 'User not found' })
+                                    }
+
+                                    if (addedFriend) {
+                                        return res.json({ success: true, msg: 'Friend Request Sent!' })
+                                    }
+                                });
+                        }
                     }
 
 
@@ -221,7 +247,8 @@ router.post('/getAllFriendRequests', (req, res, next) => {
                 for (var i = 0; i < user.friendRequests.length; i++) {
 
                     //gets the statistics object from the id
-                    User.find({ '_id': {    $in: [(user.friendRequests[i])]   }
+                    User.find({
+                        '_id': { $in: [(user.friendRequests[i])] }
                     }, function (err, friendRequest) {
                         if (err)
                             throw err;
@@ -306,14 +333,13 @@ router.post('/getAllFriends', (req, res, next) => {
 
 //addFavouriteStat
 //looks through all the users current faviourte stats to make sure they have already not added this stat
-router.put('/addFavouriteStat', (req, res, next) =>{
+router.put('/addFavouriteStat', (req, res, next) => {
     var foundMatch = false;
-    AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject =>{
-        User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats =>{
+    AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject => {
+        User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats => {
 
             //this is checking if user already has stat favourited. if it equals -1 that means they dont have that stat in the array
-            if((allUsersFavouriteStats.indexOf(averageStatObject.id)) == '-1')
-            {
+            if ((allUsersFavouriteStats.indexOf(averageStatObject.id)) == '-1') {
                 User.findOneAndUpdate({ _id: req.body.userId },
                     { $push: { favouriteStats: averageStatObject } }, (err, addedStat) => {
                         if (err)
@@ -321,88 +347,88 @@ router.put('/addFavouriteStat', (req, res, next) =>{
                         if (!addedStat) {
                             return res.json({ success: false, msg: 'Stat unable to be added' })
                         }
-            
+
                         if (addedStat) {
                             return res.json({ success: true, msg: 'Favourite Stat Added!' })
                         }
                     });
             }
-            else{
+            else {
                 return res.json({ success: false, msg: 'You already have that stat favourited!' })
             }
-           
-            
+
+
         });
-       
+
     });
-    
+
 });
 
 //gets the specific number for stat for the user. UsersStat is the users statistic object
-router.put('/getSpecificUserStat', (req, res, next) =>{
+router.put('/getSpecificUserStat', (req, res, next) => {
     var splitUpLocation = req.body.averageStat.completeLocation.split(','); //here we split up the location of the specific stat so we can parse to it
     // var usersStat = req.body.usersStat;//UsersStat is the users whole statistic object
-   
-  /*Quite complicated will explain. We grabb all stats ids for user and grab all games.
-  We then grab the stat object for each stat id and compare the game attached to that stat object to each game availabe
-  if we get a match on that then thats one step complete, we must also have the same game object on that statistic as the average stat passed throguh the parameter
-  if all this is true then we pass it into a function below and parse it to retrive the number for the specific stat */
-    User.getAllStatisticsIdsByUserId(req.body.userId).then(allUsersStatIds =>{
-        Game.getAllGames().then(games =>{
-            allUsersStatIds.forEach(function(statId){
-                Statistics.getStatisticsById(statId, (err, statObject) =>{
-                
-                    if(games.indexOf(statObject.game) && req.body.averageStat.game == statObject.game){
+
+    /*Quite complicated will explain. We grabb all stats ids for user and grab all games.
+    We then grab the stat object for each stat id and compare the game attached to that stat object to each game availabe
+    if we get a match on that then thats one step complete, we must also have the same game object on that statistic as the average stat passed throguh the parameter
+    if all this is true then we pass it into a function below and parse it to retrive the number for the specific stat */
+    User.getAllStatisticsIdsByUserId(req.body.userId).then(allUsersStatIds => {
+        Game.getAllGames().then(games => {
+            allUsersStatIds.forEach(function (statId) {
+                Statistics.getStatisticsById(statId, (err, statObject) => {
+
+                    if (games.indexOf(statObject.game) && req.body.averageStat.game == statObject.game) {
                         getDataFromLocation(splitUpLocation, statObject)
-                       
-                  
+
+
                     }
                 });
-        });
-          
+            });
+
         });
     });
 
-    function getDataFromLocation(location, usersStat){
+    function getDataFromLocation(location, usersStat) {
         var usersSpecificStat //this is what we assign the specific number in the stat we are looking for
         const statLocationTier1 = splitUpLocation[0];
         const statLocationTier2 = splitUpLocation[1];
         const statLocationTier3 = splitUpLocation[2];
         const statLocationTier4 = splitUpLocation[3];
         const statLocationTier5 = splitUpLocation[4];
-    
+
         if (statLocationTier2 == 'undefined') {
-          usersSpecificStat =  parseInt(usersStat[statLocationTier1]);
+            usersSpecificStat = parseInt(usersStat[statLocationTier1]);
         }
         else if (statLocationTier3 == 'undefined') {
-          usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2]);
+            usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2]);
         }
         else if (statLocationTier4 == 'undefined') {
-          usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2][statLocationTier3]);
+            usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2][statLocationTier3]);
         }
         else if (statLocationTier5 == 'undefined') {
-          usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2][statLocationTier3][statLocationTier4]);
+            usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2][statLocationTier3][statLocationTier4]);
         }
         else {
-          usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2][statLocationTier3][statLocationTier4][statLocationTier5]);
+            usersSpecificStat = parseInt(usersStat[statLocationTier1][statLocationTier2][statLocationTier3][statLocationTier4][statLocationTier5]);
         }
-    
+
         if (usersSpecificStat.isNullOrUndefined) {
-          console.log("Average Stat failed to find for user")
-          return res.json({ success: false, msg: 'Statistic not Found' })
+            console.log("Average Stat failed to find for user")
+            return res.json({ success: false, msg: 'Statistic not Found' })
         }
         else {
-         return res.json({ success: true, averageStat: req.body.averageStat, usersSpecificStat: usersSpecificStat, msg: 'Statistic Found' })
+            return res.json({ success: true, averageStat: req.body.averageStat, usersSpecificStat: usersSpecificStat, msg: 'Statistic Found' })
         }
     }
- 
+
 
 });
 
 
 //GetStatisticsFromUser
 router.put('/getAllStatisticsForLoggedInUser', (req, res, next) => {
-   
+
 
     const user = req.body;
     var allStatistics = [];
@@ -413,7 +439,7 @@ router.put('/getAllStatisticsForLoggedInUser', (req, res, next) => {
         if (err)
             throw err;
         if (user) {
-            
+
 
             if (!user.statistics) {
                 res.json({ success: false, message: 'No Statistics Found.' });

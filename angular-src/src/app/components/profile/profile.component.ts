@@ -20,10 +20,21 @@ export class ProfileComponent implements OnInit {
     private flashMessage: FlashMessagesService) { }
 
   ngOnInit() {
-    if(this.viewingUser == undefined)
-    this.viewingUser =JSON.parse(localStorage.getItem('user'));
+    if(this.viewingUser == undefined){
+      var loggedInUser = JSON.parse(localStorage.getItem('user'))
+     
+      this.authService.getUserObjectById(loggedInUser).subscribe(data=>{
+        if(data.success){
 
-    this.getUsersFavouriteStats(this.viewingUser);
+        this.viewingUser = data.userObj;
+        console.log(this.viewingUser)
+        this.getUsersFavouriteStats(data.userObj);
+        }
+      });
+    }
+   
+
+   
 
     
     this.authService.getProfile().subscribe(profile => {
@@ -44,7 +55,7 @@ export class ProfileComponent implements OnInit {
     for(var i = 0; i< user.favouriteStats.length; i++){
       const dataForStats = {
         favouriteStatId : user.favouriteStats[i],
-        userId : user.id
+        userId : user._id
     
       }
   

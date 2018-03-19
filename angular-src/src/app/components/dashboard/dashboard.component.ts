@@ -28,8 +28,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.getAllStatistics();
-    this.getAllFriends();
-    this.getAllFriendRequests();
+   
 
   
   }
@@ -44,90 +43,7 @@ export class DashboardComponent implements OnInit {
    });
   }
 
-  getAllFriends(){
-    this.authService.getAllFriends(this.user).subscribe(data =>{
-      for(var i = 0; i < data.friends.length; i++)
-      {
-        this.friends.push(data.friends[i][0]);
-      }
-
-    });
-
-  }
-
-  getAllFriendRequests(){
   
-    this.authService.getAllFriendRequests(this.user).subscribe(data =>{
-      for(var i = 0; i < data.friendRequests.length; i++)
-      {
-        this.friendRequests.push(data.friendRequests[i][0]);
-        
-        
-      }
-    });
-  }
-
-  onAcceptFriendRequest(){
-  
-    const friendData = 
-    {
-      //logged in users id
-      id: this.user.id,
-      //username for friend user selected in front end
-      selectedFriendUsername: this.selectedFriend
-      
-    }
-    console.log(friendData.selectedFriendUsername);
-    this.authService.confirmFriendRequest(friendData).subscribe(data =>{
-
-      if(data.success)
-      {
-        this.flashMessage.show(data.msg ,{
-          cssClass: 'alert-success',
-           timeout: 5000});
-      }
-      else{
-        this.flashMessage.show(data.msg ,{
-          cssClass: 'alert-danger',
-           timeout: 5000});
-
-      }
-    });
-  }
-
-  onAddFriendSubmit(){
-
-    if(this.username == this.user.username)
-    {
-      this.flashMessage.show("You can't add yourself!",{
-        cssClass: 'alert-danger',
-         timeout: 5000});
-    }
-    else{
-
-    
-    
-    const friendData = 
-    {
-      id: this.user.id,
-      username: this.username
-    }
-    this.authService.addFriend(friendData).subscribe(data =>{
-      if(data.success)
-      {
-        this.flashMessage.show(data.msg ,{
-          cssClass: 'alert-success',
-           timeout: 5000});
-      }
-      else{
-        this.flashMessage.show(data.msg ,{
-          cssClass: 'alert-danger',
-           timeout: 5000});
-
-      }
-    });
-  }
-}
 
 
 }

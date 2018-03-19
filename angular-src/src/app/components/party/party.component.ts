@@ -64,7 +64,7 @@ export class PartyComponent implements OnInit {
     this.getDate();
     this.getGames();
     this.getPublicParties(readableParty);
-    console.log(this.selectedMoment);
+
 
 
 
@@ -122,9 +122,10 @@ export class PartyComponent implements OnInit {
   }
 
   submitForm() {
+   
     var isPartyPublic;
-    var newDate = this.selectedMoment.toISOString().replace('Z', '').replace('T', '  ');
-    console.log(newDate);
+    // var newDate = this.selectedMoment.toISOString().replace('Z', '').replace('T', '  ');
+    // console.log(newDate);
 
     if (this.selectedAccessibility == "Public") {
       isPartyPublic = true;
@@ -138,11 +139,13 @@ export class PartyComponent implements OnInit {
         partyCreator: this.user,
         partyMembers: this.selectedFriends,
         game: this.selectedGame,
-        date: newDate,
+        date: this.selectedDate,
         accessibility: isPartyPublic
       }
-
+      console.log(party);
+   
     this.authService.createParty(party).subscribe(data => {
+   
       if (data.success) {
         this.flashMessage.show(data.msg, { cssClass: 'alert-success', timeout: 3000 });
       }
@@ -154,6 +157,14 @@ export class PartyComponent implements OnInit {
 
 
   }
+
+  onEdit(rowId){
+    console.log(rowId);
+  }
+  onDelete(rowId){
+    console.log(rowId);
+  }
+
 
   getPublicParties(array) {
  

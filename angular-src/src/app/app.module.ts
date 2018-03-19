@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppMaterialModules } from './material.module'; //imports all of materials from the materials module
 import { ChartsModule } from 'ng2-charts';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { GenericTableModule } from 'angular-generic-table';
 // import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 // import {MatRadioModule} from '@angular/material/radio';
 // import {MatFormFieldModule} from '@angular/material/form-field';
@@ -35,6 +36,7 @@ import { CreateGameComponent } from './components/create-game/create-game.compon
 import { CreateStatisticsComponent } from './components/create-statistics/create-statistics.component';
 import { PartyComponent } from './components/party/party.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
+import { FriendViewComponent } from './components/friend-view/friend-view.component';
 
 
 
@@ -46,7 +48,8 @@ const appRoutes: Routes = [
   {path: 'register', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
   {path: 'dashboard', component: DashboardComponent, canActivate:[AuthGuard]},
-  {path: 'profile', component: ProfileComponent, canActivate:[AuthGuard]}
+  {path: 'profile', component: ProfileComponent, canActivate:[AuthGuard]},
+  {path: 'friends', component: FriendViewComponent, canActivate:[AuthGuard]}
 ]
 
 @NgModule({
@@ -61,7 +64,8 @@ const appRoutes: Routes = [
     CreateGameComponent,
     CreateStatisticsComponent,
     PartyComponent,
-    StatsCardComponent
+    StatsCardComponent,
+    FriendViewComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +77,8 @@ const appRoutes: Routes = [
     AppMaterialModules,
     ChartsModule,
     OwlDateTimeModule, 
-    OwlNativeDateTimeModule
+    OwlNativeDateTimeModule,
+    GenericTableModule
     // MatButtonModule,
     // MatRadioModule, 
     // MatCheckboxModule,

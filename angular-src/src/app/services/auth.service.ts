@@ -117,6 +117,13 @@ export class AuthService {
     .map(res => res.json());
   }
 
+  getUserObjectById(user){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/users/getUserObjectById', user, {headers: headers})
+    .map(res => res.json());
+  }
+
   getLogoForGame(game){
     
     let headers = new Headers();
