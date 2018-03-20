@@ -11,16 +11,16 @@
       <li class="card card-body mb-2" *ngFor="let friend of friendsList">
         <div class="row">
           <div class="col-sm-4">
-            <!-- <img *ngIf="user.image" class="img-fluid" [src]="user.image" alt=""> -->
+            <img *ngIf="friend.profilePicture" class="img-fluid" [src]="friend.profilePicture" alt="">
             <!-- <img *ngIf="user.image" class="img-fluid" src="{{user.image}}" alt=""> -->
             <!-- <img *ngIf="user.image" class="img-fluid" bind-src="user.image" alt=""> -->
           </div>
           <div class="col-sm-8">
-            <h3 [ngStyle]="currentStyles">{{ friend.username }} {{ friend.name }}</h3>
+            <h3 [ngStyle]="currentStyles">Username: {{ friend.username }} </h3>
             <ul class="list-group">
-              <li class="list-group-item">Bio:</li>
-              <li class="list-group-item">Favourite Game:</li>
-              <li class="list-group-item">Gamer Since:</li>
+              <li class="list-group-item">Bio: {{friend.bio}}</li>
+              <li class="list-group-item">Favourite Game: {{friend.favouriteGame}}</li>
+              <li class="list-group-item">Gamer Since: {{friend.gamingSince}}</li>
             </ul>
             <br>
             <div [ngStyle]="currentStyles">
@@ -46,16 +46,17 @@
       <li class="card card-body mb-2" *ngFor="let friendRequest of friendRequestsList">
         <div class="row">
           <div class="col-sm-4">
+              <img *ngIf="friendRequest.profilePicture" class="img-fluid" [src]="friendRequest.profilePicture" alt="">
             <!-- <img *ngIf="user.image" class="img-fluid" [src]="user.image" alt=""> -->
             <!-- <img *ngIf="user.image" class="img-fluid" src="{{user.image}}" alt=""> -->
             <!-- <img *ngIf="user.image" class="img-fluid" bind-src="user.image" alt=""> -->
           </div>
           <div class="col-sm-8">
-            <h3 [ngStyle]="currentStyles">{{ friendRequest.username }} {{ friendRequest.name }}</h3>
+            <h3 [ngStyle]="currentStyles">Username: {{ friendRequest.username }}</h3>
             <ul class="list-group">
-              <li class="list-group-item">Bio:</li>
-              <li class="list-group-item">Favourite Game:</li>
-              <li class="list-group-item">Gamer Since:</li>
+              <li class="list-group-item">Bio: {{ friendRequest.bio }}</li>
+              <li class="list-group-item">Favourite Game: {{ friendRequest.favouriteGame }}</li>
+              <li class="list-group-item">Gamer Since: {{ friendRequest.gamingSince }}</li>
             </ul>
             <br>
             <div [ngStyle]="currentStyles">

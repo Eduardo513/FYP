@@ -27,6 +27,7 @@
     "@angular/router": "^5.2.5",
     "angular-generic-table": "^4.0.1",
     "angular2-flash-messages": "^1.0.8",
+    "angular2-image-upload": "^1.0.0-rc.0",
     "angular2-jwt": "^0.2.3",
     "chart.js": "^2.7.2",
     "core-js": "^2.4.1",

@@ -26,12 +26,22 @@ export class StatsCardComponent implements OnInit {
   // }
 
   ngOnInit() {
-    console.log(this.data);
+  
   }
 
   addFavouriteStat(){
+    var userId;
+
+    //passing in id in two different formats so we check which format is coming in here
+    if(this.data.user._id == undefined)
+      userId = this.data.user.id
+    
+    else
+    userId = this.data.user._id
+    
+
     const dataForStat = {
-      userId : this.data.user.id,
+      userId : userId,
       statName: this.data.statName
     }
     this.authService.addFavouriteStat(dataForStat).subscribe(data =>{

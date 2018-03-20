@@ -89,6 +89,14 @@ export class AuthService {
     .map(res => res.json());
   }
 
+
+  editUserProfileData(editedUser){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/users/editUserProfileData', editedUser, {headers: headers})
+    .map(res => res.json());
+  }
+
   getRunescape(statId){
     
     let headers = new Headers();

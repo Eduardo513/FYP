@@ -16,7 +16,8 @@ router.post('/register', (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         username: req.body.username,
-        password: req.body.password
+        password: req.body.password,
+        profilePicture: '/assets/images/blankProfilePicture.png'
     });
 
     User.addUser(newUser, (err, user) => {
@@ -27,6 +28,29 @@ router.post('/register', (req, res, next) => {
             res.json({ success: true, msg: 'User registered' });
         }
     });
+});
+
+
+//Register
+router.put('/editUserProfileData', (req, res, next) => {
+
+    User.findOneAndUpdate({ _id: req.body.id },
+        {
+            $set: {
+               bio: req.body.bio,
+               favouriteGame: req.body.favouriteGame,
+               gamingSince: req.body.gamingSince
+            //    profilePicture: req.body.profilePicture  //havent implemented this yet
+            }
+        }, (err, editedUser) => {
+            if (err)
+                 res.json({ success: false, err: err, msg: 'Failed to update user' });
+            else {
+                res.json({ success: true, editedUser: editedUser, msg: 'User updated' });
+            }
+        }
+
+    );
 });
 
 //Authenticate

@@ -19,6 +19,18 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    profilePicture :{
+        type: String,
+    },
+    bio :{
+        type: String,
+    },
+    favouriteGame :{
+        type: String,
+    },
+    gamingSince :{
+        type: Date,
+    },
     statistics :[{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Statistics'

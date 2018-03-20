@@ -462,8 +462,9 @@ export class CreateStatisticsComponent implements OnInit {
       averageStat : averageStat,
       usersStat : stat
     }
-    console.log(statData);
- 
+    
+   
+
     // this.authService.getSpecificUserStat(statData).subscribe(specificUserStat =>{
   
     //   });

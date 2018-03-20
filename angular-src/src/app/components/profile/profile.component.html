@@ -1,21 +1,63 @@
 
 
 
-    <div *ngIf="user" class="main-content">
-    
-        <mat-grid-list cols="2" rowHeight="2:1">
-                <!-- <mat-grid-tile><app-stats-card [data]="generateCard(averageStat, '/assets/images/runescapeLogo.png', specificStatistics.Runescape)"></app-stats-card> </mat-grid-tile> -->
-                <mat-grid-tile> 
-                    
+<div *ngIf="user" class="main-content">
+
+        <mat-grid-list cols="6" rowHeight="100px">
+
+                <mat-grid-tile [colspan]="3" [rowspan]="3">
+                        <img *ngIf="user.profilePicture" class="img-fluid" [src]="user.profilePicture" alt="">
                 </mat-grid-tile>
-                <mat-grid-tile>3</mat-grid-tile>
-                <mat-grid-tile>4</mat-grid-tile>
+
+                <mat-grid-tile [colspan]="3" [rowspan]="3">
+                        <div *ngIf="editProfile">
+                                <mat-form-field>
+                                        <textarea matInput [(ngModel)]="bio" name="bio" placeholder="Bio: "></textarea>
+                                       
+                                    </mat-form-field>
+                                    <br>
+                                    <mat-form-field>
+                                        <input matInput [(ngModel)]="favouriteGame" name="favouriteGame" placeholder="Favourite Game: ">
+                                    </mat-form-field>
+                                    <br>
+                                    <mat-form-field>
+                            
+                                        <input matInput [min]="minDate" [matDatepicker]="picker" placeholder="Gaming Since: " [(ngModel)]="gamingSince">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                    <br>
+                                    <button type="submit" (click)="editUser()" mat-raised-button color="primary">Confirm Changes</button>
+                                    <button type="submit" (click)="toggleEditFalse()" mat-raised-button color="primary">Cancel Changes</button>
+                             </div>
+                             <div *ngIf="editProfile==false">
+                                    <ul class="list-group">
+                                            <li class="list-group-item">Bio: {{viewingUser.bio}}</li>
+                                            <li class="list-group-item">Favourite Game: {{viewingUser.favouriteGame}}</li>
+                                            <li class="list-group-item">Gamer Since: {{viewingUser.gamingSince}}</li>
+                                          </ul>
+                                 <button type="submit" (click)="toggleEditTrue()" mat-raised-button color="primary">Edit Profile</button>
+                             </div>
+                </mat-grid-tile>
+                
+                
+           
               </mat-grid-list>
-              
-                <div *ngFor="let cardData of allCardDataForUser">
-                        <app-stats-card [data]=cardData></app-stats-card>
-                    </div>
-            <!-- <div class="container-fluid">
+
+       
+
+   
+ 
+<!-- 
+    <image-upload url="https://httpbin.org/status/200"></image-upload> -->
+
+    
+
+    <h3>Favourite Stats</h3>
+    <div *ngFor="let cardData of allCardDataForUser">
+        <app-stats-card [data]=cardData></app-stats-card>
+    </div>
+    <!-- <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="card card-stats" >
@@ -33,8 +75,8 @@
                             </div>
                         </div>
                     </div> -->
-                    
-                    <!-- <div class="row">
+
+    <!-- <div class="row">
                         <div class="col-md-4">
                             <div class="card" >
                                 <div class="card-header card-chart" data-background-color="green">
@@ -51,4 +93,4 @@
                                 </div>
                             </div>
                         </div> -->
-    </div>
+</div>
