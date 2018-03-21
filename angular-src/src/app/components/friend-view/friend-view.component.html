@@ -24,7 +24,7 @@
             </ul>
             <br>
             <div [ngStyle]="currentStyles">
-            <button type="submit" (click)="viewProfile"
+            <button type="submit" (click)="viewProfile(friend)"
             mat-raised-button color="primary">View Profile</button>
             </div>
           </div>
@@ -61,10 +61,11 @@
             <br>
             <div [ngStyle]="currentStyles">
               <button type="submit" (click)="acceptFriendRequest(friendRequest)" mat-raised-button color="primary">Accept Friend Request</button>
+              <button type="submit" (click)="declineFriendRequest(friendRequest)" mat-raised-button color="primary">Decline Friend Request</button>
             </div>
             <br>
             <div [ngStyle]="currentStyles">
-              <button type="submit" (click)="viewProfile" mat-raised-button color="primary">View Profile</button>
+              <button type="submit" (click)="viewProfile(friendRequest)" mat-raised-button color="primary">View Profile</button>
 
             </div>
           </div>

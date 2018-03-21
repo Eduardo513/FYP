@@ -9,7 +9,7 @@ const Game = require('../models/game');
 
 //CreateParty
 router.post('/create-party', (req, res, next) => {
-console.log("hello");
+
 
     let newParty = new Party({
         partyCreator: req.body.partyCreator.id,
@@ -34,7 +34,7 @@ console.log("hello");
 
 //AllPublicParties
 router.get('/getPublicParties', (req, res, next) => {
- 
+
     Party.getPartyByPublic(true, (err, parties) => {
         if (err)
             throw err
@@ -49,13 +49,13 @@ router.get('/getPublicParties', (req, res, next) => {
 
 
     })
- });
+});
 
 
 //PartyInformationInStringFormatFromObject
 //this parses all the object ids from the party object and returns it in readable string formats for display
 router.post('/getPartyInString', (req, res, next) => {
-    
+
 
     User.findById(req.body.partyCreator, (err, partyCreatorObject) => {
         if (err)
@@ -68,8 +68,8 @@ router.post('/getPartyInString', (req, res, next) => {
                 if (err)
                     throw err
                 if (gameObject) {
-
                     const readableData = {
+                        partyId: req.body._id,
                         partyCreator: partyCreatorObject.username,
                         game: gameObject.name,
                         startDate: req.body.startDate,
@@ -86,8 +86,44 @@ router.post('/getPartyInString', (req, res, next) => {
 
 
 
+});
 
+router.put('/joinParty', (req, res, next) => {
+    var loggedInUserId = req.body.loggedInUserId;
+    var partyId = req.body.partyId;
 
+    Party.getPartyById(partyId, (err, partyObject) => {
+        if (err)
+            throw err
+        if (partyObject) {
+            if (partyObject.partyCreator == loggedInUserId)
+                return res.json({ success: false, msg: "You can't join a party you created" })
+            else if((partyObject.participants.indexOf(loggedInUserId)) != '-1'){
+                return res.json({ success: false, msg: "You are already a participant of that party" })
+            }
+            else {
+
+                User.findById(loggedInUserId, (err, userObj)=>{
+                    if(err)
+                        throw err
+                    if(userObj)
+                    {
+                        Party.findOneAndUpdate({ _id: partyObject._id },
+                            { $push: { participants: userObj } }, (err, updatedParty) => {
+                                if (err)
+                                    throw err;
+                                    else{
+                                        return res.json({ success: true, msg: "You have joined the party" })
+                                    }
+                
+                
+                            });
+                       
+                    }
+                });
+            }
+        }
+    });
 
 });
 

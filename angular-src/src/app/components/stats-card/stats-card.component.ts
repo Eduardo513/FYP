@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth.service';
 export class StatsCardComponent implements OnInit {
 
   @Input('data') data: any;
+  viewingUserIsLoggedIn: boolean = false;
 
   constructor(private validateService: ValidateService,
     private router: Router,
@@ -26,6 +27,12 @@ export class StatsCardComponent implements OnInit {
   // }
 
   ngOnInit() {
+    var loggedInUser = JSON.parse(localStorage.getItem('user'))
+
+    if(this.data.user.username == loggedInUser.username) //this is so we can see if the person vieiwng the card is the user thats logged in or not so we can have different functionalities 
+    this.viewingUserIsLoggedIn = true
+
+
   
   }
 

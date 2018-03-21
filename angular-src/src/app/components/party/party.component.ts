@@ -32,6 +32,7 @@ export class PartyComponent implements OnInit {
   selectedDate;
   selectedGame;
   games;
+  allPublicParties = []
   selectedAccessibility;
   accessibilityOptions = [
     'Public',
@@ -63,41 +64,41 @@ export class PartyComponent implements OnInit {
     this.getAllFriends();
     this.getDate();
     this.getGames();
-    this.getPublicParties(readableParty);
+    this.getPublicParties(this.allPublicParties);
 
 
 
 
 
 
-
-
+ //all this is for angular material table
+    // this.getPublicParties(readableParty);
     //creates a promise that will resolve the array of parties after 1 second 
     //possible refactor would be to have set timeout to know when the array is finished populating instead of just waiting one second
     //but after 3 days of attempting to populate this table I am settling with this
-    const myPromise = new Promise<any>((resolve, reject) => {
-      setTimeout(function () {
+    // const myPromise = new Promise<any>((resolve, reject) => {
+    //   setTimeout(function () {
 
-        resolve(readableParty);
-      }, 1000)
+    //     resolve(readableParty);
+    //   }, 1000)
 
-    });
+    // });
 
 
     //sets up an observable stream to look at the promise once it is resolved
     //not sure if observable is needed here, potentially just use promise instead but according to angular material table api
     // we have to use either observable, array or connnect()-disconnect()
-    const parties$ = Observable.fromPromise(myPromise);
+    // const parties$ = Observable.fromPromise(myPromise);
 
 
-    //subscribes to the observable and sets the datasource of the table to the result of the observable stream.
+    // //subscribes to the observable and sets the datasource of the table to the result of the observable stream.
 
-    parties$.subscribe(x => {
+    // parties$.subscribe(x => {
 
 
-      this.dataSource.data = x;
+    //   this.dataSource.data = x;
 
-    });
+    // });
 
 
 
@@ -142,7 +143,7 @@ export class PartyComponent implements OnInit {
         date: this.selectedDate,
         accessibility: isPartyPublic
       }
-      console.log(party);
+      
    
     this.authService.createParty(party).subscribe(data => {
    
@@ -165,32 +166,81 @@ export class PartyComponent implements OnInit {
     console.log(rowId);
   }
 
+  getPublicParties(allPublicParties) {
+    
+   
+       this.authService.getAllPublicParties().subscribe(data => {
+   
+         if (data.success) {
+           
+   
+           for (var i = 0; i < data.parties.length; i++) {
+             this.authService.getPartyInString(data.parties[i]).subscribe(data => {
+               allPublicParties.push(data.readableData);
+             });
+            
+          
+           
+         }
+        }
+         else {
+           this.flashMessage.show(data.message, {
+             cssClass: 'alert-danger',
+             timeout: 5000
+           });
+         }
+       })
+     }
 
-  getPublicParties(array) {
- 
-
-    this.authService.getAllPublicParties().subscribe(data => {
-
-      if (data.success) {
-
-        for (var i = 0; i < data.parties.length; i++) {
-
-          this.authService.getPartyInString(data.parties[i]).subscribe(data => {
-            array.push(data.readableData);
-
-            return array;
-
+     joinParty(party){
+       const partyData = {
+         loggedInUserId: this.user.id,
+         partyId: party.partyId
+       }
+       this.authService.joinParty(partyData).subscribe(data =>{
+        if(data.success){
+          this.flashMessage.show(data.msg, {cssClass: 'alert-success', timeout: 5000
           });
         }
-      }
-      else {
-        this.flashMessage.show(data.message, {
-          cssClass: 'alert-danger',
-          timeout: 5000
-        });
-      }
-    })
-  }
+
+        else {
+          this.flashMessage.show(data.msg, {   cssClass: 'alert-danger', timeout: 5000
+          });
+        }
+       });
+
+     }
+
+ //this is the method for the angular material table
+  // getPublicParties(array) {
+ 
+
+  //   this.authService.getAllPublicParties().subscribe(data => {
+
+  //     if (data.success) {
+        
+
+  //       for (var i = 0; i < data.parties.length; i++) {
+
+  //         this.authService.getPartyInString(data.parties[i]).subscribe(data => {
+  //           console.log(data.readableData);
+  //           this.allPublicParties.push(data.readableData);
+  //           array.push(data.readableData);
+
+
+  //           return array;
+
+  //         });
+  //       }
+  //     }
+  //     else {
+  //       this.flashMessage.show(data.message, {
+  //         cssClass: 'alert-danger',
+  //         timeout: 5000
+  //       });
+  //     }
+  //   })
+  // }
 
   getGames() {
     this.authService.getAllGames().subscribe(data => {

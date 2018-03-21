@@ -2,7 +2,7 @@
 
 
 <div *ngIf="user" class="main-content">
-
+<h3> {{viewingUser.username}} Profile</h3>
         <mat-grid-list cols="6" rowHeight="100px">
 
                 <mat-grid-tile [colspan]="3" [rowspan]="3">
@@ -36,8 +36,10 @@
                                             <li class="list-group-item">Favourite Game: {{viewingUser.favouriteGame}}</li>
                                             <li class="list-group-item">Gamer Since: {{viewingUser.gamingSince}}</li>
                                           </ul>
+                                          <div *ngIf=viewingUserIsLoggedIn>
                                  <button type="submit" (click)="toggleEditTrue()" mat-raised-button color="primary">Edit Profile</button>
-                             </div>
+                                </div>
+                                </div>
                 </mat-grid-tile>
                 
                 

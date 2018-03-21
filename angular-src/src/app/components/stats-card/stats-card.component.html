@@ -21,6 +21,8 @@
   </div>
   </mat-card-content>
   <mat-card-actions>
+    <div *ngIf=viewingUserIsLoggedIn>
     <button mat-raised-button color="accent" (click)="addFavouriteStat()">Add to Favourites</button>
+    </div>
   </mat-card-actions>
 </mat-card>

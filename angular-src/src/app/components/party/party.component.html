@@ -69,8 +69,31 @@
     
 
     <mat-tab label="View Public Parties">
-           
-           
+        
+        <div>
+                <table style="width:100%">
+                        <tr>
+                          <th>Party Creator</th>
+                          <th>Number of Participants</th> 
+                          <th>Game</th>
+                          <th>Start Date</th>
+                          <th>Join Party</th>
+                        </tr>
+                        <tr *ngFor="let party of allPublicParties">
+                            
+                          <td>{{party.partyCreator}}</td>
+                          <td>{{party.numOfParticipants}}</td> 
+                          <td>{{party.game}}</td>
+                          <td>{{party.startDate}}</td>
+                          <td>
+                                <button type="submit" (click)="joinParty(party)" mat-raised-button color="primary">Join</button>
+                            </td>
+                        </tr>
+                      </table>
+
+            </div>
+
+<!--        
         <div class="example-container mat-elevation-z8">
             <mat-table #table [dataSource]="dataSource">
                 
@@ -87,11 +110,11 @@
               
             
                           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                          <!-- <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row> -->
+                          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
                           <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onEdit(row)"></mat-row>
             </mat-table>
         </div>
-    
+     -->
     </mat-tab>
 </mat-tab-group>
 

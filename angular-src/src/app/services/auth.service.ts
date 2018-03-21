@@ -89,6 +89,13 @@ export class AuthService {
     .map(res => res.json());
   }
 
+  joinParty(party){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/partys/joinParty', party, {headers: headers})
+    .map(res => res.json());
+  }
+
 
   editUserProfileData(editedUser){
     
@@ -224,6 +231,14 @@ export class AuthService {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     return this.http.post('http://localhost:3000/users/confirmFriendRequest', user, {headers: headers})
+    .map(res => res.json());
+  }
+
+  declineFriendRequest(user){
+    
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    return this.http.post('http://localhost:3000/users/declineFriendRequest', user, {headers: headers})
     .map(res => res.json());
   }
 

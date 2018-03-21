@@ -197,6 +197,24 @@ router.post('/addFriend', (req, res, next) => {
     });
 });
 
+router.post('/declineFriendRequest', (req, res, next) =>{
+    const currentUserId = req.body.id;
+     const friendRequestId = req.body.friendRequestId;
+   
+
+         User.findOneAndUpdate({ _id: currentUserId },
+        { $pull: { friendRequests: friendRequestId } }, (err, loggedInUser) => {
+            if (err)
+                throw err;
+            if (!loggedInUser) {
+                return res.json({ success: false, msg: 'User not found' })
+            }
+            if(loggedInUser)
+            return res.json({ success: true, msg: 'Friend Request Deleted' })
+        });
+
+});
+
 //Once someone accepts friend request, goes to both user objects and updates friends array so they both are friends with each other
 router.post('/confirmFriendRequest', (req, res, next) => {
     const currentUserId = req.body.id;
