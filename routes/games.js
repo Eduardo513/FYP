@@ -31,7 +31,7 @@ router.put('/getLogoForGame', (req, res, next) => {
         switch (gameObj.name) {
             
                     case "Leagueoflegends":
-                       logo = '/assets/images/LeagueOfLegendsLogo.jpg'
+                       logo = '/assets/images/leagueOfLegendsLogo2.png'
                         break;
             
                     case "Oldschool Runescape":

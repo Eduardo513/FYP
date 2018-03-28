@@ -39,8 +39,8 @@ router.put('/editUserProfileData', (req, res, next) => {
             $set: {
                bio: req.body.bio,
                favouriteGame: req.body.favouriteGame,
-               gamingSince: req.body.gamingSince
-            //    profilePicture: req.body.profilePicture  //havent implemented this yet
+               gamingSince: req.body.gamingSince,
+               profilePicture: req.body.profilePicture  
             }
         }, (err, editedUser) => {
             if (err)
@@ -373,10 +373,62 @@ router.post('/getAllFriends', (req, res, next) => {
 
 });
 
+//checks to see if the user has already favourited this stat or not
+router.put('/getFavouriteStatLikeStatus', (req, res, next) => {
+    
+     AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject => {
+         User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats => {
+             
+ 
+             //this is checking if user already has stat favourited. if it equals -1 that means they dont have that stat in the array
+             if ((allUsersFavouriteStats.indexOf(averageStatObject.id)) == '-1') {
+                return res.json({ success: false, status: false, msg: "You don't have that stat favourited" })
+             }
+             else {
+                 return res.json({ success: true, status: true, msg: "You already have that stat favourited!" })
+             }
+ 
+ 
+         });
+ 
+     });
+ 
+ });
+
+router.put('/removeFavouriteStat', (req, res, next) => {
+   
+    AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject => {
+        User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats => {
+
+            //this is checking if user already has stat favourited. if it equals -1 that means they dont have that stat in the array
+            if ((allUsersFavouriteStats.indexOf(averageStatObject.id)) != '-1') {
+                User.findOneAndUpdate({ _id: req.body.userId },
+                    { $pull: { favouriteStats: averageStatObject.id } }, (err, addedStat) => {
+                        if (err)
+                            throw err;
+                        if (!addedStat) {
+                            return res.json({ success: false, msg: 'Stat unable to be added' })
+                        }
+
+                        if (addedStat) {
+                            return res.json({ success: true, msg: 'Favourite Stat Removed!' })
+                        }
+                    });
+            }
+            else {
+                return res.json({ success: false, msg: "You don't have that stat favourited" })
+            }
+
+
+        });
+
+    });
+
+});
+
 //addFavouriteStat
 //looks through all the users current faviourte stats to make sure they have already not added this stat
 router.put('/addFavouriteStat', (req, res, next) => {
-    var foundMatch = false;
     AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject => {
         User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats => {
 

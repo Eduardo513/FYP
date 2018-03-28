@@ -9,7 +9,7 @@
 
 <mat-card class="example-card">
   <mat-card-header><div>
-    <div mat-card-avatar class="example-header-image">  <img mat-card-image src={{data.logo}} alt="Overwatch Logo"></div>
+    <div mat-card-avatar class="example-header-image">  <img mat-card-image src={{data.logo}} alt="Logo"></div>
     <mat-card-title>  </mat-card-title>
   </div>
   </mat-card-header>
@@ -22,7 +22,13 @@
   </mat-card-content>
   <mat-card-actions>
     <div *ngIf=viewingUserIsLoggedIn>
-    <button mat-raised-button color="accent" (click)="addFavouriteStat()">Add to Favourites</button>
+        
+            <div *ngIf="currentStatFavourited;then removeFavourite else addFavourite"></div>
+      
+        <ng-template #addFavourite><button mat-raised-button color="accent" (click)="addFavouriteStat()">Add to Favourites</button></ng-template>
+        <ng-template #removeFavourite> <button mat-raised-button color="accent" (click)="removeFavouriteStat()">Remove from Favourites</button></ng-template>
+       
+   
     </div>
   </mat-card-actions>
 </mat-card>

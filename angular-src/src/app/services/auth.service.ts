@@ -104,6 +104,13 @@ export class AuthService {
     .map(res => res.json());
   }
 
+  getAllPartiesForUser(user){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/partys/getAllPartiesForUser', user, {headers: headers})
+    .map(res => res.json());
+  }
+
   getRunescape(statId){
     
     let headers = new Headers();
@@ -129,6 +136,20 @@ export class AuthService {
     
     let headers = new Headers();
     return this.http.put('http://localhost:3000/users/addFavouriteStat', averageStatAndUser, {headers: headers})
+    .map(res => res.json());
+  }
+
+ 
+  getFavouriteStatLikeStatus(averageStatAndUser){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/users/getFavouriteStatLikeStatus', averageStatAndUser, {headers: headers})
+    .map(res => res.json());
+  }
+  removeFavouriteStat(averageStatAndUser){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/users/removeFavouriteStat', averageStatAndUser, {headers: headers})
     .map(res => res.json());
   }
 

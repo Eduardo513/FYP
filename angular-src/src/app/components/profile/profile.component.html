@@ -1,15 +1,97 @@
 
 
-
 <div *ngIf="user" class="main-content">
+    <div class="row">
+        <div class="col-md-6">
+            <a routerLink="/" class="btn btn-link">
+                <i class="fa fa-arrow-circle-o-left"></i> Back to Dashboard
+            </a>
+        </div>
+        <!-- <div class="col-md-6">
+        <div class="btn-group pull-middle">
+                <i class="fa fa-user-o" aria-hidden="true"> {{viewingUser.username}}'s Profile</i>
+        </div>
+      </div> -->
+
+        <div class="col-md-6">
+            <div class="btn-group pull-right">
+                <div *ngIf="viewingUserIsLoggedIn && !editProfile">
+                    <button type="submit" (click)="toggleEditTrue()" mat-raised-button color="primary">Edit Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="card">
+
+        <div class="card-body">
+            <div class="row">
+                <div class="cold-md-8 col-sm-4">
+                    <img style="max-height: 100%; max-width: 100%;" class="img-fluid" [src]="viewingUser.profilePicture" alt="">
+                </div>
+                <div class="cold-md-8 col-sm-8">
+                    <div *ngIf="editProfile">
+                        <mat-form-field class="full-width">
+                            <textarea matInput [(ngModel)]="bio" name="bio" placeholder="Bio: " matTextareaAutosize></textarea>
+
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field class="full-width">
+                            <input matInput [(ngModel)]="favouriteGame" name="favouriteGame" placeholder="Favourite Game: " size="100">
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field class="full-width">
+
+                            <input matInput [min]="minDate" [matDatepicker]="picker" placeholder="Gaming Since: " [(ngModel)]="gamingSince">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <h4>Pick a profile Picture</h4>
+                        <div class="cc-selector">
+                            <input id="leagueOfLegends" type="radio" name="logo" [(ngModel)]="myLogo" value="leagueOfLegends" />
+                            <label class="drinkcard-cc leagueOfLegends" for="leagueOfLegends"></label>
+                            <input id="overwatch" type="radio" name="logo" [(ngModel)]="myLogo" value="overwatch" />
+                            <label class="drinkcard-cc overwatch" for="overwatch"></label>
+                            <input id="runescape" type="radio" name="logo" [(ngModel)]="myLogo" value="runescape" />
+                            <label class="drinkcard-cc runescape" for="runescape"></label>
+                            <input id="oldschoolRunescape" type="radio" name="logo" [(ngModel)]="myLogo" value="oldschoolRunescape" />
+                            <label class="drinkcard-cc oldschoolRunescape" for="oldschoolRunescape"></label>
+                            <input id="worldOfWarcraft" type="radio" name="logo" [(ngModel)]="myLogo" value="worldOfWarcraft" />
+                            <label class="drinkcard-cc worldOfWarcraft" for="worldOfWarcraft"></label>
+                        </div>
+
+                        <br>
+                        <div>
+                            <button type="submit" (click)="editUser(logoGroup)" mat-raised-button color="primary">Confirm Changes</button>
+                            <button type="submit" (click)="toggleEditFalse()" mat-raised-button color="primary">Cancel Changes</button>
+                        </div>
+                    </div>
+                    <div *ngIf="editProfile==false">
+                        <ul class="list-group">
+                            <li class="list-group-item">Bio: {{viewingUser.bio}}</li>
+                            <li class="list-group-item">Favourite Game: {{viewingUser.favouriteGame}}</li>
+                            <li class="list-group-item">Gamer Since: {{viewingUser.gamingSince}}</li>
+                        </ul>
+
+                    </div>
+                </div>
+          
+            </div>
+
+            <hr>
+
+        </div>
+    </div>
+</div>
+<!-- <div *ngIf="user" class="main-content">
 <h3> {{viewingUser.username}} Profile</h3>
         <mat-grid-list cols="6" rowHeight="100px">
 
-                <mat-grid-tile [colspan]="3" [rowspan]="3">
+                <mat-grid-tile [colspan]="2" [rowspan]="3">
                         <img *ngIf="user.profilePicture" class="img-fluid" [src]="user.profilePicture" alt="">
                 </mat-grid-tile>
 
-                <mat-grid-tile [colspan]="3" [rowspan]="3">
+                <mat-grid-tile [colspan]="4" [rowspan]="3">
                         <div *ngIf="editProfile">
                                 <mat-form-field>
                                         <textarea matInput [(ngModel)]="bio" name="bio" placeholder="Bio: "></textarea>
@@ -44,22 +126,21 @@
                 
                 
            
-              </mat-grid-list>
+              </mat-grid-list> -->
 
-       
 
-   
- 
-<!-- 
-    <image-upload url="https://httpbin.org/status/200"></image-upload> -->
 
-    
 
-    <h3>Favourite Stats</h3>
-    <div *ngFor="let cardData of allCardDataForUser">
-        <app-stats-card [data]=cardData></app-stats-card>
-    </div>
-    <!-- <div class="container-fluid">
+
+
+
+
+
+<h3>Favourite Stats</h3>
+<div *ngFor="let cardData of allCardDataForUser">
+    <app-stats-card [data]=cardData></app-stats-card>
+</div>
+<!-- <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="card card-stats" >
@@ -78,7 +159,7 @@
                         </div>
                     </div> -->
 
-    <!-- <div class="row">
+<!-- <div class="row">
                         <div class="col-md-4">
                             <div class="card" >
                                 <div class="card-header card-chart" data-background-color="green">
@@ -95,4 +176,4 @@
                                 </div>
                             </div>
                         </div> -->
-</div>
+<!-- </div> -->

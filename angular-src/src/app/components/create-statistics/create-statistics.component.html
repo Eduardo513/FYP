@@ -11,6 +11,12 @@
         <input matInput [(ngModel)]="lolUsername" placeholder="Username" name="lolusername" required>
       </mat-form-field>
 
+      <mat-form-field>
+        <mat-select placeholder="Region" [(ngModel)]="selectedLeagueOfLegendsRegion" name="Region" required>
+          <mat-option *ngFor="let region of allLeagueOfLegendRegions" [value]="region">{{region.regionName}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
       <button type="submit" [disabled]="!isValid(lolUsername)" (click)="onCreateStatisticSubmit('Leagueoflegends', lolUsername)"
         mat-raised-button color="primary">Create Statistics</button>
     </form>
@@ -25,6 +31,13 @@
       <div *ngFor="let game of games">
         <div *ngIf="validateCertainGameAndStats(game, stat, 'Leagueoflegends')">
 
+          <div *ngFor="let averageStat of allLeagueOfLegendsAverages">  
+            <span >
+                <app-stats-card [data]="generateCard(averageStat, '/assets/images/leagueOfLegendsLogo2.png', specificStatistics.Leagueoflegends)"></app-stats-card> 
+
+
+            </span>
+           </div>
 
           <mat-list-item> Game: {{ game.name }} </mat-list-item>
           <mat-list-item> Average Play Time: {{ stat.averagePlayTime }} </mat-list-item>

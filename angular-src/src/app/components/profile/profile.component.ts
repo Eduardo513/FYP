@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FlashMessagesService } from 'angular2-flash-messages';
 
+declare var $:any;
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +21,16 @@ export class ProfileComponent implements OnInit {
   favouriteGame;
   bio;
   viewingUserIsLoggedIn: boolean = false; //boolean to see if the user currently seeing the profile is the logged in user
- 
+  selectedLogo;
+  myLogo;
+  logos =[
+    {logo: '/assets/images/leagueOfLegendsLogo2.png', gameName: "leagueOfLegends"}, 
+    {logo: '/assets/images/overwatchLogo.jpg', gameName: "overwatch"}, 
+    {logo: '/assets/images/runescapeLogo.png', gameName: "runescape"}, 
+    {logo: '/assets/images/oldschoolRunescapeLogo.jpg', gameName: "oldschoolRunescape"}, 
+    {logo: '/assets/images/World-of-WarcraftLogo.png', gameName: "worldOfWarcraft"}, 
+  
+  ]
 
   constructor(
     private authService: AuthService,
@@ -29,7 +39,16 @@ export class ProfileComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    var addclass = 'color';
+    var $cols = $('.divs').click(function(e) {
+        $cols.removeClass(addclass);
+        $(this).addClass(addclass);
+    });
 
+    $('img').click(function(){
+      $('.selected').removeClass('selected');
+      $(this).addClass('selected');
+  });
     //grabs user from params if they got here from somewhere else. If its the logged in user then populate fields with that user data
     this.sub = this.route.params.subscribe(params => {
       if(params['userId'] == undefined){
@@ -65,6 +84,7 @@ export class ProfileComponent implements OnInit {
   
     this.authService.getUserObjectById(user).subscribe(data => {
       if (data.success) {
+        console.log(data);
         this.viewingUser = data.userObj;
         this.gamingSince = this.viewingUser.gamingSince;
               this.favouriteGame = this.viewingUser.favouriteGame;
@@ -85,15 +105,27 @@ export class ProfileComponent implements OnInit {
     this.editProfile = true;
   }
 
+  getLogos(){
+
+  }
+
   editUser() {
+    var chosenLogo = this.myLogo;
+    var chosenLogoLocation;
+    this.logos.forEach(function(logoObject) {
+      if(logoObject.gameName == chosenLogo){
+        chosenLogoLocation = logoObject.logo
+      }
+    });
     
     const editedUserData = {
       id: this.viewingUser._id,
       bio: this.bio,
       favouriteGame: this.favouriteGame,
-      gamingSince: this.gamingSince
+      gamingSince: this.gamingSince,
+      profilePicture: chosenLogoLocation
+      
     }
-    console.log(editedUserData)
     this.toggleEditFalse();
     this.authService.editUserProfileData(editedUserData).subscribe(data => {
       if (data.success) {
@@ -147,7 +179,7 @@ export class ProfileComponent implements OnInit {
 
 
 
-              this.flashMessage.show(data.msg, { cssClass: 'alert-success', timeout: 3000 });
+            
             }
             else {
               this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });

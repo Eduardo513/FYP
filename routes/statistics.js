@@ -154,29 +154,30 @@ router.put('/getWorldOfWarcraftRealms', (req, res, next) => {
 });
 router.put('/leagueoflegends', (req, res, next) => {
 
-    var params = {key: String, ttl: Number, api: Object, objectType: String, region: String, params:Object}
+    // var params = {key: String, ttl: Number, api: Object, objectType: String, region: String, params:Object}
     
-    var lol = require('lol-js');
-    var lolClient = lol.client({
-        apiKey: 'RGAPI-6dd3239e-6e10-491c-b532-c8d9c9f9a9da',
-        cache: {set: {params: params , value: Object}, 
-        get: {params: params, callback: Object}}
-    });
-    lolClient.getChampionById('na', 53, {champData: ['all']}, function(err, data) {
-        console.log("Found ", data.name);
-        lolClient.destroy();
-    });
+    // var lol = require('lol-js');
+    // var lolClient = lol.client({
+    //     apiKey: 'RGAPI-d9b6f490-89db-45f7-a8b2-c236986cedaf',
+    //     cache: {set: {params: params , value: Object}, 
+    //     get: {params: params, callback: Object}}
+    // });
+    // lolClient.getChampionById('na', 53, {champData: ['all']}, function(err, data) {
+    //     console.log("Found ", data.name);
+    //     lolClient.destroy();
+    // });
 
-    lolClient.getChampionByName('EUW1', 'Sona', (err, data) =>{
-        console.log(data);
-    });
+    // lolClient.getChampionByName('EUW1', 'Sona', (err, data) =>{
+    //     console.log(data);
+    // });
 
      var summonerLevel;
     var summonerProfile;
-    var apiKey = 'RGAPI-6dd3239e-6e10-491c-b532-c8d9c9f9a9da';
+    var apiKey = 'RGAPI-d9b6f490-89db-45f7-a8b2-c236986cedaf';
+    var regionCode = req.body.region.regionCode;
 
 
-    Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", req.body.username, apiKey, (err, data) => {
+    Statistics.requestLeagueApi("https://" + regionCode + ".api.riotgames.com/lol/summoner/v3/summoners/by-name/", req.body.username, apiKey, (err, data) => {
         if (err)
             throw err;
 
@@ -186,6 +187,7 @@ router.put('/leagueoflegends', (req, res, next) => {
                 res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
             }
             else {
+         
                 //grabs level off the data to update later
                 var summonerId = data.id;
                 var accountId = data.accountId
@@ -194,32 +196,32 @@ router.put('/leagueoflegends', (req, res, next) => {
 
                
 
-                // Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
-                //     if (err)
-                //         throw err;
+                Statistics.requestLeagueApi('https://' + regionCode + '.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
+                    if (err)
+                        throw err;
 
-                    // if (data) {
-                    //     if ("status" in data) {
-                    //         console.log("Error: " + data.status.status_code);
-                    //         res.json({ success: false, msg: "Something Went Wrong" });
-                    //     }
-                    //     else {
-                         
-                    //         //average time per game of league is 30 mins
+                    if (data) {
+                        if ("status" in data) {
+                            console.log("Error: " + data.status.status_code);
+                            res.json({ success: false, msg: "Something Went Wrong" });
+                        }
+                        else {
+                        
+                          summonerProfile["totalGames"] = data.totalGames
+                          
 
+                            const detailedStats = {
+                                username: req.body.username,
+                                game: req.body.game,
+                                userId: req.body.id,
+                                detailGameData: summonerProfile,
+                                level: summonerLevel
+                            }
+                            res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
 
-                    //         const detailedStats = {
-                    //             username: req.body.username,
-                    //             game: req.body.game,
-                    //             userId: req.body.id,
-                    //             detailGameData: summonerProfile,
-                    //             level: summonerLevel
-                    //         }
-                    //         res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
-
-                    //     }
-                    // }
-                // });
+                        }
+                    }
+                });
 
 
 
@@ -297,7 +299,7 @@ router.post('/getAverageForAStat', (req, res, next) => {
     const statLocationTier4 = splitUpLocation[3];
     const statLocationTier5 = splitUpLocation[4];
    
-    var averageStat = 0;
+    var averageStat = 0
     Game.getGameByName(req.body.game)
         .then(gameObj => {
 

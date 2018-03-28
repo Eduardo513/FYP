@@ -9,6 +9,9 @@ import { ChartsModule } from 'ng2-charts';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { GenericTableModule } from 'angular-generic-table';
 import { ImageUploadModule } from "angular2-image-upload";
+import { CalendarModule } from 'angular-calendar';
+
+
 // import {MatButtonModule, MatCheckboxModule} from '@angular/material';
 // import {MatRadioModule} from '@angular/material/radio';
 // import {MatFormFieldModule} from '@angular/material/form-field';
@@ -81,6 +84,8 @@ const appRoutes: Routes = [
     OwlNativeDateTimeModule,
     GenericTableModule,
     ImageUploadModule.forRoot(),
+    CalendarModule.forRoot()
+    
     // MatButtonModule,
     // MatRadioModule, 
     // MatCheckboxModule,

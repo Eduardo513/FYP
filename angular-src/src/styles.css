@@ -2,3 +2,14 @@
 
 @import "~@angular/material/prebuilt-themes/purple-green.css";
 @import "~ng-pick-datetime/assets/style/picker.min.css";
+
+html
+{
+    font-size: 100%;
+}
+
+th {
+    background-color: rgb(7, 88, 41);
+    color: white;
+}
+

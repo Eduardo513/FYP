@@ -9,8 +9,7 @@ const Game = require('../models/game');
 
 //CreateParty
 router.post('/create-party', (req, res, next) => {
-
-
+   
     let newParty = new Party({
         partyCreator: req.body.partyCreator.id,
         participants: req.body.partyMembers,
@@ -51,10 +50,25 @@ router.get('/getPublicParties', (req, res, next) => {
     })
 });
 
+router.put('/getAllPartiesForUser', (req, res, next) =>{
+    User.findById(req.body.id, (err, userObj) =>{
+        if(userObj)
+        Party.getAllPartiesForUser(userObj).then(allUserParties =>{
+            if(allUserParties)
+            return res.json({ success: true, allUserParties: allUserParties.parties })
+            else
+            return res.json({ success: false, msg: "You is not included in any parties" })
+          
+        });
+    });
+
+});
+
 
 //PartyInformationInStringFormatFromObject
 //this parses all the object ids from the party object and returns it in readable string formats for display
 router.post('/getPartyInString', (req, res, next) => {
+    
 
 
     User.findById(req.body.partyCreator, (err, partyCreatorObject) => {

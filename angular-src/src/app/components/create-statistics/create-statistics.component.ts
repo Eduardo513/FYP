@@ -26,6 +26,15 @@ export class CreateStatisticsComponent implements OnInit {
   allWoWRealms = [];
   allWoWRegions = ['eu', 'us', 'kr', 'tw'];
   allOverwatchRegions = ['eu', 'us', 'as'];
+  allLeagueOfLegendRegions = [{regionName: 'Brazil', regionCode:'br1'}, 
+  {regionName:'EU North East', regionCode:'eun1'},
+  {regionName:'EU West', regionCode:'euw1'},
+  {regionName:'Japan', regionCode:'jp1'},
+  {regionName:'Korea', regionCode:'kr'},
+  {regionName:'North America', regionCode:'na1'},
+  {regionName:'Oceana', regionCode:'oc1'},
+  {regionName:'Russia', regionCode:'ru'}];
+  selectedLeagueOfLegendsRegion;
   allOverwatchPlatforms = ['PC', 'Xbox One', 'PlayStation 4'];
   specificStatistics: any = {
     Leagueoflegends : Object,
@@ -193,6 +202,7 @@ export class CreateStatisticsComponent implements OnInit {
     switch (selectedGame) {
 
       case "Leagueoflegends":
+      statistics["region"] = this.selectedLeagueOfLegendsRegion;
         this.authService.getLeagueOfLegends(statistics).subscribe(data => {
           if (data.success) {
             this.createStatisticObject(data);
@@ -287,14 +297,14 @@ export class CreateStatisticsComponent implements OnInit {
         completeLocation: completeLocation
       }
 
-
+      console.log(selectedGame)
     this.authService.getAverageForAStat(averageData).subscribe(data => {
       if (!data.success || data.averageStat == null) { //we have error checking in routes as well but just as a backup
 
       }
       else {
 
-
+   
         const averageStats = {
           game: data.gameObj,
           statName: statString,
@@ -319,7 +329,8 @@ export class CreateStatisticsComponent implements OnInit {
     this.getAverageStat('Overwatch', 'Best MultiKill', 'detailGameData', 'quickplay', 'global', 'multikill_best', undefined);
     this.getAverageStat('Overwatch', 'Most Damage Done in Game', 'detailGameData', 'quickplay', 'global', 'hero_damage_done_most_in_game', undefined);
     this.getAverageStat('World of Warcraft', 'Total Honorable Kills', 'detailGameData', 'totalHonorableKills', undefined, undefined, undefined);
-
+    this.getAverageStat('Leagueoflegends', 'Summoner Level', 'detailGameData', 'summonerLevel', undefined, undefined, undefined);
+    this.getAverageStat('Leagueoflegends', 'Total Games This Season', 'detailGameData', 'totalGames', undefined, undefined, undefined);
     // this.getAverageStat('Overwatch', 'Competitive Best Kill Streak', 'detailGameData', 'competitive', 'global', 'kill_streak_best', undefined);
     // this.getAverageStat('Overwatch', 'Competitive Most Damage Done in Game', 'detailGameData', 'competitive', 'global', 'hero_damage_done_most_in_game', undefined);
   }

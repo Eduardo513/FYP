@@ -1,0 +1,64 @@
+.full-width {
+    width: 100%;
+  }
+  .color {
+    background-color: yellow;
+}
+
+
+
+/* .radio {
+  opacity: 0;
+  position: absolute;
+}
+.label {
+  background: url('/assets/images/leagueOfLegendsLogo2.png');
+  background-size: 105px;
+  text-indent: -999em;
+  border: 10px solid white;
+  width: 126px;
+  height: 126px;
+  display: block;
+  float: left;
+  margin: 10px;
+}
+input[type="radio"]:checked + label {
+  border: 10px solid orange;
+} */
+
+.cc-selector input{
+  margin:0;padding:0;
+  -webkit-appearance:none;
+     -moz-appearance:none;
+          appearance:none;
+}
+.leagueOfLegends{background-image:url('/assets/images/leagueOfLegendsLogo2.png');}
+.overwatch{background-image:url('/assets/images/overwatchLogo.jpg');}
+.runescape{background-image:url('/assets/images/runescapeLogo.png');}
+.oldschoolRunescape{background-image:url('/assets/images/oldschoolRunescapeLogo.jpg');}
+.worldOfWarcraft{background-image:url('/assets/images/World-of-WarcraftLogo.png');}
+
+.cc-selector input:active +.drinkcard-cc{opacity: .9;}
+.cc-selector input:checked +.drinkcard-cc{
+  -webkit-filter: none;
+     -moz-filter: none;
+          filter: none;
+}
+.drinkcard-cc{
+  cursor:pointer;
+  background-size:contain;
+  background-repeat:no-repeat;
+  display:inline-block;
+  width:100px;height:70px;
+  -webkit-transition: all 100ms ease-in;
+     -moz-transition: all 100ms ease-in;
+          transition: all 100ms ease-in;
+  -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+     -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+          filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+.drinkcard-cc:hover{
+  -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+     -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+          filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
