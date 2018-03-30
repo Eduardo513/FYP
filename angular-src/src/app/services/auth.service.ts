@@ -96,6 +96,26 @@ export class AuthService {
     .map(res => res.json());
   }
 
+  submitEditParty(party){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/partys/submitEditParty', party, {headers: headers})
+    .map(res => res.json());
+  }
+
+  leaveParty(party){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/partys/leaveParty', party, {headers: headers})
+    .map(res => res.json());
+  }
+
+  deleteParty(party){
+    
+    let headers = new Headers();
+    return this.http.put('http://localhost:3000/partys/deleteParty', party, {headers: headers})
+    .map(res => res.json());
+  }
 
   editUserProfileData(editedUser){
     
@@ -211,9 +231,9 @@ export class AuthService {
     .map(res => res.json());
   }
 
-  getAllPublicParties(){
+  getAllPublicPartiesWithoutUser(user){
     let headers = new Headers();
-    return this.http.get('http://localhost:3000/partys/getPublicParties', {headers: headers})
+    return this.http.put('http://localhost:3000/partys/getPublicPartiesWithoutUser', user, {headers: headers})
     .map(res => res.json());
   }
 

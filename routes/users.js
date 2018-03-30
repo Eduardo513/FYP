@@ -31,7 +31,6 @@ router.post('/register', (req, res, next) => {
 });
 
 
-//Register
 router.put('/editUserProfileData', (req, res, next) => {
 
     User.findOneAndUpdate({ _id: req.body.id },
@@ -40,7 +39,8 @@ router.put('/editUserProfileData', (req, res, next) => {
                bio: req.body.bio,
                favouriteGame: req.body.favouriteGame,
                gamingSince: req.body.gamingSince,
-               profilePicture: req.body.profilePicture  
+               profilePicture: req.body.profilePicture,
+               favouriteClip: req.body.favouriteClip  
             }
         }, (err, editedUser) => {
             if (err)

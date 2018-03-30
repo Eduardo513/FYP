@@ -1,7 +1,7 @@
 <html>
-      
-    <h1>Parties Menu</h1>
-    <mat-tab-group>
+
+<h1>Parties Menu</h1>
+<mat-tab-group>
     <mat-tab label="Create a Party">
         <br>
         <p>Select the friends you wish to invite</p>
@@ -10,8 +10,6 @@
         <p>Party accessibility</p>
         <div class="example-container">
             <form class="example-container">
-                
-
 
                 <mat-radio-group aria-label="Party accessibility" [(ngModel)]="selectedAccessibility" name="access">
                     <mat-radio-button *ngFor="let access of accessibilityOptions" [value]="access" required>
@@ -19,26 +17,20 @@
 
                     </mat-radio-button>
                 </mat-radio-group>
-              
+
             </form>
 
-            <!-- <div class="input-wrapper">
-                    <label>Date Time(binding via ngModel):</label>
-                    <input [(ngModel)]="selectedMoment"
+            <mat-form-field class="full-width">
+            <div class="input-wrapper">
+                    <label>Date Time:</label>
+                    <input [min]="minDate" matInput [(ngModel)]="selectedMoment"
                            [owlDateTimeTrigger]="dtPicker1" [owlDateTime]="dtPicker1">
                     <owl-date-time #dtPicker1></owl-date-time>
-                </div> -->
-          
-   
-           
+                </div>
+            </mat-form-field>
 
-            <mat-form-field>
-
-                <input matInput [min]="minDate" [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="selectedDate">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-
-
+            <mat-form-field class="full-width">
+                <input matInput [(ngModel)]="selectedPartyTitle" name="partyTitle" placeholder="Party Title " size="100">
             </mat-form-field>
 
             <mat-form-field>
@@ -66,55 +58,89 @@
         </div>
 
     </mat-tab>
-    
+
 
     <mat-tab label="View Public Parties">
-        
         <div>
-                <table style="width:100%">
-                        <tr>
-                          <th>Party Creator</th>
-                          <th>Number of Participants</th> 
-                          <th>Game</th>
-                          <th>Start Date</th>
-                          <th>Join Party</th>
-                        </tr>
-                        <tr *ngFor="let party of allPublicParties">
-                            
-                          <td>{{party.partyCreator}}</td>
-                          <td>{{party.numOfParticipants}}</td> 
-                          <td>{{party.game}}</td>
-                          <td>{{party.startDate}}</td>
-                          <td>
-                                <button type="submit" (click)="joinParty(party)" mat-raised-button color="primary">Join</button>
-                            </td>
-                        </tr>
-                      </table>
+            <table style="width:100%">
+                <tr>
+                    <th>Party Title</th>
+                    <th>Party Creator</th>
+                    <th>Number of Participants</th>
+                    <th>Game</th>
+                    <th>Start Date</th>
+                    <th>Join Party</th>
+                </tr>
+                <tr *ngFor="let party of allPublicParties">
 
+                    <td>{{party.title}}</td>
+                    <td>{{party.partyCreator}}</td>
+                    <td>{{party.participants.length}}</td>
+                    <td>{{party.game}}</td>
+                    <td>{{party.startDate}}</td>
+                    <td>
+                        <button type="submit" (click)="joinParty(party)" mat-raised-button color="primary">Join</button>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </mat-tab>
+    <mat-tab label="View Your Calender">
+
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="btn-group">
+                    <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+                        Previous
+                    </div>
+                    <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+                        Today
+                    </div>
+                    <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+                        Next
+                    </div>
+                </div>
             </div>
 
-            <!-- <mwl-demo-utils-calendar-header
+            <div class="col-md-4">
+                <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+            </div>
+        </div>
+        <!-- <mwl-demo-utils-calendar-header
             [(view)]="view"
             [(viewDate)]="viewDate">
           </mwl-demo-utils-calendar-header> -->
-       
-            <mwl-calendar-month-view
-            [viewDate]="viewDate"
-            [events]="events"
-            [activeDayIsOpen]="activeDayIsOpen"
-            (dayClicked)="dayClicked($event.day)"
-         (eventClicked)="eventClicked($event.event)">
-          </mwl-calendar-month-view>
-     
+        <!-- <div class="text-center">
+                <button class="btn btn-primary" (click)="refreshView()">Refresh + re-render the current view</button>
+              </div> -->
+        <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [activeDayIsOpen]="activeDayIsOpen" [refresh]="refresh"
+            (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent($event.event)">
+        </mwl-calendar-month-view>
 
+        <!-- <div>
+        <mwl-calendar-week-view
+        [viewDate]="viewDate"
+        [events]="events"
+        [refresh]="refresh"
+        (eventClicked)="handleEvent($event.event)">
+      </mwl-calendar-week-view>
+    </div>
+<div>
+    <mwl-calendar-day-view
+    [viewDate]="viewDate"
+    [events]="events"
+    [refresh]="refresh"
+    (eventClicked)="handleEvent( $event.event)">
+  </mwl-calendar-day-view>
+</div> -->
         <ng-template #loading>
-                <div class="text-center">
-                  <i class="fa fa-spin fa-spinner fa-5x"></i>
-                  <br>
-                  Loading events...
-                </div>
-              </ng-template>
-<!--        
+            <div class="text-center">
+                <i class="fa fa-spin fa-spinner fa-5x"></i>
+                <br> Loading events...
+            </div>
+        </ng-template>
+        <!--        
         <div class="example-container mat-elevation-z8">
             <mat-table #table [dataSource]="dataSource">
                 

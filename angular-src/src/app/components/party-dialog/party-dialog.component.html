@@ -1,0 +1,77 @@
+<div *ngIf="!editPartyToggle">
+  <ul class="list-group">
+    <li class="list-group-item">Title: {{data.title}}</li>
+    <li class="list-group-item">Party Date: {{data.meta.displayParty.displayDate}}</li>
+    <li class="list-group-item">Party Game: {{data.meta.displayParty.game}}</li>
+    <li class="list-group-item">Number of Participants {{data.meta.displayParty.participants.length}}</li>
+  </ul>
+</div>
+<div *ngIf="editPartyToggle">
+
+    <div class="example-container">
+        <form class="example-container">
+            <mat-radio-group aria-label="Party accessibility" [(ngModel)]="selectedAccessibility" name="access">
+                <mat-radio-button *ngFor="let access of accessibilityOptions" [value]="access" required>
+                    {{access}}
+
+                </mat-radio-button>
+            </mat-radio-group>
+        </form>
+
+        <mat-form-field class="full-width">
+            <input matInput [(ngModel)]="selectedPartyTitle" name="partyTitle" placeholder="Party Title " size="100">
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+        <div class="input-wrapper">
+            <label>Date Time:</label>
+            <input [min]="minDate" matInput [(ngModel)]="selectedMoment"
+                   [owlDateTimeTrigger]="dtPicker1" [owlDateTime]="dtPicker1">
+            <owl-date-time #dtPicker1></owl-date-time>
+        </div>
+      </mat-form-field>
+        <!-- <mat-form-field>
+            <input matInput [min]="minDate" [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="selectedDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field> -->
+
+        <!-- <mat-form-field>
+            <mat-select placeholder="Friends" [(ngModel)]="selectedFriends" multiple>
+                <mat-option *ngFor="let friend of friends" [value]="friend">{{friend.username}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select placeholder="Participants" [(ngModel)]="selectedParticipants"  name="part" multiple>
+                <mat-option *ngFor="let part of selectedParticipants" [value]="part">{{part.username}}</mat-option>
+            </mat-select>
+        </mat-form-field> -->
+
+        <mat-form-field>
+         <mat-select placeholder="Game" [(ngModel)]="selectedGame" name="game" required>
+                <mat-option *ngFor="let game of games" [value]="game">{{game.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div>
+            <button type="submit" (click)="submitEditParty()" mat-raised-button color="primary">Confirm Party</button>
+        </div>
+
+
+    </div>
+</div>
+
+<div *ngIf="isUserPartyOwner && !editPartyToggle">
+  <button mat-raised-button (click)="deleteParty()">Delete Party</button>
+  <button mat-raised-button (click)="editParty()">Edit Party</button>
+</div>
+<div *ngIf="isUserParticipant">
+  <button mat-raised-button (click)="leaveParty()">Leave Party</button>
+</div>
+<div *ngIf="!isUserParticipant && !isUserPartyOwner">
+  <button mat-raised-button (click)="joinParty()">Join Party</button>
+</div>
+<div>
+  <button mat-raised-button (click)="close()">Close</button>
+</div>

@@ -29,8 +29,11 @@ const UserSchema = mongoose.Schema({
         type: String,
     },
     gamingSince :{
-        type: Date,
+        type: String,
     },
+    favouriteClip :{
+        type: String
+    }, 
     statistics :[{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Statistics'

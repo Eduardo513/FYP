@@ -2,8 +2,11 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FlashMessagesService } from 'angular2-flash-messages';
+import { YoutubePlayerModule } from 'ng2-youtube-player';
+var moment = require('moment');
 
-declare var $:any;
+
+declare var $: any;
 
 @Component({
   selector: 'app-profile',
@@ -11,6 +14,11 @@ declare var $:any;
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
+  youtubeUrlId;
+  UrlLoaded = false;
+  private player;
+  private ytEvent;
+
   user: Object;
   @Input('user') viewingUser: any;
   private sub: any;
@@ -19,17 +27,18 @@ export class ProfileComponent implements OnInit {
   editProfile: boolean = false;
   gamingSince;
   favouriteGame;
+  youtubeClipURL;
   bio;
   viewingUserIsLoggedIn: boolean = false; //boolean to see if the user currently seeing the profile is the logged in user
   selectedLogo;
   myLogo;
-  logos =[
-    {logo: '/assets/images/leagueOfLegendsLogo2.png', gameName: "leagueOfLegends"}, 
-    {logo: '/assets/images/overwatchLogo.jpg', gameName: "overwatch"}, 
-    {logo: '/assets/images/runescapeLogo.png', gameName: "runescape"}, 
-    {logo: '/assets/images/oldschoolRunescapeLogo.jpg', gameName: "oldschoolRunescape"}, 
-    {logo: '/assets/images/World-of-WarcraftLogo.png', gameName: "worldOfWarcraft"}, 
-  
+  logos = [
+    { logo: '/assets/images/leagueOfLegendsLogo2.png', gameName: "leagueOfLegends" },
+    { logo: '/assets/images/overwatchLogo.jpg', gameName: "overwatch" },
+    { logo: '/assets/images/runescapeLogo.png', gameName: "runescape" },
+    { logo: '/assets/images/oldschoolRunescapeLogo.jpg', gameName: "oldschoolRunescape" },
+    { logo: '/assets/images/World-of-WarcraftLogo.png', gameName: "worldOfWarcraft" },
+
   ]
 
   constructor(
@@ -40,32 +49,35 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     var addclass = 'color';
-    var $cols = $('.divs').click(function(e) {
-        $cols.removeClass(addclass);
-        $(this).addClass(addclass);
+    var $cols = $('.divs').click(function (e) {
+      $cols.removeClass(addclass);
+      $(this).addClass(addclass);
     });
 
-    $('img').click(function(){
+    $('img').click(function () {
       $('.selected').removeClass('selected');
       $(this).addClass('selected');
-  });
+    });
+
+
+
     //grabs user from params if they got here from somewhere else. If its the logged in user then populate fields with that user data
     this.sub = this.route.params.subscribe(params => {
-      if(params['userId'] == undefined){
+      if (params['userId'] == undefined) {
         this.viewingUserIsLoggedIn = true;
         this.updateViewingUser(JSON.parse(localStorage.getItem('user')))
       }
-      else{
-      
-      const user ={
-        id: params['userId']
+      else {
+
+        const user = {
+          id: params['userId']
+        }
+        this.updateViewingUser(user)
       }
-      this.updateViewingUser(user)
-    }
     });
-    
-   
-  
+
+
+
 
 
 
@@ -80,18 +92,27 @@ export class ProfileComponent implements OnInit {
 
   }
 
-  updateViewingUser(user){
-  
+  updateViewingUser(user) {
+
     this.authService.getUserObjectById(user).subscribe(data => {
       if (data.success) {
-        console.log(data);
         this.viewingUser = data.userObj;
+   
+      
+        console.log(this.viewingUser.gamingSince);
         this.gamingSince = this.viewingUser.gamingSince;
-              this.favouriteGame = this.viewingUser.favouriteGame;
-              this.bio = this.viewingUser.bio;
-              if(this.favouriteStats.length == 0) //this is so we dont keep adding to the array of favourited stats everytime we edit details
-              this.getUsersFavouriteStats(data.userObj);
-       
+        this.favouriteGame = this.viewingUser.favouriteGame;
+        this.bio = this.viewingUser.bio;
+
+        if(this.viewingUser.favouriteClip == undefined)
+          this.youtubeUrlId =  'TXul5WDzvOs'   
+        else
+        this.youtubeUrlId =  this.viewingUser.favouriteClip;
+        this.UrlLoaded = true
+
+        if (this.favouriteStats.length == 0) //this is so we dont keep adding to the array of favourited stats everytime we edit details
+          this.getUsersFavouriteStats(data.userObj);
+
       }
     });
 
@@ -105,26 +126,35 @@ export class ProfileComponent implements OnInit {
     this.editProfile = true;
   }
 
-  getLogos(){
+  getLogos() {
 
   }
 
   editUser() {
     var chosenLogo = this.myLogo;
     var chosenLogoLocation;
-    this.logos.forEach(function(logoObject) {
-      if(logoObject.gameName == chosenLogo){
+    var youtubeClipId;
+    this.logos.forEach(function (logoObject) {
+      if (logoObject.gameName == chosenLogo) {
         chosenLogoLocation = logoObject.logo
       }
     });
+
+    if(this.youtubeClipURL != undefined)
+    youtubeClipId = this.YouTubeGetID(this.youtubeClipURL);
+    else
+    youtubeClipId = this.viewingUser.favouriteClip;
+
     
+    var gamingSinceFormatted = moment(this.gamingSince).format("dddd, MMMM Do YYYY");
     const editedUserData = {
       id: this.viewingUser._id,
       bio: this.bio,
       favouriteGame: this.favouriteGame,
-      gamingSince: this.gamingSince,
-      profilePicture: chosenLogoLocation
-      
+      gamingSince: gamingSinceFormatted,
+      profilePicture: chosenLogoLocation,
+      favouriteClip: youtubeClipId
+
     }
     this.toggleEditFalse();
     this.authService.editUserProfileData(editedUserData).subscribe(data => {
@@ -138,7 +168,7 @@ export class ProfileComponent implements OnInit {
       }
 
     });
-  
+
   }
 
   getUsersFavouriteStats(user) {
@@ -169,7 +199,7 @@ export class ProfileComponent implements OnInit {
                 user: user,
                 viewingUserIsLoggedIn: this.viewingUserIsLoggedIn
               }
-          
+
 
               //retrieves the logo for specific game
               this.authService.getLogoForGame(data.averageStat).subscribe(data => {
@@ -179,7 +209,7 @@ export class ProfileComponent implements OnInit {
 
 
 
-            
+
             }
             else {
               this.flashMessage.show(data.msg, { cssClass: 'alert-danger', timeout: 3000 });
@@ -191,6 +221,36 @@ export class ProfileComponent implements OnInit {
       });
     }
 
+  }
+
+  //taken from https://gist.github.com/takien/4077195/
+ YouTubeGetID(url){
+    var ID = '';
+    url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+    if(url[2] !== undefined) {
+      ID = url[2].split(/[^0-9a-z_\-]/i);
+      ID = ID[0];
+    }
+    else {
+      ID = url;
+    }
+      return ID;
+  }
+  
+
+  onStateChange(event) {
+    this.ytEvent = event.data;
+  }
+  savePlayer(player) {
+    this.player = player;
+  }
+
+  playVideo() {
+    this.player.playVideo();
+  }
+
+  pauseVideo() {
+    this.player.pauseVideo();
   }
 
 }

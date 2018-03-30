@@ -10,6 +10,9 @@ import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
 import { GenericTableModule } from 'angular-generic-table';
 import { ImageUploadModule } from "angular2-image-upload";
 import { CalendarModule } from 'angular-calendar';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { YoutubePlayerModule } from 'ng2-youtube-player';
+
 
 
 // import {MatButtonModule, MatCheckboxModule} from '@angular/material';
@@ -41,6 +44,7 @@ import { CreateStatisticsComponent } from './components/create-statistics/create
 import { PartyComponent } from './components/party/party.component';
 import { StatsCardComponent } from './components/stats-card/stats-card.component';
 import { FriendViewComponent } from './components/friend-view/friend-view.component';
+import { PartyDialogComponent } from './components/party-dialog/party-dialog.component';
 
 
 
@@ -69,7 +73,8 @@ const appRoutes: Routes = [
     CreateStatisticsComponent,
     PartyComponent,
     StatsCardComponent,
-    FriendViewComponent
+    FriendViewComponent,
+    PartyDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -84,7 +89,10 @@ const appRoutes: Routes = [
     OwlNativeDateTimeModule,
     GenericTableModule,
     ImageUploadModule.forRoot(),
-    CalendarModule.forRoot()
+    CalendarModule.forRoot(),
+    NgbModule.forRoot(),
+    YoutubePlayerModule,
+
     
     // MatButtonModule,
     // MatRadioModule, 
@@ -98,7 +106,8 @@ const appRoutes: Routes = [
     // MatTabsModule,
     // MatTableModule
   ],
-  providers: [ValidateService, AuthService, AuthGuard],
-  bootstrap: [AppComponent]
+  providers: [ValidateService, AuthService, AuthGuard, ],
+  bootstrap: [AppComponent],
+  entryComponents: [PartyDialogComponent]
 })
 export class AppModule { }
