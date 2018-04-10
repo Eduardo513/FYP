@@ -55,6 +55,8 @@
                         </mat-form-field>
                         <h4>Pick a profile Picture</h4>
                         <div class="cc-selector">
+                                <input id="gameCorner" type="radio" name="logo" [(ngModel)]="myLogo" value="gameCorner" checked />
+                                <label class="drinkcard-cc gameCorner" for="gameCorner"></label>
                             <input id="leagueOfLegends" type="radio" name="logo" [(ngModel)]="myLogo" value="leagueOfLegends" />
                             <label class="drinkcard-cc leagueOfLegends" for="leagueOfLegends"></label>
                             <input id="overwatch" type="radio" name="logo" [(ngModel)]="myLogo" value="overwatch" />

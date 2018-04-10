@@ -33,6 +33,7 @@ export class ProfileComponent implements OnInit {
   selectedLogo;
   myLogo;
   logos = [
+    {logo: 'assets/images/GCLogo.png', gameName: "gameCorner"},
     { logo: '/assets/images/leagueOfLegendsLogo2.png', gameName: "leagueOfLegends" },
     { logo: '/assets/images/overwatchLogo.jpg', gameName: "overwatch" },
     { logo: '/assets/images/runescapeLogo.png', gameName: "runescape" },
@@ -99,7 +100,7 @@ export class ProfileComponent implements OnInit {
         this.viewingUser = data.userObj;
    
       
-        console.log(this.viewingUser.gamingSince);
+   
         this.gamingSince = this.viewingUser.gamingSince;
         this.favouriteGame = this.viewingUser.favouriteGame;
         this.bio = this.viewingUser.bio;
@@ -134,14 +135,21 @@ export class ProfileComponent implements OnInit {
     var chosenLogo = this.myLogo;
     var chosenLogoLocation;
     var youtubeClipId;
+
+
+    if(chosenLogo !=undefined){
     this.logos.forEach(function (logoObject) {
       if (logoObject.gameName == chosenLogo) {
         chosenLogoLocation = logoObject.logo
       }
     });
-
-    if(this.youtubeClipURL != undefined)
+  }
+  else{
+    chosenLogoLocation = 'assets/images/GCLogo.png'
+  }
+    if(this.youtubeClipURL != undefined){
     youtubeClipId = this.YouTubeGetID(this.youtubeClipURL);
+    }
     else
     youtubeClipId = this.viewingUser.favouriteClip;
 

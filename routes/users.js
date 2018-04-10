@@ -17,7 +17,7 @@ router.post('/register', (req, res, next) => {
         email: req.body.email,
         username: req.body.username,
         password: req.body.password,
-        profilePicture: '/assets/images/blankProfilePicture.png'
+        profilePicture: '/assets/images/GCLogo.png'
     });
 
     User.addUser(newUser, (err, user) => {
