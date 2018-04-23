@@ -140,18 +140,17 @@
 
 
 
+<div *ngIf="allCardDataForUser.length != 0">
+        <h3>Favourite Stats</h3>
+</div>
 
-<h3>Favourite Stats</h3>
 <div *ngFor="let cardData of allCardDataForUser">
     <app-stats-card [data]=cardData></app-stats-card>
 </div>
 
 <div class="container">
-    <section class="panel panel-info">
-        <div class="panel-heading">
-
-        </div>
-        <div class="panel-body">
+   
+        <div class="div-right">
             <div class="row">
                 <div  *ngIf="UrlLoaded; else loading;" class="cold-md-8 col-sm-4" >
                     <div *ngIf=editProfile>
@@ -171,7 +170,7 @@
 
 
         </div>
-    </section>
+ 
 
 
 </div>

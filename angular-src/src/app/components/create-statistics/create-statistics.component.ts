@@ -3,7 +3,8 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 import { ValidateService } from '../../services/validate.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-
+import {Sort} from '@angular/material';
+declare var $: any;
 
 @Component({
   selector: 'app-create-statistics',
@@ -36,7 +37,7 @@ export class CreateStatisticsComponent implements OnInit {
   {regionName:'Russia', regionCode:'ru'}];
   selectedLeagueOfLegendsRegion;
   allOverwatchPlatforms = ['PC', 'Xbox One', 'PlayStation 4'];
-  specificStatistics: any = {
+  specificStatistics: any = { //this is for use when generating the average stat card
     Leagueoflegends : Object,
     Runescape : Object,
     OldschoolRunescape : Object,
@@ -51,6 +52,11 @@ export class CreateStatisticsComponent implements OnInit {
   allWorldOfWarcraftAverages = [];
 
   averageStats = []
+
+  usersRunescapeStat = [];
+  usersLeagueOfLegendStat = [];
+  usersOldschoolRunescapeStat = [];
+  usersOverwatchStat = [];
 
   public barChartOptions: any = {
     scaleShowVerticalLines: false,
@@ -93,23 +99,76 @@ export class CreateStatisticsComponent implements OnInit {
         this.allWoWRealms = data.realms;
     });
 
-    //this grabs all the stats and all the games then assigns each of the users statistics to the corresponding variable of the object specificStatistcs
+    this.updateStats();
+
+
+  }
+
+  //taken from angular material documentation page
+//   sortData(sort: Sort, items) {
+//     const data = items.slice();
+//     if (!sort.active || sort.direction == '') {
+//       this.sortedData = data;
+//       return;
+//     }
+//     this.sortedData = data.sort((a, b) => {
+//       let isAsc = sort.direction == 'asc';
+//       switch (sort.active) {
+//         case 'title': return compare(a.title, b.title, isAsc);
+//         case 'author': return compare(+a.author, +b.author, isAsc);
+//         case 'category': return compare(+a.category, +b.category, isAsc);
+//         case 'price': return compare(+a.price, +b.price, isAsc);
+//         case 'stock': return compare(+a.stock, +b.stock, isAsc);
+//         case 'discount': return compare(+a.discount, +b.discount, isAsc);
+//         default: return 0;
+//       }
+//     });
+    
+// function compare(a, b, isAsc) {
+//   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+// }
+//   }
+
+//updates stats when this is called, This method should be called everytime user craetes or updates stats
+updateStats()
+{
+//this grabs all the stats and all the games then assigns each of the users statistics to the corresponding variable of the object specificStatistcs
     //this is so we can use the specific stats for specific games in the template withought having to call method calls in the template which is bad practice
     this.getAllStatisticsForLoggedInUser(statistics =>{
       this.getGames(games =>{
 
         this.getStatsForSpecificGame('Overwatch', statistics, games, (specificStat =>{
-          this.specificStatistics.Overwatch = specificStat;
-         }));
+          this.specificStatistics.Overwatch = specificStat; //this one is for use in average stat Card generation
+          this.usersOverwatchStat = specificStat //this is for use when displaying data 
+        }));
+
          this.getStatsForSpecificGame('Leagueoflegends', statistics, games, (specificStat =>{
           this.specificStatistics.Leagueoflegends = specificStat;
          }));
+         
          this.getStatsForSpecificGame('Runescape', statistics, games, (specificStat =>{
           this.specificStatistics.Runescape = specificStat;
-         }));
+          var runescapeSkillNames = (Object.getOwnPropertyNames(specificStat.detailGameData.skills)) //grabs the name of all the runescape skills
+          this.usersRunescapeStat = this.convertObjectToArray(specificStat.detailGameData.skills)//need to convert all runescape skills to array in order to display efficently
+   
+          for(var i = 0; i<  runescapeSkillNames.length; i++){ //joins runescape skill names and object data together
+             var capitalizedSkillName =  this.capitalizeFirstLetter(runescapeSkillNames[i]);
+            this.usersRunescapeStat[i]["skillName"] =  capitalizedSkillName; //this.userrunescapestat will be used in html to loop through all skills
+          }
+        }));
+
          this.getStatsForSpecificGame('Oldschool Runescape', statistics, games, (specificStat =>{
           this.specificStatistics.OldschoolRunescape= specificStat;
+          var runescapeSkillNames = (Object.getOwnPropertyNames(specificStat.detailGameData.skills)) //grabs the name of all the runescape skills
+          this.usersOldschoolRunescapeStat = this.convertObjectToArray(specificStat.detailGameData.skills)//need to convert all runescape skills to array in order to display efficently
+         
+          for(var i = 0; i<  runescapeSkillNames.length; i++){ //joins runescape skill names and object data together
+            var capitalizedSkillName =  this.capitalizeFirstLetter(runescapeSkillNames[i]);
+            this.usersOldschoolRunescapeStat[i]["skillName"] =  capitalizedSkillName; //this.userrunescapestat will be used in html to loop through all skills
+          }
+        
          }));
+
          this.getStatsForSpecificGame('World of Warcraft', statistics, games, (specificStat =>{
           this.specificStatistics.WorldofWarcraft = specificStat;
          }));
@@ -117,12 +176,7 @@ export class CreateStatisticsComponent implements OnInit {
       
       }); 
     });
-    
-
-   
-
-     
- 
+  
     this.updateOrCreateAllAverages();
 
     //normally we should never do this we should instead of making 5 objects we should make 1 object
@@ -169,10 +223,20 @@ export class CreateStatisticsComponent implements OnInit {
 
     
 
+}
+//converst object passed in to array
+convertObjectToArray(object){
+  var array = $.map(object, function(value, index) {
+    return [value];
+});
+  return array;
+}
 
-
-  }
-
+//capitilize first letter of parameter string
+capitalizeFirstLetter(string) {
+  
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
   onCreateStatisticSubmit(selectedGame, username) {
 
@@ -285,6 +349,7 @@ export class CreateStatisticsComponent implements OnInit {
 
     }
 
+
   }
 
   //get average for a stat across all users for that game. Tiers are different levels deeper into the object
@@ -297,7 +362,7 @@ export class CreateStatisticsComponent implements OnInit {
         completeLocation: completeLocation
       }
 
-      console.log(selectedGame)
+  
     this.authService.getAverageForAStat(averageData).subscribe(data => {
       if (!data.success || data.averageStat == null) { //we have error checking in routes as well but just as a backup
 
@@ -328,7 +393,9 @@ export class CreateStatisticsComponent implements OnInit {
     this.getAverageStat('Overwatch', 'Best Kill Streak', 'detailGameData', 'quickplay', 'global', 'kill_streak_best', undefined);
     this.getAverageStat('Overwatch', 'Best MultiKill', 'detailGameData', 'quickplay', 'global', 'multikill_best', undefined);
     this.getAverageStat('Overwatch', 'Most Damage Done in Game', 'detailGameData', 'quickplay', 'global', 'hero_damage_done_most_in_game', undefined);
+    this.getAverageStat('Overwatch', 'Total Medals', 'detailGameData', 'quickplay', 'global', 'medals', undefined);
     this.getAverageStat('World of Warcraft', 'Total Honorable Kills', 'detailGameData', 'totalHonorableKills', undefined, undefined, undefined);
+    this.getAverageStat('World of Warcraft', '3v3 Arena Rating', 'detailGameData', 'pvp', 'brackets', 'ARENA_BRACKET_3v3', 'rating');
     this.getAverageStat('Leagueoflegends', 'Summoner Level', 'detailGameData', 'summonerLevel', undefined, undefined, undefined);
     this.getAverageStat('Leagueoflegends', 'Total Games This Season', 'detailGameData', 'totalGames', undefined, undefined, undefined);
     // this.getAverageStat('Overwatch', 'Competitive Best Kill Streak', 'detailGameData', 'competitive', 'global', 'kill_streak_best', undefined);
@@ -338,7 +405,9 @@ export class CreateStatisticsComponent implements OnInit {
   //this is run after it has been confirmed the user for that game exists and the user does not already have a statistic of this kind created
   //once this criteria is met then we create the actual statistic object
   createStatisticObject(detailedStats) {
+    console.log(detailedStats);
     this.authService.createStatistics(detailedStats).subscribe(data => {
+      this.updateStats();
       this.flashMessageOutput(data);
 
 

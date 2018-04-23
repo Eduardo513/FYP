@@ -135,6 +135,11 @@ export class PartyDialogComponent implements OnInit {
   }
 
   submitEditParty(){
+    if(this.selectedPartyTitle == "")
+    {
+      this.flashMessage.show('Please enter in a valid title', {cssClass: 'alert-danger', timeout: 3000});
+      return false;
+    }
     var isPartyPublic;
     if (this.selectedAccessibility == "Public") {
       isPartyPublic = true;

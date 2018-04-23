@@ -12,20 +12,26 @@ const Game = require('../models/game');
 
 //Register
 router.post('/register', (req, res, next) => {
-    let newUser = new User({
-        name: req.body.name,
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password,
-        profilePicture: '/assets/images/GCLogo.png'
-    });
-
-    User.addUser(newUser, (err, user) => {
-        if (err) {
-            res.json({ success: false, msg: 'Failed to register user' });
-        }
+    User.findOne({ username: req.body.username }, (err, user) => {
+        if (user)
+            res.json({ success: false, msg: 'Username taken, please choose another username.' });
         else {
-            res.json({ success: true, msg: 'User registered' });
+            let newUser = new User({
+                name: req.body.name,
+                email: req.body.email,
+                username: req.body.username,
+                password: req.body.password,
+                profilePicture: '/assets/images/Rift_profile_logo.png'
+            });
+
+            User.addUser(newUser, (err, user) => {
+                if (err) {
+                    res.json({ success: false, msg: 'Failed to register user' });
+                }
+                else {
+                    res.json({ success: true, msg: 'User registered' });
+                }
+            });
         }
     });
 });
@@ -36,15 +42,15 @@ router.put('/editUserProfileData', (req, res, next) => {
     User.findOneAndUpdate({ _id: req.body.id },
         {
             $set: {
-               bio: req.body.bio,
-               favouriteGame: req.body.favouriteGame,
-               gamingSince: req.body.gamingSince,
-               profilePicture: req.body.profilePicture,
-               favouriteClip: req.body.favouriteClip  
+                bio: req.body.bio,
+                favouriteGame: req.body.favouriteGame,
+                gamingSince: req.body.gamingSince,
+                profilePicture: req.body.profilePicture,
+                favouriteClip: req.body.favouriteClip
             }
         }, (err, editedUser) => {
             if (err)
-                 res.json({ success: false, err: err, msg: 'Failed to update user' });
+                res.json({ success: false, err: err, msg: 'Failed to update user' });
             else {
                 res.json({ success: true, editedUser: editedUser, msg: 'User updated' });
             }
@@ -63,7 +69,7 @@ router.post('/authenticate', (req, res, next) => {
             throw err;
         }
         if (!user) {
-            return res.json({ success: false, msg: "User not found" });
+            return res.json({ success: false, msg: "Invalid Username or Password" });
         }
 
         User.comparePassword(password, user.password, (err, isMatch) => {
@@ -197,20 +203,20 @@ router.post('/addFriend', (req, res, next) => {
     });
 });
 
-router.post('/declineFriendRequest', (req, res, next) =>{
+router.post('/declineFriendRequest', (req, res, next) => {
     const currentUserId = req.body.id;
-     const friendRequestId = req.body.friendRequestId;
-   
+    const friendRequestId = req.body.friendRequestId;
 
-         User.findOneAndUpdate({ _id: currentUserId },
+
+    User.findOneAndUpdate({ _id: currentUserId },
         { $pull: { friendRequests: friendRequestId } }, (err, loggedInUser) => {
             if (err)
                 throw err;
             if (!loggedInUser) {
                 return res.json({ success: false, msg: 'User not found' })
             }
-            if(loggedInUser)
-            return res.json({ success: true, msg: 'Friend Request Deleted' })
+            if (loggedInUser)
+                return res.json({ success: true, msg: 'Friend Request Deleted' })
         });
 
 });
@@ -375,28 +381,28 @@ router.post('/getAllFriends', (req, res, next) => {
 
 //checks to see if the user has already favourited this stat or not
 router.put('/getFavouriteStatLikeStatus', (req, res, next) => {
-    
-     AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject => {
-         User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats => {
-             
- 
-             //this is checking if user already has stat favourited. if it equals -1 that means they dont have that stat in the array
-             if ((allUsersFavouriteStats.indexOf(averageStatObject.id)) == '-1') {
+
+    AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject => {
+        User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats => {
+
+
+            //this is checking if user already has stat favourited. if it equals -1 that means they dont have that stat in the array
+            if ((allUsersFavouriteStats.indexOf(averageStatObject.id)) == '-1') {
                 return res.json({ success: false, status: false, msg: "You don't have that stat favourited" })
-             }
-             else {
-                 return res.json({ success: true, status: true, msg: "You already have that stat favourited!" })
-             }
- 
- 
-         });
- 
-     });
- 
- });
+            }
+            else {
+                return res.json({ success: true, status: true, msg: "You already have that stat favourited!" })
+            }
+
+
+        });
+
+    });
+
+});
 
 router.put('/removeFavouriteStat', (req, res, next) => {
-   
+
     AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject => {
         User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats => {
 

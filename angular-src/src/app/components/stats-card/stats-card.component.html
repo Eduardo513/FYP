@@ -1,38 +1,117 @@
-<mat-toolbar color="primary" class="example-card">
-  <mat-toolbar-row class="example-card">
+<mat-toolbar color="primary" class="card">
+
+  <mat-toolbar-row class="card">
+    <div mat-card-avatar>
+      <img  mat-card-image src={{data.logo}} alt="Logo" style="max-width:150px; margin-top: -12px; margin-left:-16px;" width="50px" height="65px">
+    </div>
+    <span class="example-spacer"></span>
     <span> {{data.statName}}</span>
     <span class="example-spacer"></span>
-    <mat-icon class="example-icon">favorite</mat-icon>
-    <mat-icon class="example-icon">delete</mat-icon>
+    
+    <div *ngIf=viewingUserIsLoggedIn>
+        
+              <div *ngIf="currentStatFavourited;then removeFavourite else addFavourite"></div>
+        
+              <ng-template #addFavourite>
+                 
+                <div (click)="addFavouriteStat()"> <i class="fa fa-heart" aria-hidden="true"></i></div>
+              </ng-template>
+              <ng-template #removeFavourite>
+                <div (click)="removeFavouriteStat()"><i class="fa fa-times" aria-hidden="true"></i></div>
+              </ng-template>
+        
+        
+            </div>
+            <!-- <mat-icon class="example-icon">favorite</mat-icon>
+    <mat-icon class="example-icon">delete</mat-icon> -->
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-card class="example-card">
-  <mat-card-header>
-      
-    <div>
-    <div mat-card-avatar class="example-header-image">  <img mat-card-image src={{data.logo}} alt="Logo"></div>
-    <mat-card-title>  </mat-card-title>
-  </div>
-  </mat-card-header>
- 
-  <mat-card-content >
-    <div>
+<mat-card class="card">
 
-    <p> Your Stat: {{data.userStat}}</p>
-   <p> Gamers City Users Average:{{data.average}} </p>
-  </div>
+  <mat-card-content>
+    <mat-grid-list cols="2" rowHeight="90px">
+      <mat-grid-tile>
+        <div class="center">
+          <h3>Your Statistic</h3>
+          <div>
+            <h4>{{data.userStat}}</h4>
+          </div>
+        </div>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <div class="center">
+          <h3>Stat Rating</h3>
+          <div *ngIf="goldStat">
+            <h4>Gold</h4>
+           
+          </div>
+
+          <div *ngIf="silverStat">
+            <h4>Silver</h4>
+            
+          </div>
+
+          <div *ngIf="bronzeStat">
+            <h4>Bronze</h4>
+            
+          </div>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+          <div class="center">
+              <h3>Gamers City Average</h3>
+              <div>
+                <h4>{{data.average}}</h4>
+              </div>
+            </div>
+      </mat-grid-tile>
+      <mat-grid-tile>
+          <div>
+             
+              <div *ngIf="goldStat">
+        
+                <div mat-card-avatar class="example-header-image">
+                  <img mat-card-image src='/assets/images/gold_medal.png' alt="Logo" height="90px">
+                </div>
+              </div>
+    
+              <div *ngIf="silverStat">
+             
+                <div mat-card-avatar class="example-header-image">
+                  <img mat-card-image src='/assets/images/silver_medal.png' alt="Logo" height="90px">
+                </div>
+              </div>
+    
+              <div *ngIf="bronzeStat">
+          
+                <div mat-card-avatar class="example-header-image">
+                  <img mat-card-image src='/assets/images/bronze_medal.png' alt="Logo" height="90px">
+                </div>
+              </div>
+            </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+
+
+
+
 
   </mat-card-content>
   <mat-card-actions>
     <div *ngIf=viewingUserIsLoggedIn>
-        
-            <div *ngIf="currentStatFavourited;then removeFavourite else addFavourite"></div>
-      
-        <ng-template #addFavourite><button mat-raised-button color="accent" (click)="addFavouriteStat()">Add to Favourites</button></ng-template>
-        <ng-template #removeFavourite> <button mat-raised-button color="accent" (click)="removeFavouriteStat()">Remove from Favourites</button></ng-template>
-       
-   
+
+      <div *ngIf="currentStatFavourited;then removeFavourite else addFavourite"></div>
+
+      <ng-template #addFavourite>
+        <button mat-raised-button color="accent" (click)="addFavouriteStat()">Add to Favourites</button>
+      </ng-template>
+      <ng-template #removeFavourite>
+        <button mat-raised-button color="accent" (click)="removeFavouriteStat()">Remove from Favourites</button>
+      </ng-template>
+
+
     </div>
   </mat-card-actions>
 </mat-card>

@@ -30,7 +30,7 @@
             </mat-form-field>
 
             <mat-form-field class="full-width">
-                <input matInput [(ngModel)]="selectedPartyTitle" name="partyTitle" placeholder="Party Title " size="100">
+                <input matInput [(ngModel)]="selectedPartyTitle" name="partyTitle" placeholder="Party Title " size="100" required>
             </mat-form-field>
 
             <mat-form-field>
@@ -48,7 +48,7 @@
                 </mat-select>
 
             </mat-form-field>
-            <div *ngIf="selectedGame != undefined &&(selectedAccessibility == 'Public' || selectedAccessibility == 'Private') ">
+            <div *ngIf=" selectedPartyTitle != undefined &&selectedGame != undefined &&(selectedAccessibility == 'Public' || selectedAccessibility == 'Private') ">
 
                 <button type="submit" (click)="submitForm()" mat-raised-button color="primary">Create Party</button>
 
@@ -87,7 +87,7 @@
         </div>
     </mat-tab>
     <mat-tab label="View Your Calender">
-
+<div class="container">
         <div class="row text-center">
             <div class="col-md-4">
                 <div class="btn-group">
@@ -107,6 +107,7 @@
                 <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
             </div>
         </div>
+    </div>
         <!-- <mwl-demo-utils-calendar-header
             [(view)]="view"
             [(viewDate)]="viewDate">

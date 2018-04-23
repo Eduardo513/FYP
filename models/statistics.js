@@ -80,7 +80,7 @@ module.exports.addStatistics = function(newStatistics, callback){
 module.exports.requestLeagueApi = function(getRequest, input, key, callback ){
     var data;
     var request = require("request");
-  
+   
     request(getRequest + input + '?api_key=' +key, function (err, res, body) {
         if(err)
             throw err;

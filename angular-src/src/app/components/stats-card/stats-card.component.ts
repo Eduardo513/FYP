@@ -15,6 +15,13 @@ export class StatsCardComponent implements OnInit {
   viewingUserIsLoggedIn: boolean = false;
   currentStatFavourited:boolean; //this variable holds whether stat is already favourited
 
+  //these variables decide whether the users stat is a gold rating stat which means it is 20 percent higher then the average/
+  // silver stat: between the average by a margin of 20 percent
+  //bronze stat: below the average by 20 percent
+  goldStat = false;
+  silverStat=  false;
+  bronzeStat = false;
+
   constructor(private validateService: ValidateService,
     private router: Router,
     private authService: AuthService,
@@ -34,8 +41,30 @@ export class StatsCardComponent implements OnInit {
     this.viewingUserIsLoggedIn = true
 
     this.checkFavouriteStatStatus()
+    this.checkUsersStatComparedToAverage();
   
   }
+
+  checkUsersStatComparedToAverage(){
+    var goldRating = this.data.average*1.1;
+    var silverRating = this.data.average;
+    var bronzeRating = this.data.average*0.9;
+    console.log("gold :" + goldRating)
+    console.log("silver :" + silverRating)
+    console.log("bronze :" + bronzeRating)
+
+    if(this.data.userStat >= goldRating)
+    this.goldStat = true;
+
+    if(this.data.userStat < goldRating && this.data.userStat > bronzeRating)
+    this.silverStat = true;
+
+    if(this.data.userStat <= bronzeRating)
+    this.bronzeStat = true;
+
+  }
+
+
 
   //sees if the stat is already favourited by the user
   checkFavouriteStatStatus(){

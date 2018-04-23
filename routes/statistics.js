@@ -14,6 +14,7 @@ const blizzard = require('blizzard.js').initialize({ apikey: BLIZZARD_API_KEY })
 const owjs = require('overwatch-js');
 //GetStats from LeagueOfLegends
 
+
 router.put('/overwatch', (req, res, next) => {
 
     owjs.getOverall(req.body.platform, req.body.region, req.body.username)
@@ -24,7 +25,6 @@ router.put('/overwatch', (req, res, next) => {
                 game: req.body.game,
                 userId: req.body.id,
                 detailGameData: overwatchStats,
-                averagePlayTime: (((overwatchStats.quickplay.global.time_played / 60) / 60) / 1000),
                 level: (((overwatchStats.profile.tier) * 100) + overwatchStats.profile.level)
             }
             res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
@@ -155,7 +155,7 @@ router.put('/getWorldOfWarcraftRealms', (req, res, next) => {
 router.put('/leagueoflegends', (req, res, next) => {
 
     // var params = {key: String, ttl: Number, api: Object, objectType: String, region: String, params:Object}
-    
+
     // var lol = require('lol-js');
     // var lolClient = lol.client({
     //     apiKey: 'RGAPI-d9b6f490-89db-45f7-a8b2-c236986cedaf',
@@ -171,9 +171,10 @@ router.put('/leagueoflegends', (req, res, next) => {
     //     console.log(data);
     // });
 
-     var summonerLevel;
+    var summonerLevel;
     var summonerProfile;
-    var apiKey = 'RGAPI-d9b6f490-89db-45f7-a8b2-c236986cedaf';
+    var allChampionData;
+    var apiKey = 'RGAPI-fdad99b2-be65-487d-880f-b552709b4f43';
     var regionCode = req.body.region.regionCode;
 
 
@@ -187,14 +188,53 @@ router.put('/leagueoflegends', (req, res, next) => {
                 res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
             }
             else {
-         
+                //gets all champion masteries
+                // Statistics.requestLeagueApi("https://" + regionCode + ".api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/", data.id, apiKey, (err, data) => {
+                //     if (err)
+                //         throw err;
+            
+                //     if (data) {
+                //         if ("status" in data) {
+                //             console.log("Error: " + data.status.status_code);
+                //             res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
+                //         }
+                //         else {
+                //             for (var i = 0; i < data.length; i++) {
+                //                // console.log(i)
+                //                // console.log(data[i].championId);
+                //             }
+                     
+
+                //         }
+                //     }
+                // });
+                //gets all static champion data
+                Statistics.requestLeagueApi("https://" + regionCode + ".api.riotgames.com/lol/static-data/v3/champions/", "", apiKey, (err, data) => {
+                    if (err)
+                        throw err;
+            
+                    if (data) {
+                        if ("status" in data) {
+                            console.log("Error: " + data.status.status_code);
+                            res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
+                        }
+                        else {
+                           allChampionData = data;
+                         
+                        
+
+                        }
+                    }
+                });
+
                 //grabs level off the data to update later
                 var summonerId = data.id;
                 var accountId = data.accountId
                 summonerLevel = data.summonerLevel;
                 summonerProfile = data;
+                var past100ChampionPlayed = []
 
-               
+
 
                 Statistics.requestLeagueApi('https://' + regionCode + '.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
                     if (err)
@@ -206,16 +246,54 @@ router.put('/leagueoflegends', (req, res, next) => {
                             res.json({ success: false, msg: "Something Went Wrong" });
                         }
                         else {
-                        
-                          summonerProfile["totalGames"] = data.totalGames
-                          
+
+                            var lanes = { TOP: 0, JUNGLE: 0, MID: 0, BOTTOM: 0, NONE: 0 };
+                           
+                            for (var i = 0; i < data.matches.length; i++) {
+                                past100ChampionPlayed.push(data.matches[i].champion);
+                             
+                                switch (data.matches[i].lane) {
+
+                                    case "TOP":
+                                        lanes.TOP++
+                                        break;
+
+                                    case "JUNGLE":
+
+                                        lanes.JUNGLE++
+                                        break;
+
+                                    case "MID":
+                                        lanes.MID++
+                                        break;
+
+                                    case "BOTTOM":
+                                        lanes.BOTTOM++
+                                        break;
+
+                                        case "NONE":
+                                        lanes.NONE++
+                                        break;
+                                }
+                            
+
+
+                            }
+
+
+                            summonerProfile["totalGames"] = data.totalGames
+                            summonerProfile["lanes"] = lanes
+                            summonerProfile["allChampionData"] = allChampionData
+                            summonerProfile["past100ChampionsPlayed"] = past100ChampionPlayed
+
 
                             const detailedStats = {
                                 username: req.body.username,
                                 game: req.body.game,
                                 userId: req.body.id,
                                 detailGameData: summonerProfile,
-                                level: summonerLevel
+                                level: summonerLevel,
+                              
                             }
                             res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
 
@@ -229,6 +307,7 @@ router.put('/leagueoflegends', (req, res, next) => {
 
             }
         }
+        
     });
 
     // var summonerLevel;
@@ -260,7 +339,7 @@ router.put('/leagueoflegends', (req, res, next) => {
     //                         res.json({ success: false, msg: "Something Went Wrong" });
     //                     }
     //                     else {
-                         
+
     //                         //average time per game of league is 30 mins
 
 
@@ -292,20 +371,20 @@ router.put('/leagueoflegends', (req, res, next) => {
 router.post('/getAverageForAStat', (req, res, next) => {
 
     var splitUpLocation = req.body.completeLocation.split(',');
-  
+
     const statLocationTier1 = splitUpLocation[0];
     const statLocationTier2 = splitUpLocation[1];
     const statLocationTier3 = splitUpLocation[2];
     const statLocationTier4 = splitUpLocation[3];
     const statLocationTier5 = splitUpLocation[4];
-   
+
     var averageStat = 0
     Game.getGameByName(req.body.game)
         .then(gameObj => {
 
             Statistics.getAllStatisticsForGame(gameObj)
                 .then(stats => {
-                  
+
                     for (var i = 0; i < stats.length; i++) {
                         if (statLocationTier2 == 'undefined') {
                             averageStat = averageStat + parseInt(stats[i][statLocationTier1]);
@@ -325,10 +404,10 @@ router.post('/getAverageForAStat', (req, res, next) => {
 
 
                     }
-                
+
                     averageStat = averageStat / stats.length;
-                
-                   
+
+
                     if (averageStat.isNullOrUndefined) {
                         res.json({ success: false, msg: 'Failed to retrieve Average' });
                     }
@@ -368,25 +447,24 @@ router.post('/create-statistics', (req, res, next) => {
             //retrieves all the statistics for the user
             User.getAllStatisticsIdsByUserId(currentUserId)
                 .then(stats => {
-                    
+
                     if (stats.length == 0)//if no stats are created then create stats
                         saveStatistics(gameObj);
                     else {
-                       
+
                         for (var i = 0; i < stats.length || statisticsExists; i++) {
-                            Statistics.findById(stats[i], (err, statObject) =>{
-                          
-                                if(statObject.game == gameObj.id){                       
+                            Statistics.findById(stats[i], (err, statObject) => {
+
+                                if (statObject.game == gameObj.id) {
                                     updateStatistics(statObject.id, gameObj);
                                     statisticsExists = true;
                                 }
-                                if(j == stats.length - 1 && !statisticsExists)
-                                {
-                                  saveStatistics(gameObj)
+                                if (j == stats.length - 1 && !statisticsExists) {
+                                    saveStatistics(gameObj)
                                 }
                                 j = j + 1; //since we are in a callback we have to keep track of i in a different variable
                             });
-                        };                  
+                        };
 
                     }
                 })
@@ -395,8 +473,8 @@ router.post('/create-statistics', (req, res, next) => {
 
         });
 
-        function updateStatistics(statObject, gameObj){
-         Statistics.findOneAndUpdate({ _id: statObject },
+    function updateStatistics(statObject, gameObj) {
+        Statistics.findOneAndUpdate({ _id: statObject },
             {
                 $set: {
                     username: req.body.detailedStats.username,
@@ -407,7 +485,7 @@ router.post('/create-statistics', (req, res, next) => {
                 }
             }, (err, newStatistic) => {
                 if (err)
-                     res.json({ success: false, err: err, msg: 'Failed to update statistc' });
+                    res.json({ success: false, err: err, msg: 'Failed to update statistc' });
                 else {
                     res.json({ success: true, newStatistic: newStatistic, msg: 'Statistic Updated' });
                 }
@@ -452,6 +530,8 @@ router.post('/create-statistics', (req, res, next) => {
 
 
 });
+
+
 
 module.exports = router;
 

@@ -9,8 +9,13 @@ html
 
 }
 
-th {
-    background-color: rgb(7, 88, 41);
-    color: white;
+.center {
+    text-align: center;
+}
+.right {
+    text-align: right;
+}
+.div-right{
+    float: right;
 }
 

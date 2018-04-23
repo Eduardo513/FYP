@@ -1,7 +1,7 @@
 <html>
 <nav class="navbar navbar-default" >
   <div class="container">
-    <a class="navbar-brand" href="#">Gamers City</a>
+    <a class="navbar-brand" href="#"><img  style="max-width:150px; margin-top: -45px;" src="/assets/images/Rift.png"></a>
 
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
@@ -15,27 +15,25 @@
 
       <ul class="nav navbar-nav navbar-right">
 
-        <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a [routerLink]="['/dashboard']"> Dashboard </a>
-        </li>
-
-         <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a [routerLink]="['/friends']"> Friends </a>
-        </li>
-
-        <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-            <a [routerLink]="['/party']"> Create Party </a>
-          </li>
+          <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+              <a [routerLink]="['/profile']"> Profile </a>
+            </li>
 
           <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-            <a [routerLink]="['/create-statistics']"> Statistics</a>
-          </li>
-  
+              <a [routerLink]="['/create-statistics']"> Statistics</a>
+            </li>
+    
 
         <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a [routerLink]="['/profile']"> Profile </a>
-        </li>
+            <a [routerLink]="['/party']"> Parties </a>
+          </li>
 
+
+         <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+            <a [routerLink]="['/friends']"> Friends </a>
+          </li>
+
+       
         <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
           <a [routerLink]="['/login']"> Login </a>
         </li>
