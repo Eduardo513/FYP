@@ -105,13 +105,14 @@
       <div *ngIf="currentStatFavourited;then removeFavourite else addFavourite"></div>
 
       <ng-template #addFavourite>
-        <button mat-raised-button color="accent" (click)="addFavouriteStat()">Add to Favourites</button>
+        <button mat-raised-button color="primary" (click)="addFavouriteStat()"> <i class="fa fa-heart" aria-hidden="true"></i> Add to Favourites</button>
       </ng-template>
       <ng-template #removeFavourite>
-        <button mat-raised-button color="accent" (click)="removeFavouriteStat()">Remove from Favourites</button>
+        <button mat-raised-button color="primary" (click)="removeFavouriteStat()"><i class="fa fa-times" aria-hidden="true"></i> Remove from Favourites</button>
       </ng-template>
 
 
     </div>
   </mat-card-actions>
 </mat-card>
+<hr>

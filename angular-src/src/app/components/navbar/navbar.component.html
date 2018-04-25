@@ -6,44 +6,44 @@
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="nav navbar-nav  navbar-left">
-
+<!-- 
         <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
           <a [routerLink]="['/']">Home</a>
-        </li>
+        </li> -->
 
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
 
           <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-              <a [routerLink]="['/profile']"> Profile </a>
+              <a [routerLink]="['/profile']"><i class="fa fa-user" aria-hidden="true"></i> Profile </a>
             </li>
 
           <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-              <a [routerLink]="['/create-statistics']"> Statistics</a>
+              <a [routerLink]="['/create-statistics']"><i class="fa fa-bar-chart" aria-hidden="true"></i> Statistics</a>
             </li>
     
 
         <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-            <a [routerLink]="['/party']"> Parties </a>
+            <a [routerLink]="['/party']"> <i class="fa fa-calendar" aria-hidden="true"></i> Parties </a>
           </li>
 
 
          <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-            <a [routerLink]="['/friends']"> Friends </a>
+            <a [routerLink]="['/friends']"> <i class="fa fa-users" aria-hidden="true"></i> Friends </a>
           </li>
 
        
         <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a [routerLink]="['/login']"> Login </a>
+          <a [routerLink]="['/login']"> <i class="fa fa-sign-in" aria-hidden="true"></i> Login </a>
         </li>
 
         <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a [routerLink]="['/register']"> Register </a>
+          <a [routerLink]="['/register']"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Register </a>
         </li>
 
         <li *ngIf="authService.loggedIn()">
-          <a (click)="onLogoutClick()" href='#'> Logout </a>
+          <a (click)="onLogoutClick()" href='#'> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a>
         </li>
 
       </ul>

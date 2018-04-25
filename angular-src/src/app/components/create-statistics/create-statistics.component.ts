@@ -62,7 +62,7 @@ export class CreateStatisticsComponent implements OnInit {
     scaleShowVerticalLines: false,
     responsive: true
   };
-  public barChartLabels: string[] = [];
+  public barChartLabels: string[] = ["100", "333", "32", "53", "54"];
   public barChartType: string = 'bar';
   public barChartLegend: boolean = true;
 
@@ -71,9 +71,10 @@ export class CreateStatisticsComponent implements OnInit {
     // {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
   ];
 
-  public doughnutChartLabels: string[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
-  public doughnutChartData: number[] = [350, 450, 100];
+  public doughnutChartLabels: string[] = ["Top", "Jungle", "Mid", "Bottom", "Other"];
+  public doughnutChartData: number[] = [100, 333, 32, 53, 54];
   public doughnutChartType: string = 'doughnut';
+ 
 
   public chartClicked(e: any): void {
     console.log(e);
@@ -144,6 +145,9 @@ updateStats()
 
          this.getStatsForSpecificGame('Leagueoflegends', statistics, games, (specificStat =>{
           this.specificStatistics.Leagueoflegends = specificStat;
+          this.doughnutChartData = this.convertObjectToArray(this.specificStatistics.Leagueoflegends.detailGameData.lanes) //for use in the doughnut chart
+      
+          
          }));
          
          this.getStatsForSpecificGame('Runescape', statistics, games, (specificStat =>{
@@ -151,6 +155,7 @@ updateStats()
           var runescapeSkillNames = (Object.getOwnPropertyNames(specificStat.detailGameData.skills)) //grabs the name of all the runescape skills
           this.usersRunescapeStat = this.convertObjectToArray(specificStat.detailGameData.skills)//need to convert all runescape skills to array in order to display efficently
    
+         
           for(var i = 0; i<  runescapeSkillNames.length; i++){ //joins runescape skill names and object data together
              var capitalizedSkillName =  this.capitalizeFirstLetter(runescapeSkillNames[i]);
             this.usersRunescapeStat[i]["skillName"] =  capitalizedSkillName; //this.userrunescapestat will be used in html to loop through all skills
@@ -405,7 +410,7 @@ capitalizeFirstLetter(string) {
   //this is run after it has been confirmed the user for that game exists and the user does not already have a statistic of this kind created
   //once this criteria is met then we create the actual statistic object
   createStatisticObject(detailedStats) {
-    console.log(detailedStats);
+   
     this.authService.createStatistics(detailedStats).subscribe(data => {
       this.updateStats();
       this.flashMessageOutput(data);

@@ -15,15 +15,6 @@ const StatisticsSchema = mongoose.Schema({
     level :{
         type:String,
     },
-    winLossRatio :{
-        type:String,
-    },
-    gamesPlayed :{
-        type:String,
-    },
-    averagePlayTime :{
-        type:Number,
-    },
     rank :{
         type:String,
     },

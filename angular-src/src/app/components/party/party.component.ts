@@ -138,11 +138,17 @@ export class PartyComponent implements OnInit {
     this.getAllFriends();
     this.getDate();
     this.getGames();
-    this.getPublicPartiesWithoutUser(this.allPublicParties);
-    this.getAllPartiesForUser();
+    this.updateData();
+    
      
 
 
+  }
+
+  //instead of refreshing the page we just call this method to repopulate all the data on the page
+  updateData(){
+    this.getPublicPartiesWithoutUser(this.allPublicParties);
+    this.getAllPartiesForUser();
   }
 
 
@@ -199,6 +205,7 @@ export class PartyComponent implements OnInit {
 
       if (data.success) {
         this.refreshView();
+        this.updateData();
         this.flashMessage.show(data.msg, { cssClass: 'alert-success', timeout: 3000 });
       }
       else {

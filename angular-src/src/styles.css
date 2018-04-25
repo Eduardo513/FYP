@@ -19,3 +19,15 @@ html
     float: right;
 }
 
+.section-right{
+    width:50%;
+	float:right;
+
+}
+.section-left{
+	width:45%;
+	float:left;
+	margin-left:10px;
+}
+
+.footer { bottom: 0; }

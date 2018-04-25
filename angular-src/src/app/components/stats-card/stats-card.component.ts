@@ -37,6 +37,8 @@ export class StatsCardComponent implements OnInit {
   ngOnInit() {
     var loggedInUser = JSON.parse(localStorage.getItem('user'))
 
+  
+
     if(this.data.user.username == loggedInUser.username) //this is so we can see if the person vieiwng the card is the user thats logged in or not so we can have different functionalities 
     this.viewingUserIsLoggedIn = true
 
@@ -49,9 +51,6 @@ export class StatsCardComponent implements OnInit {
     var goldRating = this.data.average*1.1;
     var silverRating = this.data.average;
     var bronzeRating = this.data.average*0.9;
-    console.log("gold :" + goldRating)
-    console.log("silver :" + silverRating)
-    console.log("bronze :" + bronzeRating)
 
     if(this.data.userStat >= goldRating)
     this.goldStat = true;
@@ -90,6 +89,13 @@ export class StatsCardComponent implements OnInit {
             this.currentStatFavourited = data.status;
           }
         });
+      }
+
+      //source https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+      formatNumber(x){
+        const numberWithCommas = (x) => {
+          return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
       }
   
 

@@ -6,24 +6,23 @@
       <h2 class="center">League of Legends Statistics</h2>
       <hr>
    
-    <!-- <script src="node_modules/chart.js/src/chart.js"></script>
-    <div style="display: block">
-      <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" (chartHover)="chartHovered($event)"
-        (chartClick)="chartClicked($event)"></canvas>
-    </div> -->
+    
 
-    <div *ngIf="this.specificStatistics.Leagueoflegends.detailGameData">
+    <div *ngIf="this.specificStatistics.Leagueoflegends.detailGameData" class="container">
 
-      <div class="card">
-
-        <div class="card-body">
-          <div class="row">
-            <div class="cold-md-8 col-sm-6">
-           
+      <div class="section-left">
+          <div label="Account Statistics">
+              <h3>Account Statistics - This Season</h3>
+              
+              <ul class="list-group">
+                <li class="list-group-item">Games Played: {{specificStatistics.Leagueoflegends.detailGameData.totalGames}}</li>
+                <li class="list-group-item">Level: {{specificStatistics.Leagueoflegends.detailGameData.summonerLevel}}</li>
+              </ul>
+            </div>
 
               <div label="Past Match History">
                 <h3>Past 100 Matches Statistics</h3>
-                <h4>Number of Times Position Played</h4>
+                <h4>Positions Played</h4>
                 <ul class="list-group">
                   <li class="list-group-item">Top: {{specificStatistics.Leagueoflegends.detailGameData.lanes.TOP}}</li>
                   <li class="list-group-item">Jungle: {{specificStatistics.Leagueoflegends.detailGameData.lanes.JUNGLE}}</li>
@@ -33,37 +32,32 @@
                 </ul>
               </div>
 
-              <div label="Account Statistics">
-                <h3>Account Statistics</h3>
-                <h4>This Season</h4>
-                <ul class="list-group">
-                  <li class="list-group-item">Games Played: {{specificStatistics.Leagueoflegends.detailGameData.totalGames}}</li>
-                  <li class="list-group-item">Level: {{specificStatistics.Leagueoflegends.detailGameData.summonerLevel}}</li>
-
-                </ul>
+              <script src="node_modules/chart.js/src/chart.js"></script>
+              <div style="display: block">
+                <canvas baseChart [data]="doughnutChartData" 
+                [labels]="doughnutChartLabels"
+                 [chartType]="doughnutChartType" 
+                 (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)"></canvas>
               </div>
 
-
-
-
+              
             </div>
-            <div class="cold-md-8 col-sm-8">
+
+
+
+          
+          <div class="section-right">
               <div *ngFor="let averageStat of allLeagueOfLegendsAverages">
                 <span>
                   <app-stats-card [data]="generateCard(averageStat, '/assets/images/leagueOfLegendsLogo2.png', specificStatistics.Leagueoflegends)"></app-stats-card>
                 </span>
               </div>
             </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-
+         
     </div>
+
+
     <form class="example-container">
         
    
@@ -87,8 +81,8 @@
     <hr>
 
 
-    <div *ngIf="usersRunescapeStat.length > 0">
-     
+    <div *ngIf="usersRunescapeStat.length > 0" class="container">
+     <div class="section-left">
       <table class="table table-striped">
         <tr>
           <th>Skill</th>
@@ -103,13 +97,14 @@
           <td>{{stat.rank}}</td>
         </tr>
       </table>
-   
+    </div>
+    <div class="section-right">
       <div *ngFor="let averageStat of allRunescapeAverages">
           <span>
             <app-stats-card [data]="generateCard(averageStat, '/assets/images/runescapeLogo.png', specificStatistics.Runescape)"></app-stats-card>
           </span>
         </div>
-   
+      </div>
     </div>
 
     <form class="example-container">
@@ -131,9 +126,9 @@
     <hr>
 
 
-    <div *ngIf="this.usersOldschoolRunescapeStat.length > 0">
+    <div *ngIf="this.usersOldschoolRunescapeStat.length > 0" class="container">
 
-
+        <div class="section-left">
       <table class="table table-striped">
         <tr>
           <th>Skill</th>
@@ -148,8 +143,8 @@
           <td>{{stat.rank}}</td>
         </tr>
       </table>
-
-
+</div>
+<div class="section-right">
       <div *ngFor="let averageStat of allOldSchoolRunescapeAverages">
           <span>
     
@@ -158,11 +153,11 @@
     
         </div>
     </div>
-
+</div>
     
 
     <form class="example-container">
-      <hr>
+    
       <mat-form-field>
         <input matInput [(ngModel)]="oldRunescapeUsername" name="oldRunescapeUsername" placeholder="Username" required>
       </mat-form-field>
@@ -183,17 +178,17 @@
     <h2 class="center">Overwatch Statistics</h2>
     <hr>
 
-    <div *ngIf="usersOverwatchStat.detailGameData">
+    <div *ngIf="usersOverwatchStat.detailGameData" class="container">
    
-      <div class="card">
+      <!-- <div class="card">
           <div class="container">
         <div class="card-body">
           <div class="row">
-            <div class="cold-md-5 col-sm-5">
-
+            <div class="cold-md-5 col-sm-5"> -->
+                <div class="section-left">
 
               <div label="Match Awards">
-                <h3>
+                <h3 class="center">
                   <i class="fa fa-trophy" aria-hidden="true"></i> Match Awards</h3>
                 <ul class="list-group">
                   <li class="list-group-item">Cards: {{usersOverwatchStat.detailGameData.quickplay.global.cards}}</li>
@@ -205,8 +200,8 @@
               </div>
 
               <div label="Combat Stats">
-                <h3>
-                  <i class="fa fa-free-code-camp" aria-hidden="true"></i> Combat Stats</h3>
+                <h3 class="center">
+                  <i class="fa fa-free-code-camp" aria-hidden="true"></i> Combat</h3>
                 <ul class="list-group">
                   <li class="list-group-item">All Barrier Damage: {{usersOverwatchStat.detailGameData.quickplay.global.barrier_damage_done}} </li>
                   <li class="list-group-item">Melee Final Blows: {{usersOverwatchStat.detailGameData.quickplay.global.melee_final_blows}} </li>
@@ -224,8 +219,8 @@
 
 
               <div label="Assist Stats">
-                <h3>
-                  <i class="fa fa-handshake-o" aria-hidden="true"></i> Assist Stats</h3>
+                <h3 class="center">
+                  <i class="fa fa-handshake-o" aria-hidden="true"></i> Assist</h3>
                 <ul class="list-group">
                   <li class="list-group-item">Healing Done: {{usersOverwatchStat.detailGameData.quickplay.global.healing_done}}</li>
                   <li class="list-group-item">Recon Assists: {{usersOverwatchStat.detailGameData.quickplay.global.recon_assists}}</li>
@@ -236,8 +231,8 @@
               </div>
 
               <div label="Best Stats">
-                <h3>
-                  <i class="fa fa-star" aria-hidden="true"></i> Best Stats</h3>
+                <h3 class="center">
+                  <i class="fa fa-star" aria-hidden="true"></i> Best</h3>
                 <ul class="list-group">
                   <li class="list-group-item">Eliminations - Most In Game: {{usersOverwatchStat.detailGameData.quickplay.global.eliminations_most_in_game}}</li>
                   <li class="list-group-item">Final Blows - Most In Game: {{usersOverwatchStat.detailGameData.quickplay.global.final_blows_most_in_game}}</li>
@@ -260,8 +255,8 @@
               </div>
 
               <div label="Game Stats">
-                <h3>
-                  <i class="fa fa-gamepad" aria-hidden="true"></i> Game Stats</h3>
+                <h3 class="center">
+                  <i class="fa fa-gamepad" aria-hidden="true"></i> Game</h3>
                 <ul class="list-group">
                   <li class="list-group-item">Games Won: {{usersOverwatchStat.detailGameData.quickplay.global.games_won}}</li>
                   <li class="list-group-item">Time Played in Hours: {{((((usersOverwatchStat.detailGameData.quickplay.global.time_played/10)/60)/60)/100)}}
@@ -269,20 +264,23 @@
                 </ul>
               </div>
 
-            </div>
-            <div class="cold-md-4 col-sm-6">
+        </div>
+        <div class="section-right">
+            <!-- <div class="cold-md-4 col-sm-6"> -->
               <div *ngFor="let averageStat of allOverwatchAverages" >
                 <span>
                   <app-stats-card [data]="generateCard(averageStat, '/assets/images/overwatchLogo.jpg', specificStatistics.Overwatch)"></app-stats-card>
                 </span>
               </div>
-            </div>
+          
+          </div>
+            <!-- </div>
           </div>
         </div>
         </div>
-      </div>
+      </div> -->
+    
     </div>
-
     <form class="example-container">
       <mat-form-field>
         <input matInput [(ngModel)]="overwatchUsername" name="overwatchUsername" placeholder="Username" required>
@@ -323,15 +321,17 @@
     <h2 class="center">World of Warcraft Statistics</h2>
     <hr>
 
-    <div *ngIf="specificStatistics.WorldofWarcraft.detailGameData">
+    <div *ngIf="specificStatistics.WorldofWarcraft.detailGameData" class="container">
 
 
-      <div class="card">
+      <!-- <div class="card">
           <div class="container">
         <div class="card-body">
           <div class="row">
-            <div class="cold-md-5 col-sm-5">
-
+            <div class="cold-md-5 col-sm-5"> -->
+                <div class="section-left">
+                  
+            
 
               <div label="Guild Statistics">
                 <h3>Guild Statistics</h3>
@@ -384,24 +384,30 @@
                   <li class="list-group-item">Versatility: {{specificStatistics.WorldofWarcraft.detailGameData.stats.versatility}} </li>
                 </ul>
               </div>
-
             </div>
-            <div class="cold-md-4 col-sm-6">
+<!-- 
+            </div> -->
+            <!-- <div class="cold-md-4 col-sm-6"> -->
+              <div class="section-right">
               <div *ngFor="let averageStat of allWorldOfWarcraftAverages">
                 <span>
 
                   <app-stats-card [data]="generateCard(averageStat, '/assets/images/World-of-WarcraftLogo.png', specificStatistics.WorldofWarcraft)"></app-stats-card>
+                
                 </span>
               </div>
             </div>
+          
+            <!-- </div>
 
           </div>
 
         </div>
 </div>
-      </div>
+      </div> -->
     </div>
-
+ 
+  
     <form class="example-container">
 
       <mat-form-field>

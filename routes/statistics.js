@@ -16,7 +16,6 @@ const owjs = require('overwatch-js');
 
 
 router.put('/overwatch', (req, res, next) => {
-
     owjs.getOverall(req.body.platform, req.body.region, req.body.username)
         .then((overwatchStats) => {
 
@@ -31,15 +30,19 @@ router.put('/overwatch', (req, res, next) => {
         }).catch(reason => {
             res.json({ success: false, msg: "Username not found in Overwatch database, Please try again." });
         });
-
 });
 
 
 router.put('/runescape', (req, res, next) => {
 
+
+    rsapi.rs.player.details(req.body.username).then(
+        function (runescapeClan) {
+            
     rsapi.rs.player.hiscores(req.body.username).then(
         function (runescapeStats) {
 
+            runescapeStats["clan"] = runescapeClan;
             const detailedStats = {
                 username: req.body.username,
                 game: req.body.game,
@@ -57,11 +60,17 @@ router.put('/runescape', (req, res, next) => {
         });
 
 
+      
+        }).catch(reason => {
+            res.json({ success: false, msg: "Username not found in Oldschool Runescape database, Please try again." });
+        });
+
+
 
 });
 
 router.put('/oldschoolRunescape', (req, res, next) => {
-
+   
 
     rsapi.osrs.player.hiscores(req.body.username).then(
         function (runescapeStats) {
@@ -174,7 +183,7 @@ router.put('/leagueoflegends', (req, res, next) => {
     var summonerLevel;
     var summonerProfile;
     var allChampionData;
-    var apiKey = 'RGAPI-fdad99b2-be65-487d-880f-b552709b4f43';
+    var apiKey = 'RGAPI-f9c57d74-cea9-4b78-8a79-bf3ac05c2957';
     var regionCode = req.body.region.regionCode;
 
 

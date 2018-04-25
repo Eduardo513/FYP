@@ -17,7 +17,6 @@ router.post('/register', (req, res, next) => {
             res.json({ success: false, msg: 'Username taken, please choose another username.' });
         else {
             let newUser = new User({
-                name: req.body.name,
                 email: req.body.email,
                 username: req.body.username,
                 password: req.body.password,
@@ -86,7 +85,6 @@ router.post('/authenticate', (req, res, next) => {
                     token: 'JWT ' + token,
                     user: {
                         id: user._id,
-                        name: user.name,
                         username: user.username,
                         email: user.email,
                         statistics: user.statistics,
@@ -385,7 +383,6 @@ router.put('/getFavouriteStatLikeStatus', (req, res, next) => {
     AverageStat.getAverageStatByName(req.body.statName).then(averageStatObject => {
         User.getAllFavouriteStats(req.body.userId).then(allUsersFavouriteStats => {
 
-
             //this is checking if user already has stat favourited. if it equals -1 that means they dont have that stat in the array
             if ((allUsersFavouriteStats.indexOf(averageStatObject.id)) == '-1') {
                 return res.json({ success: false, status: false, msg: "You don't have that stat favourited" })
@@ -393,12 +390,8 @@ router.put('/getFavouriteStatLikeStatus', (req, res, next) => {
             else {
                 return res.json({ success: true, status: true, msg: "You already have that stat favourited!" })
             }
-
-
         });
-
     });
-
 });
 
 router.put('/removeFavouriteStat', (req, res, next) => {

@@ -30,11 +30,16 @@ export class FriendViewComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+   this.updateData();
+
+
+
+  }
+
+  //updates all data releveant to the page
+  updateData(){
     this.getAllFriends()
     this.getAllFriendRequests()
-
-
-
   }
 
   getAllFriends() {
@@ -81,6 +86,7 @@ export class FriendViewComponent implements OnInit {
     this.authService.declineFriendRequest(friendRequestData).subscribe(data => {
       
             if (data.success) {
+              this.updateData();
               this.flashMessage.show(data.msg, {
                 cssClass: 'alert-success',
                 timeout: 5000
@@ -110,6 +116,7 @@ export class FriendViewComponent implements OnInit {
     this.authService.confirmFriendRequest(friendData).subscribe(data => {
 
       if (data.success) {
+        this.updateData();
         this.flashMessage.show(data.msg, {
           cssClass: 'alert-success',
           timeout: 5000
