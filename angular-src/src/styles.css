@@ -31,3 +31,5 @@ html
 }
 
 .footer { bottom: 0; }
+
+body {overflow-x:hidden;}

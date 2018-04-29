@@ -51,7 +51,7 @@ const appRoutes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'create-statistics', component: CreateStatisticsComponent, canActivate:[AuthGuard]},
   {path: 'party', component: PartyComponent, canActivate:[AuthGuard]},
-  {path: 'create-game', component: CreateGameComponent},
+  {path: 'create-game', component: CreateGameComponent, canActivate:[AuthGuard]},
   {path: 'register', component: RegisterComponent},
   {path: 'login', component: LoginComponent},
   {path: 'profile', component: ProfileComponent, canActivate:[AuthGuard]},

@@ -1,24 +1,24 @@
 <html>
 
-<h1>Parties Menu</h1>
+
 <mat-tab-group>
-    <mat-tab label="Create a Party">
-        <br>
-        <p>Select the friends you wish to invite</p>
+    <mat-tab label="Create a Party" class="center">
+        <div class="center">
+        <h2>Plan Your Party</h2>
+<hr>
 
-
-        <p>Party accessibility</p>
+       
         <div class="example-container">
+            <h3>Party accessibility</h3>
             <form class="example-container">
-
-                <mat-radio-group aria-label="Party accessibility" [(ngModel)]="selectedAccessibility" name="access">
-                    <mat-radio-button *ngFor="let access of accessibilityOptions" [value]="access" required>
-                        {{access}}
-
-                    </mat-radio-button>
-                </mat-radio-group>
-
-            </form>
+                                <mat-radio-group aria-label="Party accessibility" [(ngModel)]="selectedAccessibility" name="access">
+                                    <mat-radio-button *ngFor="let access of accessibilityOptions" [value]="access" required>
+                                        {{access}}
+                
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                
+                            </form>
 
             <mat-form-field class="full-width">
             <div class="input-wrapper">
@@ -41,13 +41,12 @@
             </mat-form-field>
 
             <mat-form-field>
-
-
                 <mat-select placeholder="Game" [(ngModel)]="selectedGame" required>
                     <mat-option *ngFor="let game of games" [value]="game">{{game.name}}</mat-option>
                 </mat-select>
-
             </mat-form-field>
+
+         
             <div *ngIf=" selectedPartyTitle != undefined &&selectedGame != undefined &&(selectedAccessibility == 'Public' || selectedAccessibility == 'Private') ">
 
                 <button type="submit" (click)="submitForm()" mat-raised-button color="primary">Create Party</button>
@@ -56,36 +55,9 @@
 
 
         </div>
-
+    </div>
     </mat-tab>
 
-
-    <mat-tab label="View Public Parties">
-        <div>
-            <table style="width:100%">
-                <tr>
-                    <th>Party Title</th>
-                    <th>Party Creator</th>
-                    <th>Number of Participants</th>
-                    <th>Game</th>
-                    <th>Start Date</th>
-                    <th>Join Party</th>
-                </tr>
-                <tr *ngFor="let party of allPublicParties">
-
-                    <td>{{party.title}}</td>
-                    <td>{{party.partyCreator}}</td>
-                    <td>{{party.participants.length}}</td>
-                    <td>{{party.game}}</td>
-                    <td>{{party.startDate}}</td>
-                    <td>
-                        <button type="submit" (click)="joinParty(party)" mat-raised-button color="primary">Join</button>
-                    </td>
-                </tr>
-            </table>
-
-        </div>
-    </mat-tab>
     <mat-tab label="View Your Calender">
 <div class="container">
         <div class="row text-center">

@@ -11,7 +11,7 @@
     <div *ngIf="this.specificStatistics.Leagueoflegends.detailGameData" class="container">
 
       <div class="section-left">
-          <div label="Account Statistics">
+          <div label="Account Statistics" class="center">
               <h3>Account Statistics - This Season</h3>
               
               <ul class="list-group">
@@ -20,8 +20,8 @@
               </ul>
             </div>
 
-              <div label="Past Match History">
-                <h3>Past 100 Matches Statistics</h3>
+              <div label="Past Match History" class="center">
+                <h3>Past 100 Matches</h3>
                 <h4>Positions Played</h4>
                 <ul class="list-group">
                   <li class="list-group-item">Top: {{specificStatistics.Leagueoflegends.detailGameData.lanes.TOP}}</li>
@@ -31,16 +31,19 @@
                   <li class="list-group-item">Other: {{specificStatistics.Leagueoflegends.detailGameData.lanes.NONE}} </li>
                 </ul>
               </div>
+              <hr>  
+              
+              <h3 class="center">Lane Positions</h3>
+              <div style="display: block">
+                  <canvas baseChart [data]="doughnutChartData" 
+                  [labels]="doughnutChartLabels"
+                   [chartType]="doughnutChartType" 
+                   (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)"></canvas>
+                </div>
 
               <script src="node_modules/chart.js/src/chart.js"></script>
-              <div style="display: block">
-                <canvas baseChart [data]="doughnutChartData" 
-                [labels]="doughnutChartLabels"
-                 [chartType]="doughnutChartType" 
-                 (chartHover)="chartHovered($event)"
-                  (chartClick)="chartClicked($event)"></canvas>
-              </div>
-
+             
               
             </div>
 
@@ -48,6 +51,7 @@
 
           
           <div class="section-right">
+           
               <div *ngFor="let averageStat of allLeagueOfLegendsAverages">
                 <span>
                   <app-stats-card [data]="generateCard(averageStat, '/assets/images/leagueOfLegendsLogo2.png', specificStatistics.Leagueoflegends)"></app-stats-card>
@@ -99,11 +103,22 @@
       </table>
     </div>
     <div class="section-right">
+        <h3 class="center">Main Skill Types</h3>
+        <div style="display: block">
+          <canvas baseChart
+                  [data]="runescapePieChartData"
+                  [labels]="runescapePieChartLabel"
+                  [chartType]="runescapePieChartType"
+                  (chartHover)="chartHovered($event)"
+                  (chartClick)="chartClicked($event)"></canvas>
+        </div>
+        <hr>
       <div *ngFor="let averageStat of allRunescapeAverages">
           <span>
             <app-stats-card [data]="generateCard(averageStat, '/assets/images/runescapeLogo.png', specificStatistics.Runescape)"></app-stats-card>
           </span>
         </div>
+        
       </div>
     </div>
 
@@ -145,6 +160,16 @@
       </table>
 </div>
 <div class="section-right">
+    <h3 class="center">Main Skill Types</h3>
+    <div style="display: block">
+      <canvas baseChart
+              [data]="oldschoolRunescapePieChartData"
+              [labels]="oldschoolRunescapePieChartLabel"
+              [chartType]="oldschoolRunescapePieChartType"
+              (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)"></canvas>
+    </div>
+    <hr>
       <div *ngFor="let averageStat of allOldSchoolRunescapeAverages">
           <span>
     
@@ -152,6 +177,7 @@
           </span>
     
         </div>
+      
     </div>
 </div>
     
@@ -187,7 +213,7 @@
             <div class="cold-md-5 col-sm-5"> -->
                 <div class="section-left">
 
-              <div label="Match Awards">
+              <div label="Match Awards" class="center">
                 <h3 class="center">
                   <i class="fa fa-trophy" aria-hidden="true"></i> Match Awards</h3>
                 <ul class="list-group">
@@ -199,7 +225,7 @@
                 </ul>
               </div>
 
-              <div label="Combat Stats">
+              <div label="Combat Stats"  class="center"> 
                 <h3 class="center">
                   <i class="fa fa-free-code-camp" aria-hidden="true"></i> Combat</h3>
                 <ul class="list-group">
@@ -218,7 +244,7 @@
               </div>
 
 
-              <div label="Assist Stats">
+              <div label="Assist Stats"  class="center">
                 <h3 class="center">
                   <i class="fa fa-handshake-o" aria-hidden="true"></i> Assist</h3>
                 <ul class="list-group">
@@ -230,7 +256,7 @@
                 </ul>
               </div>
 
-              <div label="Best Stats">
+              <div label="Best Stats"  class="center">
                 <h3 class="center">
                   <i class="fa fa-star" aria-hidden="true"></i> Best</h3>
                 <ul class="list-group">
@@ -254,7 +280,7 @@
                 </ul>
               </div>
 
-              <div label="Game Stats">
+              <div label="Game Stats"  class="center">
                 <h3 class="center">
                   <i class="fa fa-gamepad" aria-hidden="true"></i> Game</h3>
                 <ul class="list-group">
@@ -266,6 +292,17 @@
 
         </div>
         <div class="section-right">
+            <h3 class="center">Medals Distribution</h3>
+            <div style="display: block">
+                <canvas baseChart
+                        [data]="owPieChartData"
+                        [labels]="owPieChartLabel"
+                        [chartType]="owPieChartType"
+                        (chartHover)="chartHovered($event)"
+                        (chartClick)="chartClicked($event)"></canvas>
+              </div>
+       
+              <hr>
             <!-- <div class="cold-md-4 col-sm-6"> -->
               <div *ngFor="let averageStat of allOverwatchAverages" >
                 <span>
@@ -333,18 +370,11 @@
                   
             
 
-              <div label="Guild Statistics">
-                <h3>Guild Statistics</h3>
-                <ul class="list-group">
-                  <li class="list-group-item">Guild Name: {{specificStatistics.WorldofWarcraft.detailGameData.guild.name}}</li>
-                  <li class="list-group-item">Total Members: {{specificStatistics.WorldofWarcraft.detailGameData.guild.members}}</li>
-                  <li class="list-group-item">Battle Group: {{specificStatistics.WorldofWarcraft.detailGameData.guild.battlegroup}} </li>
-                  <li class="list-group-item">Realm: {{specificStatistics.WorldofWarcraft.detailGameData.guild.realm}} </li>
-                </ul>
-              </div>
+            
 
-              <div label="Pvp Stats">
+              <div class="center" label="Pvp Stats">
                 <h3>PVP Statistics - This Season</h3>
+                <hr>
                 <h4>2v2 Arena</h4>
                 <ul class="list-group">
                   <li class="list-group-item">Rating {{specificStatistics.WorldofWarcraft.detailGameData.pvp.brackets.ARENA_BRACKET_2v2.rating}}</li>
@@ -368,8 +398,8 @@
                 </ul>
               </div>
 
-              <div label="Character Statistics">
-                <h3>Character Statistics</h3>
+              <div class="center" label="Character Statistics">
+                <h3><i class="fa fa-bar-chart" aria-hidden="true"></i> Character Statistics</h3>
                 <ul class="list-group">
                   <li class="list-group-item">Level: {{specificStatistics.WorldofWarcraft.detailGameData.level}}</li>
                   <li class="list-group-item">Agility: {{specificStatistics.WorldofWarcraft.detailGameData.stats.agi}}</li>
@@ -384,11 +414,31 @@
                   <li class="list-group-item">Versatility: {{specificStatistics.WorldofWarcraft.detailGameData.stats.versatility}} </li>
                 </ul>
               </div>
+
+              <div class="center" label="Guild Statistics"  *ngIf="specificStatistics.WorldofWarcraft.detailGameData.guild != undefined">
+                <h3>Guild Statistics</h3>
+                <ul class="list-group">
+                  <li class="list-group-item">Guild Name: {{specificStatistics.WorldofWarcraft.detailGameData.guild.name}}</li>
+                  <li class="list-group-item">Total Members: {{specificStatistics.WorldofWarcraft.detailGameData.guild.members}}</li>
+                  <li class="list-group-item">Battle Group: {{specificStatistics.WorldofWarcraft.detailGameData.guild.battlegroup}} </li>
+                  <li class="list-group-item">Realm: {{specificStatistics.WorldofWarcraft.detailGameData.guild.realm}} </li>
+                </ul>
+              </div>
             </div>
 <!-- 
             </div> -->
             <!-- <div class="cold-md-4 col-sm-6"> -->
               <div class="section-right">
+                  <h3 class="center">PVP: Games Played</h3>
+                  <div style="display: block">
+                    <canvas baseChart
+                            [data]="wowPieChartData"
+                            [labels]="wowPieChartLabel"
+                            [chartType]="wowPieChartType"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"></canvas>
+                  </div>
+                  <hr>
               <div *ngFor="let averageStat of allWorldOfWarcraftAverages">
                 <span>
 
@@ -396,6 +446,9 @@
                 
                 </span>
               </div>
+              
+           
+        
             </div>
           
             <!-- </div>

@@ -33,7 +33,7 @@ export class ProfileComponent implements OnInit {
   selectedLogo;
   myLogo;
   logos = [
-    {logo: 'assets/images/Rift_profile_logo.png', gameName: "gameCorner"},
+    {logo: 'assets/images/Rift_profile_logo.png', gameName: "rift"},
     { logo: '/assets/images/leagueOfLegendsLogo2.png', gameName: "leagueOfLegends" },
     { logo: '/assets/images/overwatchLogo.jpg', gameName: "overwatch" },
     { logo: '/assets/images/runescapeLogo.png', gameName: "runescape" },

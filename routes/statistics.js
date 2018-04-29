@@ -163,27 +163,11 @@ router.put('/getWorldOfWarcraftRealms', (req, res, next) => {
 });
 router.put('/leagueoflegends', (req, res, next) => {
 
-    // var params = {key: String, ttl: Number, api: Object, objectType: String, region: String, params:Object}
-
-    // var lol = require('lol-js');
-    // var lolClient = lol.client({
-    //     apiKey: 'RGAPI-d9b6f490-89db-45f7-a8b2-c236986cedaf',
-    //     cache: {set: {params: params , value: Object}, 
-    //     get: {params: params, callback: Object}}
-    // });
-    // lolClient.getChampionById('na', 53, {champData: ['all']}, function(err, data) {
-    //     console.log("Found ", data.name);
-    //     lolClient.destroy();
-    // });
-
-    // lolClient.getChampionByName('EUW1', 'Sona', (err, data) =>{
-    //     console.log(data);
-    // });
-
+   
     var summonerLevel;
     var summonerProfile;
     var allChampionData;
-    var apiKey = 'RGAPI-f9c57d74-cea9-4b78-8a79-bf3ac05c2957';
+    var apiKey = 'RGAPI-7fb8757e-6590-487a-9bcb-538ecf84dfbf';
     var regionCode = req.body.region.regionCode;
 
 
@@ -197,26 +181,7 @@ router.put('/leagueoflegends', (req, res, next) => {
                 res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
             }
             else {
-                //gets all champion masteries
-                // Statistics.requestLeagueApi("https://" + regionCode + ".api.riotgames.com/lol/champion-mastery/v3/champion-masteries/by-summoner/", data.id, apiKey, (err, data) => {
-                //     if (err)
-                //         throw err;
-            
-                //     if (data) {
-                //         if ("status" in data) {
-                //             console.log("Error: " + data.status.status_code);
-                //             res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
-                //         }
-                //         else {
-                //             for (var i = 0; i < data.length; i++) {
-                //                // console.log(i)
-                //                // console.log(data[i].championId);
-                //             }
-                     
-
-                //         }
-                //     }
-                // });
+    
                 //gets all static champion data
                 Statistics.requestLeagueApi("https://" + regionCode + ".api.riotgames.com/lol/static-data/v3/champions/", "", apiKey, (err, data) => {
                     if (err)
@@ -319,59 +284,7 @@ router.put('/leagueoflegends', (req, res, next) => {
         
     });
 
-    // var summonerLevel;
-    // var summonerProfile;
-    // var apiKey = 'RGAPI-6dd3239e-6e10-491c-b532-c8d9c9f9a9da';
-
-
-    // Statistics.requestLeagueApi("https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/", req.body.username, apiKey, (err, data) => {
-    //     if (err)
-    //         throw err;
-
-    //     if (data) {
-    //         if ("status" in data) {
-    //             console.log("Error: " + data.status.status_code);
-    //             res.json({ success: false, msg: "Username not found in League of Legends database, Please try again." });
-    //         }
-    //         else {
-    //             //grabs level off the data to update later
-    //             summonerLevel = data.summonerLevel;
-    //             summonerProfile = data;
-
-    //             Statistics.requestLeagueApi('https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/', data.accountId, apiKey, (err, data) => {
-    //                 if (err)
-    //                     throw err;
-
-    //                 if (data) {
-    //                     if ("status" in data) {
-    //                         console.log("Error: " + data.status.status_code);
-    //                         res.json({ success: false, msg: "Something Went Wrong" });
-    //                     }
-    //                     else {
-
-    //                         //average time per game of league is 30 mins
-
-
-    //                         const detailedStats = {
-    //                             username: req.body.username,
-    //                             game: req.body.game,
-    //                             userId: req.body.id,
-    //                             detailGameData: summonerProfile,
-    //                             level: summonerLevel
-    //                         }
-    //                         res.json({ success: true, detailedStats: detailedStats, msg: "User data found, creating statistic..." });
-
-    //                     }
-    //                 }
-    //             });
-
-
-
-
-
-    //         }
-    //     }
-    // });
+    
 
 });
 

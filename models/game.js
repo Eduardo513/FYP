@@ -5,7 +5,8 @@ const config = require('../config/database');
 //Game Schema
 const GameSchema = mongoose.Schema({
     name :{
-        type: String
+        type: String,
+        unique: true
     },
     genre :{
         type: String,

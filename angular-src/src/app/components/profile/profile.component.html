@@ -1,9 +1,7 @@
 <div *ngIf="user" class="main-content">
     <div class="row">
         <div class="col-md-6">
-            <a routerLink="/" class="btn btn-link">
-                <i class="fa fa-arrow-circle-o-left"></i> Back to Dashboard
-            </a>
+            
         </div>
         <!-- <div class="col-md-6">
         <div class="btn-group pull-middle">
@@ -17,9 +15,9 @@
                     <button type="submit" (click)="toggleEditTrue()" mat-raised-button color="primary">Edit Profile</button>
                 </div>
                 <div *ngIf="viewingUserIsLoggedIn && editProfile">
-                        <button type="submit" (click)="editUser()" mat-raised-button color="primary">Confirm Changes</button>
-                        <button type="submit" (click)="toggleEditFalse()" mat-raised-button color="primary">Cancel Changes</button>
-                    </div>
+                    <button type="submit" (click)="editUser()" mat-raised-button color="primary">Confirm Changes</button>
+                    <button type="submit" (click)="toggleEditFalse()" mat-raised-button color="primary">Cancel Changes</button>
+                </div>
             </div>
         </div>
     </div>
@@ -43,7 +41,7 @@
                         </mat-form-field>
                         <br>
                         <mat-form-field class="full-width">
-                                <!-- <label>
+                            <!-- <label>
                                         Date
                                         <input  matInput [(ngModel)]="gamingSince" [owlDateTimeTrigger]="dt3" [owlDateTime]="dt3">
                                         <owl-date-time [pickerType]="'calendar'" #dt3></owl-date-time>
@@ -55,8 +53,8 @@
                         </mat-form-field>
                         <h4>Pick a profile Picture</h4>
                         <div class="cc-selector">
-                                <input id="gameCorner" type="radio" name="logo" [(ngModel)]="myLogo" value="gameCorner" checked />
-                                <label class="drinkcard-cc gameCorner" for="gameCorner"></label>
+                            <input id="rift" type="radio" name="logo" [(ngModel)]="myLogo" value="rift" checked />
+                            <label class="drinkcard-cc rift" for="rift"></label>
                             <input id="leagueOfLegends" type="radio" name="logo" [(ngModel)]="myLogo" value="leagueOfLegends" />
                             <label class="drinkcard-cc leagueOfLegends" for="leagueOfLegends"></label>
                             <input id="overwatch" type="radio" name="logo" [(ngModel)]="myLogo" value="overwatch" />
@@ -139,48 +137,48 @@
 
 
 
+              <div class="container">
+<div *ngIf="allCardDataForUser.length != 0" class="section-right">
+    <h3 class="center">Favourite Stats</h3>
 
-<div *ngIf="allCardDataForUser.length != 0">
-        <h3>Favourite Stats</h3>
+
+    <div *ngFor="let cardData of allCardDataForUser">
+        <app-stats-card [data]=cardData></app-stats-card>
+    </div>
 </div>
 
-<div *ngFor="let cardData of allCardDataForUser">
-    <app-stats-card [data]=cardData></app-stats-card>
-</div>
 
-<div class="container">
-   
-        <div class="div-right">
-            <div class="row">
-                <div  *ngIf="UrlLoaded; else loading;" class="cold-md-8 col-sm-4" >
-                    <div *ngIf=editProfile>
-                            <h3>Your Favourite Clip</h3>
+    <div class="section-left">
+        <div class="row">
+            <div *ngIf="UrlLoaded; else loading;" class="center">
+                <div *ngIf=editProfile>
+                    <h3 class="center">Your Favourite Clip</h3>
                     <mat-form-field class="full-width">
                         <input matInput [(ngModel)]="youtubeClipURL" name="youtubeClipURL" placeholder="Favourite Clip URL: " size="100">
                     </mat-form-field>
-                  </div>
-                  <div *ngIf=!editProfile>
-                    <h3>Your Favourite Clip</h3>
-                  </div>
-              
+                </div>
+                <div *ngIf=!editProfile>
+                    <h3 class="center">Your Favourite Clip</h3>
+                </div>
+
                 <youtube-player [videoId]="youtubeUrlId" (ready)="savePlayer($event)" (change)="onStateChange($event)">
                 </youtube-player>
             </div>
-            </div>
-
-
         </div>
- 
+
+
+    </div>
+
 
 
 </div>
 
 <ng-template #loading>
-        <div class="text-center">
-            <i class="fa fa-spin fa-spinner fa-5x"></i>
-            <br> Loading events...
-        </div>
-    </ng-template>
+    <div class="text-center">
+        <i class="fa fa-spin fa-spinner fa-5x"></i>
+        <br> Loading events...
+    </div>
+</ng-template>
 
 
 <!-- <div class="container-fluid">

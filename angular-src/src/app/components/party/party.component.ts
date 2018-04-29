@@ -220,7 +220,7 @@ export class PartyComponent implements OnInit {
 
 
   getPublicPartiesWithoutUser(allPublicParties) {
-
+    allPublicParties = [];
 
     this.authService.getAllPublicPartiesWithoutUser(this.user).subscribe(data => {
 
@@ -279,6 +279,7 @@ export class PartyComponent implements OnInit {
   populateCalender(parties, primaryColor){
     var allPartiesForUser
     var displayParty: DisplayParty;
+    this.events = []; //reset parties
     for (var i = 0; i < parties.length; i++) {
       this.authService.getPartyInString(parties[i]).subscribe(data => {
         displayParty = data.readableData
@@ -308,72 +309,4 @@ export class PartyComponent implements OnInit {
   }
 }
 
-  // onEdit(rowId) {
-  //   console.log(rowId);
-  // }
-  // onDelete(rowId) {
-  //   console.log(rowId);
-  // }
-
-   //all this is for angular material table
-    // this.getPublicParties(readableParty);
-    //creates a promise that will resolve the array of parties after 1 second 
-    //possible refactor would be to have set timeout to know when the array is finished populating instead of just waiting one second
-    //but after 3 days of attempting to populate this table I am settling with this
-    // const myPromise = new Promise<any>((resolve, reject) => {
-    //   setTimeout(function () {
-
-    //     resolve(readableParty);
-    //   }, 1000)
-
-    // });
-
-
-    //sets up an observable stream to look at the promise once it is resolved
-    //not sure if observable is needed here, potentially just use promise instead but according to angular material table api
-    // we have to use either observable, array or connnect()-disconnect()
-    // const parties$ = Observable.fromPromise(myPromise);
-
-
-    // //subscribes to the observable and sets the datasource of the table to the result of the observable stream.
-
-    // parties$.subscribe(x => {
-
-
-    //   this.dataSource.data = x;
-
-    // });
-
-
-
-  //this is the method for the angular material table
-  // getPublicParties(array) {
-
-
-  //   this.authService.getAllPublicParties().subscribe(data => {
-
-  //     if (data.success) {
-
-
-  //       for (var i = 0; i < data.parties.length; i++) {
-
-  //         this.authService.getPartyInString(data.parties[i]).subscribe(data => {
-  //           console.log(data.readableData);
-  //           this.allPublicParties.push(data.readableData);
-  //           array.push(data.readableData);
-
-
-  //           return array;
-
-  //         });
-  //       }
-  //     }
-  //     else {
-  //       this.flashMessage.show(data.message, {
-  //         cssClass: 'alert-danger',
-  //         timeout: 5000
-  //       });
-  //     }
-  //   })
-  // }
-
+ 

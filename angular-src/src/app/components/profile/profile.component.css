@@ -32,7 +32,7 @@ input[type="radio"]:checked + label {
      -moz-appearance:none;
           appearance:none;
 }
-.gameCorner{background-image:url('/assets/images/Rift_profile_logo.png');}
+.rift{background-image:url('/assets/images/Rift_profile_logo.png');}
 .leagueOfLegends{background-image:url('/assets/images/leagueOfLegendsLogo2.png');}
 .overwatch{background-image:url('/assets/images/overwatchLogo.jpg');}
 .runescape{background-image:url('/assets/images/runescapeLogo.png');}

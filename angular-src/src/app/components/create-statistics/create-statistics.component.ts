@@ -58,18 +58,22 @@ export class CreateStatisticsComponent implements OnInit {
   usersOldschoolRunescapeStat = [];
   usersOverwatchStat = [];
 
-  public barChartOptions: any = {
-    scaleShowVerticalLines: false,
-    responsive: true
-  };
-  public barChartLabels: string[] = ["100", "333", "32", "53", "54"];
-  public barChartType: string = 'bar';
-  public barChartLegend: boolean = true;
+ 
+  public runescapePieChartLabel: string[] = ["Combat", "Gathering", "Artisan", "Support"];
+  public runescapePieChartData: number[] = [];
+  public runescapePieChartType: string = 'pie';
 
-  public barChartData: any[] = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-    // {data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B'}
-  ];
+  public oldschoolRunescapePieChartLabel: string[] = ["Combat", "Gathering", "Artisan", "Support"];
+  public oldschoolRunescapePieChartData: number[] = [];
+  public oldschoolRunescapePieChartType: string = 'pie';
+
+  public wowPieChartLabel: string[] = ["2v2", "3v3", "RBG"];
+  public wowPieChartData: number[] = [];
+  public wowPieChartType: string = 'pie';
+
+  public owPieChartLabel: string[] = ["Gold", "Silver", "Bronze"];
+  public owPieChartData: number[] = [];
+  public owPieChartType: string = 'pie';
 
   public doughnutChartLabels: string[] = ["Top", "Jungle", "Mid", "Bottom", "Other"];
   public doughnutChartData: number[] = [100, 333, 32, 53, 54];
@@ -141,6 +145,12 @@ updateStats()
         this.getStatsForSpecificGame('Overwatch', statistics, games, (specificStat =>{
           this.specificStatistics.Overwatch = specificStat; //this one is for use in average stat Card generation
           this.usersOverwatchStat = specificStat //this is for use when displaying data 
+          
+          this.owPieChartData=[]
+          this.owPieChartData.push(specificStat.detailGameData.quickplay.global.medals_gold)
+          this.owPieChartData.push(specificStat.detailGameData.quickplay.global.medals_silver)
+          this.owPieChartData.push(specificStat.detailGameData.quickplay.global.medals_bronze)
+
         }));
 
          this.getStatsForSpecificGame('Leagueoflegends', statistics, games, (specificStat =>{
@@ -155,10 +165,73 @@ updateStats()
           var runescapeSkillNames = (Object.getOwnPropertyNames(specificStat.detailGameData.skills)) //grabs the name of all the runescape skills
           this.usersRunescapeStat = this.convertObjectToArray(specificStat.detailGameData.skills)//need to convert all runescape skills to array in order to display efficently
    
-         
+         //this groups all the diffeernt levels for each category of skills to display on graph
+         var allCombatLevels = 0; //there are 8 combat skills
+         var allGatheringLevels = 0; // 6 skills
+         var allArtisanLevels = 0; // 8 skills
+         var allSupportLevels = 0; // 4 skills
+           //this for loop captilizes the skill names and categorizes each skill into a variable to use in the pie chart
           for(var i = 0; i<  runescapeSkillNames.length; i++){ //joins runescape skill names and object data together
              var capitalizedSkillName =  this.capitalizeFirstLetter(runescapeSkillNames[i]);
             this.usersRunescapeStat[i]["skillName"] =  capitalizedSkillName; //this.userrunescapestat will be used in html to loop through all skills
+          
+
+            switch (this.usersRunescapeStat[i].skillName) {
+              
+                    case "Attack":
+                    case "Strength":
+                    case "Defence":
+                    case "Ranged":
+                    case "Prayer":
+                    case "Magic":
+                    case "Hitpoints":
+                    case "Summoning":
+                    allCombatLevels = allCombatLevels + this.usersRunescapeStat[i].level
+                    break;
+
+                    case "Mining":
+                    case "Fishing":
+                    case "Woodcutting":
+                    case "Farming":
+                    case "Hunter":
+                    case "Divination":
+                    allGatheringLevels = allGatheringLevels + this.usersRunescapeStat[i].level
+                    break;
+
+                    case "Herblore":
+                    case "Crafting":
+                    case "Fletching":
+                    case "Smithing":
+                    case "Cooking":
+                    case "Firemaking":
+                    case "Runecrafting":
+                    case "Construction":
+                    allArtisanLevels = allArtisanLevels + this.usersRunescapeStat[i].level
+                    break;
+
+                    case "Agility":
+                    case "Thieving":
+                    case "Slayer":
+                    case "Dungeoneering":
+                    allSupportLevels = allSupportLevels + this.usersRunescapeStat[i].level
+                    break;
+            }
+
+          
+            if(i == runescapeSkillNames.length - 1)
+            {
+              this.runescapePieChartData = [];
+              allCombatLevels = Math.round(allCombatLevels/8)
+              allGatheringLevels = Math.round(allGatheringLevels/6)
+              allArtisanLevels = Math.round(allArtisanLevels/8)
+             allSupportLevels = Math.round(allSupportLevels/4)
+             this.runescapePieChartData.push(allCombatLevels)
+             this.runescapePieChartData.push(allGatheringLevels)
+             this.runescapePieChartData.push(allArtisanLevels)
+             this.runescapePieChartData.push(allSupportLevels)
+       
+      
+            }
           }
         }));
 
@@ -166,17 +239,82 @@ updateStats()
           this.specificStatistics.OldschoolRunescape= specificStat;
           var runescapeSkillNames = (Object.getOwnPropertyNames(specificStat.detailGameData.skills)) //grabs the name of all the runescape skills
           this.usersOldschoolRunescapeStat = this.convertObjectToArray(specificStat.detailGameData.skills)//need to convert all runescape skills to array in order to display efficently
-         
+        
+          
+          var allCombatLevels = 0; //there are 7 combat skills
+          var allGatheringLevels = 0; // 5 skills
+          var allArtisanLevels = 0; // 8 skills
+          var allSupportLevels = 0; // 3 skills
+          //this for loop captilizes the skill names and categorizes each skill into a variable to use in the pie chart
           for(var i = 0; i<  runescapeSkillNames.length; i++){ //joins runescape skill names and object data together
             var capitalizedSkillName =  this.capitalizeFirstLetter(runescapeSkillNames[i]);
             this.usersOldschoolRunescapeStat[i]["skillName"] =  capitalizedSkillName; //this.userrunescapestat will be used in html to loop through all skills
-          }
+
+            switch (this.usersOldschoolRunescapeStat[i].skillName) {
+              
+                    case "Attack":
+                    case "Strength":
+                    case "Defence":
+                    case "Ranged":
+                    case "Prayer":
+                    case "Magic":
+                    case "Hitpoints":
+                    allCombatLevels = allCombatLevels + this.usersOldschoolRunescapeStat[i].level
+                    break;
+
+                    case "Mining":
+                    case "Fishing":
+                    case "Woodcutting":
+                    case "Farming":
+                    case "Hunter":
+                    allGatheringLevels = allGatheringLevels + this.usersOldschoolRunescapeStat[i].level
+                    break;
+
+                    case "Herblore":
+                    case "Crafting":
+                    case "Fletching":
+                    case "Smithing":
+                    case "Cooking":
+                    case "Firemaking":
+                    case "Runecrafting":
+                    case "Construction":
+                    allArtisanLevels = allArtisanLevels + this.usersOldschoolRunescapeStat[i].level
+                    break;
+
+                    case "Agility":
+                    case "Thieving":
+                    case "Slayer":
+                    allSupportLevels = allSupportLevels + this.usersOldschoolRunescapeStat[i].level
+                    break;
+            }
+
+
+
+            if(i == runescapeSkillNames.length - 1)
+            {
+              this.oldschoolRunescapePieChartData = []
+              allCombatLevels = Math.round(allCombatLevels/7)
+              allGatheringLevels = Math.round(allGatheringLevels/5)
+              allArtisanLevels = Math.round(allArtisanLevels/8)
+             allSupportLevels = Math.round(allSupportLevels/3)
+             this.oldschoolRunescapePieChartData.push(allCombatLevels)
+             this.oldschoolRunescapePieChartData.push(allGatheringLevels)
+             this.oldschoolRunescapePieChartData.push(allArtisanLevels)
+             this.oldschoolRunescapePieChartData.push(allSupportLevels)
+           
         
+          }
+        }
          }));
 
          this.getStatsForSpecificGame('World of Warcraft', statistics, games, (specificStat =>{
           this.specificStatistics.WorldofWarcraft = specificStat;
-         }));
+
+          this.wowPieChartData= [];
+          this.wowPieChartData.push(this.specificStatistics.WorldofWarcraft.detailGameData.pvp.brackets.ARENA_BRACKET_2v2.seasonPlayed)
+          this.wowPieChartData.push(this.specificStatistics.WorldofWarcraft.detailGameData.pvp.brackets.ARENA_BRACKET_3v3.seasonPlayed)
+          this.wowPieChartData.push(this.specificStatistics.WorldofWarcraft.detailGameData.pvp.brackets.ARENA_BRACKET_RBG.seasonPlayed)
+        }));
         
       
       }); 

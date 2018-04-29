@@ -25,11 +25,11 @@ export class AuthService {
       .map(res => res.json());
   }
 
-  createGame(game)
+  createGame()
   {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    return this.http.post('http://localhost:3000/games/create-game', game, {headers: headers})
+    return this.http.post('http://localhost:3000/games/create-game', {headers: headers})
       .map(res => res.json());
   }
 
@@ -307,10 +307,11 @@ export class AuthService {
 
   loggedIn()
   {
-  
     return tokenNotExpired("id_token");
   }
 
+
+  
   logout()
   {
     this.authToken = null;

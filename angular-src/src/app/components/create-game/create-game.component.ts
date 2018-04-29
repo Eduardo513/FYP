@@ -11,26 +11,28 @@ import {AuthService} from '../../services/auth.service';
 export class CreateGameComponent implements OnInit {
   name: String;
   genre: String;
-
+  user = JSON.parse(localStorage.getItem('user'));
   constructor(
     private router:Router,
     private authService: AuthService,
     private flashMessage:FlashMessagesService ) { }
 
   ngOnInit() {
+    this.onCreateGameSubmit()
   }
 
   onCreateGameSubmit()
   {
-    const game =
-    {
-      name: this.name,
-      genre: this.genre
+    if(this.user.username != 'admin'){
+      this.router.navigate(['/']);
     }
+    else
+{
+  
   
 
   //Register Game
-  this.authService.createGame(game).subscribe(data => {
+  this.authService.createGame().subscribe(data => {
     if(data.success)
     {
       this.flashMessage.show('Game has been created', {cssClass: 'alert-success', timeout: 3000});
@@ -38,10 +40,10 @@ export class CreateGameComponent implements OnInit {
     }
     else
     {
-      this.flashMessage.show('Something went wrong', {cssClass: 'alert-success', timeout: 3000});
+      this.flashMessage.show('Something went wrong', {cssClass: 'alert-danger', timeout: 3000});
       
     }
   });
-
+  }
 }
 }

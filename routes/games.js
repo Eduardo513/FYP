@@ -7,17 +7,69 @@ const Game = require('../models/game');
 
 //CreateGame
 router.post('/create-game', (req, res, next) => {
-    let newGame = new Game({
-        name: req.body.name,
-        genre: req.body.genre
+    let leagueGame = new Game({
+        name: "Leagueoflegends",
+        genre: "MOBA"
     });
 
-    Game.addGame(newGame, (err, game) => {
+    let overwatchGame = new Game({
+        name: "Overwatch",
+        genre: "Shooter"
+    });
+
+    let runescapeGame = new Game({
+        name: "Runescape",
+        genre: "MMORPG"
+    });
+
+    let oldschoolRunescapeGame = new Game({
+        name: "Oldschool Runescape",
+        genre: "MMORPG"
+    });
+
+    let warcraftGame = new Game({
+        name: "World of Warcraft",
+        genre: "MMORPG"
+    });
+
+    Game.addGame(leagueGame, (err, game) => {
         if (err) {
             res.json({ success: false, msg: 'Failed to create game' });
         }
         else {
-            res.json({ success: true, msg: 'Game created' });
+            
+    Game.addGame(overwatchGame, (err, game) => {
+        if (err) {
+            res.json({ success: false, msg: 'Failed to create game' });
+        }
+        else {
+            
+    Game.addGame(runescapeGame, (err, game) => {
+        if (err) {
+            res.json({ success: false, msg: 'Failed to create game' });
+        }
+        else {
+            
+    Game.addGame(oldschoolRunescapeGame, (err, game) => {
+        if (err) {
+            res.json({ success: false, msg: 'Failed to create game' });
+        }
+        else {
+            
+    Game.addGame(warcraftGame, (err, game) => {
+        if (err) {
+            res.json({ success: false, msg: 'Failed to create game' });
+        }
+        else {
+            res.json({ success: false, msg: 'Games made' });
+        }
+    });
+        }
+    });
+        }
+    });
+        }
+    });
         }
     });
 });

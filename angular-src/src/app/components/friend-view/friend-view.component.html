@@ -1,4 +1,3 @@
-<h2>Friends</h2>
 
 <mat-tab-group>
 
@@ -6,7 +5,7 @@
 
 
 
-
+<div class="container">
     <ul class="list-unstyled">
       <li class="card-body" *ngFor="let friend of friendsList">
         <div class="row">
@@ -32,7 +31,7 @@
 
       </li>
     </ul>
-
+  </div>
     <!-- <ng-template #noUsers><h4>No Users Found</h4></ng-template> -->
 
     <h4 *ngIf="friendsList?.length == 0">No Friends Found</h4>
@@ -42,6 +41,7 @@
   <mat-tab label="View Your Friend Requests">
 
 
+    <div class="container">
     <ul class="list-unstyled">
       <li class="card card-body mb-2" *ngFor="let friendRequest of friendRequestsList">
         <div class="row">
@@ -73,6 +73,7 @@
 
       </li>
     </ul>
+    </div>
 
     <h4 *ngIf="friendRequestsList?.length == 0">No Friend Requests Found</h4>
   </mat-tab>

@@ -38,6 +38,13 @@ export class FriendViewComponent implements OnInit {
 
   //updates all data releveant to the page
   updateData(){
+    this.updateFriendsAndFriendRequests();
+   
+  }
+
+  updateFriendsAndFriendRequests(){
+    this.friendsList = [];
+    this.friendRequestsList = [];
     this.getAllFriends()
     this.getAllFriendRequests()
   }
