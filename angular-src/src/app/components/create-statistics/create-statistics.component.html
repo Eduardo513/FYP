@@ -1,8 +1,9 @@
 <html>
 
 <mat-tab-group>
-
+    <div class="container-fluid" >
   <mat-tab label="League Of Legends">
+   
       <h2 class="center">League of Legends Statistics</h2>
       <hr>
    
@@ -22,6 +23,7 @@
 
               <div label="Past Match History" class="center">
                 <h3>Past 100 Matches</h3>
+                <hr>
                 <h4>Positions Played</h4>
                 <ul class="list-group">
                   <li class="list-group-item">Top: {{specificStatistics.Leagueoflegends.detailGameData.lanes.TOP}}</li>
@@ -58,7 +60,7 @@
                 </span>
               </div>
             </div>
-         
+            <hr>
     </div>
 
 
@@ -79,6 +81,7 @@
            mat-raised-button color="primary">Create Statistics</button>
        </form>
   </mat-tab>
+</div>
 
   <mat-tab label="Runescape">
     <h2 class="center">Runescape Statistics</h2>

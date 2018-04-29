@@ -539,6 +539,7 @@ capitalizeFirstLetter(string) {
     this.getAverageStat('Overwatch', 'Total Medals', 'detailGameData', 'quickplay', 'global', 'medals', undefined);
     this.getAverageStat('World of Warcraft', 'Total Honorable Kills', 'detailGameData', 'totalHonorableKills', undefined, undefined, undefined);
     this.getAverageStat('World of Warcraft', '3v3 Arena Rating', 'detailGameData', 'pvp', 'brackets', 'ARENA_BRACKET_3v3', 'rating');
+    this.getAverageStat('World of Warcraft', '2v2 Arena Rating', 'detailGameData', 'pvp', 'brackets', 'ARENA_BRACKET_2v2', 'rating');
     this.getAverageStat('Leagueoflegends', 'Summoner Level', 'detailGameData', 'summonerLevel', undefined, undefined, undefined);
     this.getAverageStat('Leagueoflegends', 'Total Games This Season', 'detailGameData', 'totalGames', undefined, undefined, undefined);
     // this.getAverageStat('Overwatch', 'Competitive Best Kill Streak', 'detailGameData', 'competitive', 'global', 'kill_streak_best', undefined);

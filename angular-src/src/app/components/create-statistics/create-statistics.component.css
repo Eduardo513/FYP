@@ -9,6 +9,7 @@
   
   .example-container > * {
     width: 100%;
+   
   }
   
   .example-container form {
@@ -23,3 +24,4 @@
     margin: 0 5px;
   }
 
+ 

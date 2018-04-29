@@ -5,7 +5,7 @@
 
 
 
-<div class="container">
+<div class="container-fluid">
     <ul class="list-unstyled">
       <li class="card-body" *ngFor="let friend of friendsList">
         <div class="row">
@@ -25,6 +25,8 @@
             <div [ngStyle]="currentStyles">
             <button type="submit" (click)="viewProfile(friend)"
             mat-raised-button color="primary">View Profile</button>
+            <button type="submit" (click)="unFriend(friend)"
+            mat-raised-button color="primary">Remove From Friends</button>
             </div>
           </div>
         </div>
@@ -41,7 +43,7 @@
   <mat-tab label="View Your Friend Requests">
 
 
-    <div class="container">
+    <div class="container-fluid">
     <ul class="list-unstyled">
       <li class="card card-body mb-2" *ngFor="let friendRequest of friendRequestsList">
         <div class="row">

@@ -25,7 +25,7 @@ router.post('/register', (req, res, next) => {
 
             User.addUser(newUser, (err, user) => {
                 if (err) {
-                    res.json({ success: false, msg: 'Failed to register user' });
+                    res.json({ success: false, msg: 'That email is already registered. Please log in or use a different email.' });
                 }
                 else {
                     res.json({ success: true, msg: 'User registered' });
@@ -214,7 +214,27 @@ router.post('/declineFriendRequest', (req, res, next) => {
                 return res.json({ success: false, msg: 'User not found' })
             }
             if (loggedInUser)
+
+            
                 return res.json({ success: true, msg: 'Friend Request Deleted' })
+        });
+
+});
+
+router.post('/unFriend', (req, res, next) => {
+    const currentUserId = req.body.id;
+    const friendId = req.body.friendId;
+
+
+    User.findOneAndUpdate({ _id: currentUserId },
+        { $pull: { friends: friendId } }, (err, loggedInUser) => {
+            if (err)
+                throw err;
+            if (!loggedInUser) {
+                return res.json({ success: false, msg: 'User not found' })
+            }
+            if (loggedInUser)
+                return res.json({ success: true, msg: 'Friend Deleted' })
         });
 
 });

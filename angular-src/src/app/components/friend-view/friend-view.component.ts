@@ -109,6 +109,35 @@ export class FriendViewComponent implements OnInit {
           });
   }
 
+  unFriend(friend){
+    
+     const friendData =
+     {
+       //logged in users id
+       id: this.user.id,
+       //username for friend user selected in front end
+       friendId: friend._id
+ 
+     }
+     this.authService.unFriend(friendData).subscribe(data => {
+       
+             if (data.success) {
+               this.updateData();
+               this.flashMessage.show(data.msg, {
+                 cssClass: 'alert-success',
+                 timeout: 5000
+               });
+             }
+             else {
+               this.flashMessage.show(data.msg, {
+                 cssClass: 'alert-danger',
+                 timeout: 5000
+               });
+       
+             }
+           });
+   }
+
   acceptFriendRequest(friendRequest) {
 
     const friendData =
